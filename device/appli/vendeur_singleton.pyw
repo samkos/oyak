@@ -1900,24 +1900,24 @@ class processFacture:
               oyak.ihm.showMessage("La commande est vide!!!", self.goToArticle)
               return            
 
-        s="%s%s"%(self.clientClef, oyak.sep1)
+        s="%s%s"%(self.client, oyak.sep1)
         for l in range(0, self.nbArticles):
              racourci=self.selectedRacourci[l]
              fournisseur=self.selectedFournisseur[l]
-             try:
-                 barcode=oyak.ProduitsCodes[racourci, fournisseur]
-             except:
-                 barcode=-1
-             s=s+"%s%s"%(barcode, oyak.sep2)
              s=s+"%s%s"%(racourci, oyak.sep2)
              s=s+"%s%s"%(fournisseur, oyak.sep2)
              s=s+"%s%s"%(self.selectedDate[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedColis[l], oyak.sep2)
-             s=s+"%s%s"%(self.selectedPoidsColis[l], oyak.sep2)
+             s=s+"%s%s"%(self.selectedpoidsColis[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedQuantite[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedPrix[l], oyak.sep2)
-             s=s+"*%s%s"%(parametre, oyak.sep1)
-        params = urllib.urlencode({'vendeur': self.vendeur_numero, 'commande':s})
+        #params = urllib.urlencode({'vendeur': self.vendeur_numero, 'commande':s})
+        a_ecrire = "%s%s%s" % (self.vendeur_numero,oyak.sep1,s)
+        print "facture envoyee /%s/ : vendeur=/%s/ commande=/%s/ " % (a_ecrire,self.vendeur_numero,s)
+        oyak.ihm.showMessage("Commande OK!", oyak.ihm.delCurrentFacture)
+        
+        return
+    
         try:
             f = urllib.urlopen(oyak.url_send_commande, params)
         except:
