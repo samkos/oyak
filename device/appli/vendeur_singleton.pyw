@@ -1571,7 +1571,7 @@ class processFacture:
         self.selectedRacourci[self.currentArticle]=""
         self.selectedFournisseur[self.currentArticle]=""
         self.selectedDate[self.currentArticle]=""
-        self.selected[self.currentArticle]=""
+        self.selectedColis[self.currentArticle]=""
         self.selectedpoidsColis[self.currentArticle]=""
         self.selectedQuantite[self.currentArticle]=""
         self.selectedPrix[self.currentArticle]=""
@@ -1614,7 +1614,7 @@ class processFacture:
 
 
     def acceptProduit(self, racourci, fournisseur, autre_fournisseur=0, 
-                      date="-99",quantite=-99, prix_input=-99):
+                      date="-99",colis=-99,poidsColis=-99,quantite=-99, prix=-99):
         self.autre_fournisseur=autre_fournisseur
 
         self.fournisseurCode=fournisseur
@@ -1632,22 +1632,13 @@ class processFacture:
             
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
 
-        # le produit selectionne a un code barre
         if (racourci, fournisseur) in oyak.ProduitsCodes.keys():
             code = oyak.ProduitsCodes[racourci, fournisseur]
-            (libelle,racourci, prix_plancher, poids, fournisseur)=oyak.Produits[code]
+            (libelle,racourci, prix_plancher,  fournisseur)=oyak.Produits[code]
 
-        # le fournisseur est forcé par un appel a autre fournisseur
-        if autre_fournisseur:
-            code = 00
-            (libelle, prix, prix_plancher, poids)=(oyak.Produits[int(racourci)], "0", "0", "0")
-
-        if not(prix_input==-99):
-            prix=prix_input
-            
-
+        
         if True : # (racourci, fournisseur) in oyak.ProduitsCodes.keys() or autre_fournisseur:
-            (prix_plancher, poids, prix)  = ("0.","0.","0.")
+            (prix_plancher) = ("0.")
             libelle=oyak.Produits[racourci]
             societe=oyak.Fournisseurs[fournisseur]
             self.fournisseur_content.set(societe)
@@ -1655,19 +1646,27 @@ class processFacture:
               
             self.article.insert(END, libelle)
             self.article_label.set("Article : %d"%racourci)
-      
+
+            if colis>0:
+                self.colis.delete(0, END)
+                self.colis.insert(END, colis)
+            
+            if poidsColis>0:
+                self.poidsColis.delete(0, END)
+                self.poidsColis.insert(END, poidsColis)
+            
             if quantite>0:
                 self.quantite.delete(0, END)
                 self.quantite.insert(END, quantite)
-            self.quantite_label.set("Quantite : ("+"%6.2f"%(eval(poids)+0.00)+")")
+            #self.quantite_label.set("Quantite : ("+"%6.2f"%(eval(poidsColis)+0.00)+")")
 
             if prix>0:
                 self.prix.delete(0, END)
                 self.prix.insert(END,prix)
-            self.prix_label.set("Prix : ("+"%6.2f"%(eval(prix)+0.00)+")")
+                #self.prix_label.set("Prix : ("+"%6.2f"%(eval(prix)+0.00)+")")
             self.prix_default=prix
             self.prix_plancher=prix_plancher
-            self.poids=poids
+            self.poids=poidsColis
             self.produit=racourci
 
             self.selectedCode[self.currentArticle]=racourci  # devrait etre code barre recalcule
@@ -1773,6 +1772,8 @@ class processFacture:
                            self.selectedFournisseur[ligne],
                            001,
                            self.selectedDate[ligne], 
+                           self.selectedColis[ligne],
+                           self.selectedpoidsColis[ligne],
                            self.selectedQuantite[ligne],
                            self.selectedPrix[ligne])
         if focus=="quantite":
@@ -1912,7 +1913,7 @@ class processFacture:
              s=s+"%s%s"%(fournisseur, oyak.sep2)
              s=s+"%s%s"%(self.selectedDate[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedColis[l], oyak.sep2)
-             s=s+"%s%s"%(self.selectedpoidsColis[l], oyak.sep2)
+             s=s+"%s%s"%(self.selectedPoidsColis[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedQuantite[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedPrix[l], oyak.sep2)
              s=s+"*%s%s"%(parametre, oyak.sep1)
@@ -1952,6 +1953,18 @@ class processFacture:
         if len(racourci)==0:
             oyak.ihm.showMessage("Article vide!", self.goToArticle)
             return FALSE
+         # le produit selectionne a un code barre
+        if len("%s"%racourci)>3:
+            code = "%s"%racourci
+            print code
+            racourci = int(code[0:3])
+            fournisseur = int(code[3:6])
+            date = int(code[6:])
+            print racourci, fournisseur, date
+            self.acceptProduit(racourci, fournisseur)
+            return TRUE
+       
+       
         if racourci in oyak.Produits.keys():
             libelle=oyak.Produits[racourci]
             (prix, racourci, prix_plancher, poids, fournisseur) = (9,999,0.,0.,0.,1)
