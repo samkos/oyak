@@ -748,11 +748,17 @@ class getData:
         # ouverture du fichier temporaire
             
         # creation d'un fichier test si on est sous linux
-        if True or sys.platform.startswith("linux"):
+        if sys.platform.startswith("linux"):
             print "do something for linux!!!!!!!!"
             copying  = "cat '../../data/%s.txt' | awk '{clef=$1; $1=\"\"; printf(\"%%s!%%s=\", clef,$0);}' > '%s'" % \
                 (what,self.fichierBackup)
             copying  = "cp '../../data/%s.txt' '%s'" % \
+                (what,self.fichierBackup)
+            print copying
+            os.system(copying)
+        else:
+            print "do something for windows!!!!!!!!"
+            copying  = "cp 'c:/datadevice/%s.txt' '%s'" % \
                 (what,self.fichierBackup)
             print copying
             os.system(copying)
@@ -1194,7 +1200,10 @@ class chooseProduit(chooseXXX):
 
     def collect(self, article):
          (clef, libele)=article
-         oyak.Produits[int(clef)]=libele
+         try:
+             oyak.Produits[int(clef)]=libele
+         except:
+             print  "did not take ",article
          return 1
 
     def listePrepare(self):
@@ -1916,6 +1925,9 @@ class processFacture:
         print "facture envoyee /%s/ : vendeur=/%s/ commande=/%s/ " % (a_ecrire,self.vendeur_numero,s)
         oyak.ihm.showMessage("Commande OK!", oyak.ihm.delCurrentFacture)
         
+        f = open("c:/ventesjour/%s" %  "000001","w")
+	f.write(a_ecrire)
+	f.close()
         return
     
         try:
