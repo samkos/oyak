@@ -758,10 +758,10 @@ class getData:
             os.system(copying)
         else:
             print "do something for windows!!!!!!!!"
-            copying  = "cp 'c:/datadevice/%s.txt' '%s'" % \
+            copying  = "copy 'c:datadevice/%s.txt' '%s'" % \
                 (what,self.fichierBackup)
             print copying
-            os.system(copying)
+            shutil.copy('/datadevice/%s.txt'%what,self.fichierBackup)
 
         # lecture sur fichier backup d'abord
         if not(forceRecharge) and self.readFromBackup()==0:
