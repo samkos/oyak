@@ -1111,7 +1111,7 @@ class chooseClient(chooseXXX):
         i=0
         for clef in clefsClients:
             societe=oyak.Clients[clef]
-            self.listbox0.insert(END, "%04d-%s"%(clef, societe))
+            self.listbox0.insert(END, "%03d-%s"%(clef, societe))
             self.clefs0[i]=clef
             i=i+1
         #print self.listbox0
@@ -1220,7 +1220,7 @@ class chooseProduit(chooseXXX):
 
         for racourci in self.liste:
             libelle = oyak.Produits[racourci]
-            s="%04d-%s"%(racourci, libelle)
+            s="%03d-%s"%(racourci, libelle)
             c="%s"%racourci
             l="%s"%libelle
             n=len(self.filtre)
@@ -1288,7 +1288,7 @@ class chooseFournisseur(chooseXXX):
         n=len(self.filtre)
         for clef in liste:
             societe=oyak.Fournisseurs[clef]
-            s="%04d-%s"%(int(clef), societe)
+            s="%03d-%s"%(int(clef), societe)
             c="%d"%int(clef)
             n=len(self.filtre)
             try:
@@ -1330,11 +1330,11 @@ class processFacture:
         self.selectedDate={}
         self.selectedPrix={}
         self.selectedColis={}
-        self.selectedPoids={}
+        self.selectedpoidsColis={}
         self.selectedQuantite={}
 
         self.buttonColis=list()
-        self.buttonPoids=list()
+        self.buttonpoidsColis=list()
         self.buttonQuantite=list()
         self.buttonProduit=list()
         self.buttonPrix=list()
@@ -1440,7 +1440,7 @@ class processFacture:
         self.fournisseur_focus.set("---")
         self.date_focus.set("---")
         self.colis_focus.set("---")
-        self.poids_focus.set("---")
+        self.poidsColis_focus.set("---")
         self.quantite_focus.set("---")
         self.prix_focus.set("---")
         h.set("<<")
@@ -1483,7 +1483,7 @@ class processFacture:
         self.fournisseur_label, self.fournisseur, self.fournisseur_focus, self.fournisseur_content = self.addLabelEntry("Fournisseur:",clickable=FALSE)
         self.date_label, self.date, self.date_focus, self.date_content = self.addLabelEntry("Date:")
         self.colis_label, self.colis, self.colis_focus, self.colis_content = self.addLabelEntry("Colis:")
-        self.poids_label, self.poids, self.poids_focus, self.poids_content = self.addLabelEntry("Poids:")
+        self.poidsColis_label, self.poidsColis, self.poidsColis_focus, self.poidsColis_content = self.addLabelEntry("Poids:")
         self.quantite_label, self.quantite, self.quantite_focus, self.quantite_content = self.addLabelEntry("Quantite:")
         self.prix_label, self.prix, self.prix_focus, self.prix_content = self.addLabelEntry("Prix:")
 
@@ -1556,8 +1556,8 @@ class processFacture:
         self.article.bind(".", self.processProduit)
         self.article.bind("<Return>", self.route)
         self.date.bind("<Return>", self.goToColis)
-        self.colis.bind("<Return>", self.goToPoids)
-        self.poids.bind("<Return>", self.goToQuantite)
+        self.colis.bind("<Return>", self.goTopoidsColis)
+        self.poidsColis.bind("<Return>", self.goToQuantite)
         self.quantite.bind("<Return>", self.goToPrice)
         self.prix.bind("<Return>", lambda x=1:self.valider.focus_set())
 
@@ -1571,8 +1571,8 @@ class processFacture:
         self.selectedRacourci[self.currentArticle]=""
         self.selectedFournisseur[self.currentArticle]=""
         self.selectedDate[self.currentArticle]=""
-        self.selectedColis[self.currentArticle]=""
-        self.selectedPoids[self.currentArticle]=""
+        self.selected[self.currentArticle]=""
+        self.selectedpoidsColis[self.currentArticle]=""
         self.selectedQuantite[self.currentArticle]=""
         self.selectedPrix[self.currentArticle]=""
 
@@ -1640,7 +1640,7 @@ class processFacture:
         # le fournisseur est forcé par un appel a autre fournisseur
         if autre_fournisseur:
             code = 00
-            (libelle, prix, prix_plancher, poids)=(oyak.ProduitsRacourcis[racourci], "0", "0", "0")
+            (libelle, prix, prix_plancher, poids)=(oyak.Produits[int(racourci)], "0", "0", "0")
 
         if not(prix_input==-99):
             prix=prix_input
@@ -1668,9 +1668,9 @@ class processFacture:
             self.prix_default=prix
             self.prix_plancher=prix_plancher
             self.poids=poids
-            self.produit=code
+            self.produit=racourci
 
-            self.selectedCode[self.currentArticle]=code
+            self.selectedCode[self.currentArticle]=racourci  # devrait etre code barre recalcule
             self.selectedRacourci[self.currentArticle]=racourci
             self.selectedFournisseur[self.currentArticle]=fournisseur    
 
@@ -1693,7 +1693,7 @@ class processFacture:
         self.prix.delete(0, END)
         self.prix_label.set("Prix :")
         self.colis.delete(0, END)
-        self.poids.delete(0, END)
+        self.poidsColis.delete(0, END)
         self.quantite.delete(0, END)
         self.goToArticle()
 
@@ -1715,9 +1715,9 @@ class processFacture:
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
         self.labelEntryFocus(self.colis, self.colis_focus,self.colis_content)
 
-    def goToPoids(self, event="fake"):
+    def goTopoidsColis(self, event="fake"):
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
-        self.labelEntryFocus(self.poids, self.poids_focus,self.poids_content)
+        self.labelEntryFocus(self.poidsColis, self.poidsColis_focus,self.poidsColis_content)
 
     def goToQuantite(self, event="fake"):
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
@@ -1801,9 +1801,6 @@ class processFacture:
                 article_deja_choisi=oyak.ProduitsRacourcis[self.racourci]
             except:
                 article_deja_choisi="xxxxxxx"
-            if not(article in oyak.Produits.keys() or article_deja_choisi==article):
-                oyak.ihm.showMessage("%s n'est pas un code article reconnu!"%article, self.goToArticle)
-                return FALSE
                            
             # verification prix
             try :
@@ -1840,6 +1837,8 @@ class processFacture:
     #            self.deleteCode("fake")
     
             self.selectedPrix[self.currentArticle]=self.prix_saisi
+            self.selectedColis[self.currentArticle]=self.colis.get()
+            self.selectedpoidsColis[self.currentArticle]=self.poidsColis.get()
             self.selectedQuantite[self.currentArticle]=quantite
             self.selectedDate[self.currentArticle]=self.date.get()
             self.selectedCode[self.currentArticle]=0
@@ -1857,6 +1856,8 @@ class processFacture:
             
             for i in range(self.currentArticle,self.nbArticles-1): 
                 self.selectedPrix[i]       =self.selectedPrix[i+1]    
+                self.selectedColis[i]      =self.selectedColis[i+1]
+                self.selectedpoidsColis[i]      =self.selectedpoidsColis[i+1]
                 self.selectedQuantite[i]   =self.selectedQuantite[i+1]
                 self.selectedDate[i]       =self.selectedDate[i+1]
                 self.selectedCode[i]       =self.selectedCode[i+1]
@@ -1880,6 +1881,8 @@ class processFacture:
         self.selectedRacourci[self.currentArticle]=""
         self.selectedFournisseur[self.currentArticle]=""
         self.selectedDate[self.currentArticle]=""
+        self.selectedpoidsColis[self.currentArticle]=""
+        self.selectedColis[self.currentArticle]=""
         self.selectedQuantite[self.currentArticle]=""
         self.selectedPrix[self.currentArticle]=""
 
@@ -1908,6 +1911,8 @@ class processFacture:
              s=s+"%s%s"%(racourci, oyak.sep2)
              s=s+"%s%s"%(fournisseur, oyak.sep2)
              s=s+"%s%s"%(self.selectedDate[l], oyak.sep2)
+             s=s+"%s%s"%(self.selectedColis[l], oyak.sep2)
+             s=s+"%s%s"%(self.selectedpoidsColis[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedQuantite[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedPrix[l], oyak.sep2)
              s=s+"*%s%s"%(parametre, oyak.sep1)
