@@ -1,4 +1,10 @@
 # -*- coding: cp1252 -*-
+
+#  codebarre
+#     aaafffddddddn
+#  a article   f : fournisseur,   d  = date,  n = code
+#  cadrage a gauche pour a et f
+#
 from Tkinter import *
 import os
 import shutil
@@ -135,7 +141,6 @@ class singleton:
         self.myClient=0;
         self.myFournisseur=0
         self.myProduit=0
-        self.myRelease=0
         
         self.Produits={}
         self.ProduitsFournisseurs={}
@@ -145,7 +150,6 @@ class singleton:
         self.Vendeurs={}
         self.Fournisseurs={}
         self.Fournisseurs['9999']=('XXXX', 'xxxx', '9999')
-        self.Releases={}
         self.Factures={}
         self.clientNB = {}
         self.timestamp = {}
@@ -154,12 +158,12 @@ class singleton:
             self.clientNB[i]=0
             
         self.clefsClients=list()
-        self.nbChamps = {"vendeurs":4, "fournisseurs":4, "clients":4,
-                    "releases":2, "produits":4}
+        self.nbChamps = {"vendeurs":2, "fournisseurs":2, "clients":2,
+                    "produits":2}
         self.isAlreadyPaneled = {"vendeurs":0, "fournisseurs":0, "clients":0,
-                    "releases":0, "produits":0}
+                "produits":0}
         self.barSize = {"vendeurs":0.1, "fournisseurs":0.9, "clients":0.3,
-                    "releases":0.96, "produits":0.6}
+                     "produits":0.6}
         
         self.formatFact="%5.2f|%15s|%5.2f"
         self.enteteFact="%5s|%15s|%5s"%("quant", "produit", "prix")
@@ -433,9 +437,6 @@ class ihmRoot:
 
         label = Button(self.ihm, text="Relire Donnée", command=self.rechargeBase, height=4, width=self.Xmax)
         self.add(panelName, "reloader", label, 6, 0)
-        
-        label = Button(self.ihm, text="Mettre a jour", command=chooseRelease, height=4, width=self.Xmax)
-        self.add(panelName, "update", label, 7, 0)
         
         label = Button(self.ihm, text="Connection", command=self.showIp, height=4, width=self.Xmax)
         self.add(panelName, "update", label, 8, 0)
@@ -718,7 +719,6 @@ class lisData:
             Vendeurs={}
             Fournisseurs={}
             Fournisseurs['9999']=('XXXX', 'xxxx', '9999')
-            Releases={}
             timestamp = {}
 
 
@@ -748,9 +748,11 @@ class getData:
         # ouverture du fichier temporaire
             
         # creation d'un fichier test si on est sous linux
-        if sys.platform.startswith("linux"):
+        if True or sys.platform.startswith("linux"):
             print "do something for linux!!!!!!!!"
             copying  = "cat '../../data/%s.txt' | awk '{clef=$1; $1=\"\"; printf(\"%%s!%%s=\", clef,$0);}' > '%s'" % \
+                (what,self.fichierBackup)
+            copying  = "cp '../../data/%s.txt' '%s'" % \
                 (what,self.fichierBackup)
             print copying
             os.system(copying)
@@ -766,7 +768,7 @@ class getData:
             if oyak.debugMessages:
                 print "lecture from web pour %s  a %d Articles" % (what,lengthArticle)
 
-	    isThere=os.path.exists(self.fichierBackup)
+            isThere=os.path.exists(self.fichierBackup)
             if isThere:
                os.unlink(self.fichierBackup)
             self.tmpFile = open(self.fichierTemp, "w")
@@ -876,16 +878,16 @@ class getData:
             articles=string.split(l, "=")
             for a in articles:
                 article=string.split(a, "!")
-                if len(article)>lengthArticle and printMessageNotYet:
-                    if oyak.debugMessages:
+                if len(article)>lengthArticle :
+                    if oyak.debugMessages and printMessageNotYet:
                         print "reading ",article
                         print "expecting %s fields " % (lengthArticle)
                         print "Truncating...."
                         print
                         printMessageNotYet = False
                     article = article[:lengthArticle]
-                if len(article)<lengthArticle and printMessageNotYet:
-                    if oyak.debugMessages:
+                if len(article)<lengthArticle :
+                    if oyak.debugMessages and printMessageNotYet:
                         print "reading ",article
                         print "expecting %s fields " % (lengthArticle)
                         print "adding fake values for missing fields..."
@@ -893,13 +895,13 @@ class getData:
                         printMessageNotYet = False
                     while (len(article)<lengthArticle):
                         article.append(self.default[len(article)-1])
-                                        
-                    if self.collect(article):
-                        self.nbArticles+=1
-                    else:
-                        if oyak.debugMessages and printMessageNotYet:
-                            print "article has not been collected ",article
-                            printMessageNotYet = False
+                                   
+                if self.collect(article):
+                    self.nbArticles+=1
+                else:
+                     if oyak.debugMessages and printMessageNotYet:
+                         print "article has not been collected ",article
+                         printMessageNotYet = False
 
 
     def closeSource(self):                    
@@ -1020,7 +1022,7 @@ class chooseVendeur(chooseXXX):
     global oyak
 
     def __init__(self, forceRecharge=0):
-        self.default = [9999,"Nom","Prenom"]
+        self.default = [9999,"Prenom"]
         chooseXXX.__init__(self, "vendeurs", forceRecharge)        
 
     def ihmShow(self):
@@ -1028,8 +1030,9 @@ class chooseVendeur(chooseXXX):
 
     def collect(self, article):
         global Vendeurs
-        (numero, nom, prenom, timestamp)=article
-        oyak.Vendeurs[numero]=(numero, nom, prenom)
+        (numero, prenom)=article
+        oyak.Vendeurs[numero]=(numero, prenom)
+        print article
         return 1
                                     
     def initPanel(self):
@@ -1073,11 +1076,11 @@ class chooseVendeur(chooseXXX):
         liste=oyak.Vendeurs.keys()
         liste.sort(key=str.lower)
         for clef in liste:
-               (numero, nom, prenom) = oyak.Vendeurs[clef]
-               nom.lower()
-               if string.lower(nom[:len(self.filtre)])==self.filtre:
-                   self.listbox.insert(END, "%s %s"%(nom, prenom))
-                   self.clefs[i]=(numero, nom, prenom)
+               (numero, prenom) = oyak.Vendeurs[clef]
+               prenom.lower()
+               if string.lower(prenom[:len(self.filtre)])==self.filtre:
+                   self.listbox.insert(END, "%s"%(prenom))
+                   self.clefs[i]=(numero,prenom)
                    i=i+1
         oyak.ihm.show(self.what)
         self.listbox.focus_set()
@@ -1087,25 +1090,28 @@ class chooseVendeur(chooseXXX):
 class chooseClient(chooseXXX):
 
     def __init__(self, forceRecharge=0):
-        self.default = ["Societe","ville",9999,9999999]
+        self.default = [999,"Societe"]
         chooseXXX.__init__(self, "clients", forceRecharge)
         
     def ihmShow(self):
         chooseXXX.ihmShow(self, "clients")
 
     def collect(self, article):
-        (societe, ville, clef, timestamp)=article
-        oyak.Clients[societe+"/"+ville]=(societe, ville, clef)
+        (clef,societe)=article
+        try:
+            oyak.Clients[int(clef)]=societe
+        except:
+            print "rejeté : ",(clef,societe)
         return 1
 
     def listePrepare(self):
         clefsClients=oyak.Clients.keys()
-        clefsClients.sort(key=str.lower)
+        clefsClients.sort()#key=str.lower)
 
         i=0
         for clef in clefsClients:
-            (societe, ville, nb)=oyak.Clients[clef]
-            self.listbox0.insert(END, "%04d-%s"%(int(nb[1:]), clef))
+            societe=oyak.Clients[clef]
+            self.listbox0.insert(END, "%04d-%s"%(clef, societe))
             self.clefs0[i]=clef
             i=i+1
         #print self.listbox0
@@ -1114,7 +1120,7 @@ class chooseClient(chooseXXX):
 
     def initPanel(self):
         self.clefs={}
-        (numero, nom, prenom)=oyak.vendeurChoisi
+        (numero, prenom)=oyak.vendeurChoisi
         self.filtreName="%s > "%prenom
 
     def go(self, event):
@@ -1122,10 +1128,10 @@ class chooseClient(chooseXXX):
         try :
           if len(self.filtre)==0 and len(self.clefs0)>0:
               clef=self.listbox0.curselection()[0]
-              choix=oyak.Clients[self.clefs0[int(clef)]]
+              choix=int(self.clefs0[int(clef)])
           else:
               clef=self.listbox.curselection()[0]
-              choix=oyak.Clients[self.clefs[int(clef)]]
+              choix=int(self.clefs[int(clef)])
         except:
             oyak.ihm.showMessage("Choix impossible!!!", self.action)
             return 0
@@ -1136,8 +1142,7 @@ class chooseClient(chooseXXX):
         if oyak.notInterrogation:        
             processFacture(client=choix)
         else:
-            (societe, ville, nb)=choix
-            oyak.interrogateur.ask(client=nb)
+            oyak.interrogateur.ask(client=choix)
 
     def action(self, event="fake"):
         global clefsClients
@@ -1154,10 +1159,10 @@ class chooseClient(chooseXXX):
             self.listbox.delete(0, END)
             oyak.ihm.show("clients")
             for clef in oyak.Clients.keys():
-                (societe, ville, nb)=oyak.Clients[clef]
+                (nb, societe)=oyak.Clients[clef]
                 nb=nb[1:]
                 if string.lower(clef[:n])==self.filtre or  nb.find(self.filtre)==0:
-                    self.listbox.insert(END, "%04d-%s"%(int(nb), clef))
+                    self.listbox.insert(END, "%s-%s"%(nb, clef))
                     self.clefs[i]=clef
                     i=i+1
             self.listbox.focus_set()
@@ -1168,7 +1173,7 @@ class chooseClient(chooseXXX):
 class chooseProduit(chooseXXX):
 
     def __init__(self, forceRecharge=0):
-        self.default = [ 9999,"xxxxxxx",0.0,0.0,0]        
+        self.default = [ 9999,"xxxxxxx"]        
         chooseXXX.__init__(self, "produits", forceRecharge)
 
 
@@ -1178,7 +1183,8 @@ class chooseProduit(chooseXXX):
         
         self.facture=facture
         self.valeur=valeur
-        (societe, ville, clef) = facture.client
+        clef = facture.client
+        societe = oyak.Clients[clef]
         self.filtreName="%s >"%societe
         chooseXXX.ihmShow(self, "produits", killable=1)
         
@@ -1187,32 +1193,23 @@ class chooseProduit(chooseXXX):
         
 
     def collect(self, article):
-         (clef, libele, prix, prix_plancher)=article
-         racourci = int(clef)
-         fournisseur = 1
-         code = fournisseur*1000+racourci
-         oyak.ProduitsRacourcis[racourci]=libele
-         if racourci in oyak.ProduitsFournisseurs.keys():
-             oyak.ProduitsFournisseurs[racourci].append(fournisseur)
-         else:
-             oyak.ProduitsFournisseurs[racourci]=[fournisseur]
-         oyak.ProduitsCodes[racourci, fournisseur]=code
-         oyak.Produits[code]=(libele, prix, racourci, prix_plancher,fournisseur)
+         (clef, libele)=article
+         oyak.Produits[int(clef)]=libele
          return 1
 
     def listePrepare(self):
-        self.liste=oyak.ProduitsRacourcis.keys()
+        self.liste=oyak.Produits.keys()
         self.liste.sort()
         
     def go(self, event):
         try:
             clef=self.listbox.curselection()[0]
-            (racourci, libelle)=self.clefs[int(clef)]
+            (libelle)=self.clefs[int(clef)]
         except:
             return
 
-        oyak.Factures[oyak.factureCurrent].racourci=racourci
-        oyak.myFournisseur.ihmShow(self.facture, racourci)
+        oyak.Factures[oyak.factureCurrent].racourci=clef
+        oyak.myFournisseur.ihmShow(self.facture, clef)
 
 
     def action(self, event="fake"):
@@ -1222,12 +1219,12 @@ class chooseProduit(chooseXXX):
         i=0
 
         for racourci in self.liste:
-            (libelle) = oyak.ProduitsRacourcis[racourci]
-            libelle.lower()
+            libelle = oyak.Produits[racourci]
             s="%04d-%s"%(racourci, libelle)
             c="%s"%racourci
+            l="%s"%libelle
             n=len(self.filtre)
-            if string.lower(libelle[:n])==self.filtre or c.find(self.filtre)==0:
+            if l.find(self.filtre)==0 or c.find(self.filtre)==0:
                 self.listbox.insert(END, s)
                 self.clefs[i]=(racourci, libelle)
                 i=i+1
@@ -1241,28 +1238,29 @@ class chooseProduit(chooseXXX):
 class chooseFournisseur(chooseXXX):
 
     def __init__(self, forceRecharge=0):
-        self.default = ["Societe","ville",9999,9999999]
+        self.default = [9999,"Societe"]
         chooseXXX.__init__(self, "fournisseurs", forceRecharge)
         
     def ihmShow(self, facture, racourci, all=0):
+        print "fournisseur ihm_show (facture, racourci)=",(facture,racourci)
         self.facture=facture
-        self.racourci=racourci
+        self.racourci=int(racourci)
         self.all=all
         chooseXXX.ihmShow(self, "fournisseurs", killable=1)
         
     def initPanel(self):
-        if self.all: 
-            self.fournisseurs = oyak.Fournisseurs.keys()
-        else:   
-            self.fournisseurs = oyak.ProduitsFournisseurs[self.racourci]
+        self.fournisseurs = oyak.Fournisseurs.keys()
         if oyak.notInterrogation:
-            self.filtreName="%s > "%oyak.ProduitsRacourcis[self.racourci]
+            self.filtreName="%s > "%oyak.Produits[self.racourci]
         else:
             self.filtreName=" ???? >"
             
     def collect(self, article):
-        (societe, ville, clef, timestamp)=article
-        oyak.Fournisseurs[clef]=(societe, ville, clef)
+        (clef, societe)=article
+        try:
+            oyak.Fournisseurs[int(clef)]=societe
+        except:
+            print "did not take ",(clef,societe)
         return 1
     
     def go(self, event):
@@ -1272,7 +1270,7 @@ class chooseFournisseur(chooseXXX):
         except:
           return  
 
-        (societe, ville, clef) = choix
+        (societe,  clef) = choix
         if clef==0: # selection de tous les fournisseurs
             self.ihmShow(self.facture, self.racourci, all=1)
         else:               
@@ -1288,16 +1286,18 @@ class chooseFournisseur(chooseXXX):
         i=0
         liste=self.fournisseurs
         n=len(self.filtre)
-        for code in liste:
-            (societe, ville, clef)=oyak.Fournisseurs[code]
+        for clef in liste:
+            societe=oyak.Fournisseurs[clef]
             s="%04d-%s"%(int(clef), societe)
             c="%d"%int(clef)
             n=len(self.filtre)
-            if string.lower(societe[:n])==self.filtre or c.find(self.filtre)==0:
+            try:
+              if societe.find(self.filtre)==0 or c.find(self.filtre)==0:
                 self.listbox.insert(END, s)
-                self.clefs[i]=(societe, ville, clef)
+                self.clefs[i]=(societe,  clef)
                 i=i+1
-
+            except:
+              print "defaut de filtrage sur (societe,clef,filtre)=",(societe,self.filtre,clef)
 	# ajout de 'TOUS'
         self.listbox.insert(END, "TOUS LES FOURNISSEURS")
         self.clefs[i]=("TOUS", "PARTOUT", 0)
@@ -1308,98 +1308,7 @@ class chooseFournisseur(chooseXXX):
 
 
 
-class chooseRelease(chooseXXX):
 
-    def __init__(self, forceRecharge=0):
-        self.default = [9999,"filename"]
-        chooseXXX.__init__(self, "releases")
-
-    def ihmShow(self, facture, racourci, save=0):
-        chooseXXX.ihmShow(self, "releases", killable=1)
-
-    def panelInit(self):
-        self.facture=facture
-        self.save=save
-        self.filtreName="Oyak Version > "
-
-    def collect(self, article):
-        (numero, filename)=article
-        Releases[numero]=(numero, filename)
-
-    def go(self, event):
-        
-        try:
-          clef=self.listbox.curselection()[0]
-          choix=self.clefs[int(clef)]
-        except:
-          oyak.ihm.returnPrevious()  
-
-        (numero, filename) = choix
-        oyak.ihm.messageShow("telechargement %s"%filename)
-        loadRelease(filename, self.save)
-
-
-    def action(self, event="fake"):
-        self.listbox.delete(0, END)
-
-        self.clefs={}
-        i=0
-        liste=Releases.keys()
-        n=len(self.filtre)
-        for code in liste:
-            (numero, filename)=Releases[code]
-            s="%s"%(filename)
-            n=len(self.filtre)
-            if filename.find(self.filtre)==0:
-                self.listbox.insert(END, s)
-                self.clefs[i]=(numero, filename)
-                i=i+1
-                
-        self.listbox.focus_set()
-#        self.listbox.selection_set(0)
-
-
-
-
-###################################################################
-#
-#  Gestion de la mise a jour
-#
-###################################################################
-
-def loadRelease(filename, save):
-    global oyak
-    
-    if not(save):
-        params = urllib.urlencode({'dwn': filename})
-        try:
-            f = urllib.urlopen(oyak.url_update_commande, params)
-        except:
-            oyak.ihm.showMessage("Le serveur Release ne répond pas!")
-            return
-        try:
-          os.remove("/Oyak/%s"%filename)
-        except:
-          pass
-
-        new=open("/Oyak/%s"%filename, "w")
-        program=f.readlines()
-        for l in program :
-            new.write("%s\n"%l[:-1])
-        new.close()
-        try:
-            shutil.copy("/Oyak/%s"%filename, "/Windows/Desktop/%s"%filename)
-        except:
-            pass
-    else:
-        try:
-            shutil.copy("/Oyak/%s"%filename, "/Application/Python/vendeur.pyw")
-            oyak.ihm.showMessage("Device Flashe avec %s"%filename)
-        except:
-            oyak.ihm.showMessage("Pb dans la mise a jour %s"%filename)
-        
-
-    
 
 
 
@@ -1420,8 +1329,12 @@ class processFacture:
         self.selectedFournisseur={}
         self.selectedDate={}
         self.selectedPrix={}
+        self.selectedColis={}
+        self.selectedPoids={}
         self.selectedQuantite={}
 
+        self.buttonColis=list()
+        self.buttonPoids=list()
         self.buttonQuantite=list()
         self.buttonProduit=list()
         self.buttonPrix=list()
@@ -1450,13 +1363,13 @@ class processFacture:
             oyak.factureCurrent=self.nb
             oyak.Factures[self.nb]=self
             
-            (numero, nom, prenom)=oyak.vendeurChoisi
+            (numero, prenom)=oyak.vendeurChoisi
             self.vendeur_prenom=prenom
             self.vendeur_numero=numero
                 
             if oyak.notInterrogation:
                 self.client=client
-                (societe, ville, clef)=self.client
+                societe=oyak.Clients[self.client]
                 
                 self.root=oyak.ihm.factureCreate(self.nb)
 
@@ -1526,6 +1439,8 @@ class processFacture:
         self.article_focus.set("---")
         self.fournisseur_focus.set("---")
         self.date_focus.set("---")
+        self.colis_focus.set("---")
+        self.poids_focus.set("---")
         self.quantite_focus.set("---")
         self.prix_focus.set("---")
         h.set("<<")
@@ -1553,8 +1468,9 @@ class processFacture:
 
         
 
-        (societe, ville, clef)=self.client
-        self.clientClef=clef
+        clef=self.client
+        societe=oyak.Clients[self.client]
+                
 
         # rappel nom client
         label = Label(self.clientFrame,
@@ -1566,6 +1482,8 @@ class processFacture:
         self.article_label, self.article, self.article_focus, self.article_content = self.addLabelEntry("Article:")
         self.fournisseur_label, self.fournisseur, self.fournisseur_focus, self.fournisseur_content = self.addLabelEntry("Fournisseur:",clickable=FALSE)
         self.date_label, self.date, self.date_focus, self.date_content = self.addLabelEntry("Date:")
+        self.colis_label, self.colis, self.colis_focus, self.colis_content = self.addLabelEntry("Colis:")
+        self.poids_label, self.poids, self.poids_focus, self.poids_content = self.addLabelEntry("Poids:")
         self.quantite_label, self.quantite, self.quantite_focus, self.quantite_content = self.addLabelEntry("Quantite:")
         self.prix_label, self.prix, self.prix_focus, self.prix_content = self.addLabelEntry("Prix:")
 
@@ -1637,7 +1555,9 @@ class processFacture:
         self.goToArticle()
         self.article.bind(".", self.processProduit)
         self.article.bind("<Return>", self.route)
-        self.date.bind("<Return>", self.goToQuantite)
+        self.date.bind("<Return>", self.goToColis)
+        self.colis.bind("<Return>", self.goToPoids)
+        self.poids.bind("<Return>", self.goToQuantite)
         self.quantite.bind("<Return>", self.goToPrice)
         self.prix.bind("<Return>", lambda x=1:self.valider.focus_set())
 
@@ -1651,6 +1571,8 @@ class processFacture:
         self.selectedRacourci[self.currentArticle]=""
         self.selectedFournisseur[self.currentArticle]=""
         self.selectedDate[self.currentArticle]=""
+        self.selectedColis[self.currentArticle]=""
+        self.selectedPoids[self.currentArticle]=""
         self.selectedQuantite[self.currentArticle]=""
         self.selectedPrix[self.currentArticle]=""
 
@@ -1713,7 +1635,7 @@ class processFacture:
         # le produit selectionne a un code barre
         if (racourci, fournisseur) in oyak.ProduitsCodes.keys():
             code = oyak.ProduitsCodes[racourci, fournisseur]
-            (libelle, prix, racourci, prix_plancher, poids, fournisseur)=oyak.Produits[code]
+            (libelle,racourci, prix_plancher, poids, fournisseur)=oyak.Produits[code]
 
         # le fournisseur est forcé par un appel a autre fournisseur
         if autre_fournisseur:
@@ -1724,9 +1646,10 @@ class processFacture:
             prix=prix_input
             
 
-        if (racourci, fournisseur) in oyak.ProduitsCodes.keys() or autre_fournisseur:
-
-            (societe, ville, clef)=oyak.Fournisseurs[fournisseur]
+        if True : # (racourci, fournisseur) in oyak.ProduitsCodes.keys() or autre_fournisseur:
+            (prix_plancher, poids, prix)  = ("0.","0.","0.")
+            libelle=oyak.Produits[racourci]
+            societe=oyak.Fournisseurs[fournisseur]
             self.fournisseur_content.set(societe)
             self.fournisseur_label.set("Fournisseur : %s"%fournisseur)
               
@@ -1769,6 +1692,8 @@ class processFacture:
         self.date.delete(0, END)
         self.prix.delete(0, END)
         self.prix_label.set("Prix :")
+        self.colis.delete(0, END)
+        self.poids.delete(0, END)
         self.quantite.delete(0, END)
         self.goToArticle()
 
@@ -1785,6 +1710,14 @@ class processFacture:
     def goToPrice(self, event="fake"):
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
         self.labelEntryFocus(self.prix, self.prix_focus,self.prix_content)
+
+    def goToColis(self, event="fake"):
+        oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
+        self.labelEntryFocus(self.colis, self.colis_focus,self.colis_content)
+
+    def goToPoids(self, event="fake"):
+        oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
+        self.labelEntryFocus(self.poids, self.poids_focus,self.poids_content)
 
     def goToQuantite(self, event="fake"):
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
@@ -2015,7 +1948,8 @@ class processFacture:
             oyak.ihm.showMessage("Article vide!", self.goToArticle)
             return FALSE
         if racourci in oyak.Produits.keys():
-            (libelle, prix, racourci, prix_plancher, poids, fournisseur)=oyak.Produits[racourci]
+            libelle=oyak.Produits[racourci]
+            (prix, racourci, prix_plancher, poids, fournisseur) = (9,999,0.,0.,0.,1)
             self.acceptProduit(racourci, fournisseur)
             return TRUE
         # * ->  La commande est envoye
@@ -2031,7 +1965,7 @@ class processFacture:
             self.article.delete(0, END)
             oyak.ihm.showMessage("%s n'est pas un code reconnu!"%racourci, self.goToArticle)
             return FALSE
-        if racourci in oyak.ProduitsRacourcis.keys():
+        if racourci in oyak.Produits.keys():
             oyak.myFournisseur.ihmShow(self, racourci)
             return TRUE
         else:
