@@ -59,7 +59,7 @@ if (!$message) { $message="&nbsp;";}
   <br />
   </td> </tr>
   <tr >
-      <td /> <a href="../query/releases.php?liste=1&header=1">Télécharger logiciel vendeur</a></td>
+<!--      <td /> <a href="../query/releases.php?liste=1&header=1">Télécharger logiciel vendeur</a></td> -->
       <td> <a href="../factures/traite.php?noprint=1">Creer les factures  </a> </br>
            <a href="../factures/traite.php">Creer & Imprimer les factures </a></td>
       <td> <a href="../barcode/latex_barcode.php?action=file">Creer les etiquettes  </a> </br>

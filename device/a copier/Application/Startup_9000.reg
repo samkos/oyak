@@ -1,3 +1,0 @@
-[HKEY_CURRENT_USER\Software\Symbol\Startup]
-"Path"="\Application\Startup"
-"NoSetup"=dword:1
