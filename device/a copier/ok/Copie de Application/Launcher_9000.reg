@@ -1,0 +1,151 @@
+;--------------------------------------------------------------------
+; FILENAME:	Launcher_9000.Reg
+;
+; Copyright(c) 2003 Symbol Technologies Inc. All rights reserved.
+;
+; DESCRIPTION:	Regitry setting used by OTL/BLT launcher application
+;
+; NOTES
+; 
+;--------------------------------------------------------------------
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Default]
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Default\Programs]
+
+;************************************************************************
+; Config 0 = Normal
+;************************************************************************
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog1]
+"Description"="Test Apps"
+"Call"="SymSetup"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog2]
+"Command"="/NO_MULTIPLE_INSTANCES"
+"Description"="Scan"
+"Name"="\\Windows\\Scansamp2.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog3]
+"Command"=""
+"Description"="RFID"
+"Name"="\\Windows\\Gemini_RFID.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog4]
+"Command"=""
+"Description"="Files"
+"Name"="\\Windows\\InKWiz.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog5]
+"Description"="Sounds"
+"Command"=""
+"Name"="\\Windows\\AudioSamp.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog6]
+"Description"="Images"
+"Command"=""
+"Name"="\\Windows\\ImageViewer.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog7]
+"Command"=""
+"Description"="Ctl Panel"
+"Name"="\\Windows\\CtlPanel.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog8]
+"Command"=""
+"Description"="PC Link"
+"Name"="\\windows\\Repllog.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog9]
+"Command"=""
+"Description"="Terminal Emulators"
+"Name"="\\windows\\TelnetCE.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog10]
+"Command"=""
+"Description"="S24 DS Settings"
+"Name"="\\windows\\Nictt.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Configuration\configtype0\Default\Programs\Prog11]
+"Command"=""
+"Description"="S24 FH Settings"
+"Name"="\\windows\\NCPAFH.cpl"
+
+
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\Default\Settings]
+"Exit"=""
+"DetailColumns"=dword:00000001
+"ButtonColumns"=dword:00000003
+"About"="About OTL"
+"TitleBar"="Series 9000 Demo"
+"Number"=dword:00000000
+"Mode"="Large Icons"
+"UseProgramIcons"=dword:00000001
+
+
+
+;************************************************************************
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\SymSetup]
+;************************************************************************
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup]
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs]
+
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog1]
+"Name"="\\Windows\\SelfTest.exe"
+"Description"="SelfTest"
+"Command"=""
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog2]
+"Command"=""
+"Description"="Notify"
+"Name"="\\Windows\\Notify.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog3]
+"Command"=""
+"Description"="Keyboard"
+"Name"="\\Windows\\KeyCheck.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog4]
+"Command"=""
+"Description"="Display"
+"Name"="\\Windows\\Displaytest.exe"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog5]
+"Name"="\\Windows\\MemTest.exe"
+"Description"="Memory"
+"Command"=""
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog6]
+"Name"="\\Windows\\MsrSamp.exe"
+"Description"="MSR 9000"
+"Command"="MSR3000.dll"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog7]
+"Name"="\\Windows\\MsrSamp.exe"
+"Description"="MSR Cameo"
+"Command"="MSRCameo.dll"
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Programs\Prog8]
+"Name"="\\Windows\\BasicPrint.exe"
+"Description"="Printing"
+"Command"=""
+
+[HKEY_CURRENT_USER\Software\Symbol\Launcher\symsetup\Settings]
+"DetailColumns"=dword:00000001
+"ButtonColumns"=dword:00000002
+"TitleBar"="Test Applications"
+"Number"=dword:00000000
+"Mode"="Large Icons"
+"UseProgramIcons"=dword:00000001
+"Return"="Back"
+
+
+; *** where Symbol Demo look for Wav files ***
+[HKEY_CURRENT_USER\Software\Symbol\Settings]
+"WavDirectory"="\\Application\\Wav"
+
+[HKEY_CURRENT_USER\Software\Symbol\Settings\WavDirectory\Config0]
+"WavDirectory"="\\Platform\\Alias"
+[HKEY_CURRENT_USER\Software\Symbol\Settings\WavDirectory\Config1]
+"WavDirectory"="\\Application\\Wav"

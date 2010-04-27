@@ -1,0 +1,109 @@
+REGEDIT4
+
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TRANS]
+   "Prefix"="PRT"
+   "Dll"="TRANS.dll"
+   "Index"=dword:1
+   "Order"=dword:3
+
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\EAPWLAN]
+   "Prefix"="LEP"
+   "Dll"="EAPWLAN.dll"
+   "Index"=dword:1
+   "Order"=dword:4
+
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\PSKWLAN]
+   "Prefix"="PSK"
+   "Dll"="PSKWLAN.dll"
+   "Index"=dword:1
+   "Order"=dword:4
+
+
+; TYPE 2 TRILOGY
+[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Symbol_Technologies-LA4111_Spectrum24_Wireless_LAN_PC_Card-077d]
+   "Dll"="NDIS.dll"
+   "Prefix"="NDS"
+   "Miniport"="NETWLAN"
+   "Index"=dword:1
+
+; TYPE 3 TRILOGY
+[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Symbol-Spectrum24_LA4100_Series_WLAN_PC_Card-e063]
+   "Dll"="NDIS.dll"
+   "Prefix"="NDS"
+   "Miniport"="NETWLAN"
+   "Index"=dword:1
+
+; TYPE 3 Socketcom
+[HKEY_LOCAL_MACHINE\Drivers\PCMCIA\Socket-CF+_LP_WLAN_Card_Rev_A-09DF]
+   "Dll"="NDIS.dll"
+   "Prefix"="NDS"
+   "Miniport"="NETWLAN"
+   "Index"=dword:1
+
+[HKEY_LOCAL_MACHINE\Comm\NETWLAN]
+   "DisplayName"="802.11b Wireless LAN"
+   "ImagePath"="NETWLAN.dll"
+   "Group"="NDIS"
+
+[HKEY_LOCAL_MACHINE\Comm\NETWLAN\Linkage]
+   "Route"=multi_sz:"NETWLAN1"
+
+[HKEY_LOCAL_MACHINE\Comm\NETWLAN1]
+   "DisplayName"="802.11b Wireless LAN"
+   "ImagePath"="NETWLAN.dll"
+   "Group"="NDIS"
+
+
+[HKEY_LOCAL_MACHINE\Comm\NETWLAN1\Parms]
+   "AdapterModel"="802.11b Wireless LAN"	; must match DisplayName value
+   "Version"="3.7.11.4"
+   "CardType"=dword:0
+   "IoBaseAddress"=dword:300
+   "IoLength"=dword:46
+   "MUEncryptionAlgorithm"=dword:00000001
+   "ESS_ID"="   "
+   "PowerIndex"=dword:1					; PSP
+;   "SerialKey"="3FBA67E6FAAE76AA001A5CB9D1639D128F3DF39FA1FA9FD999798AEFA92683036C0334C35EE211F50912CB" 
+   "Password"="3745A4CA1FD2D1CFC10041C7576C0E6423A815E6D4D094C8D87441C26A6C0211153DDE9C851085"
+   "RogueAPDetection"=dword:1
+   "ProtocolsToBindTo"=multi_sz:"NOT","NDISUIO","EAPWLAN","PSKWLAN"
+;   "Kerberoskdc" = "krbtgt"
+
+	"HostPowerDown"=dword:0
+;Doesn't unload the driver on Resume
+	"ResetOnResume"=dword:0
+; Use PCMCIA Mapping
+;	"IOMapping"=dword:1   
+
+
+[HKEY_LOCAL_MACHINE\Comm\NETWLAN1\Parms\TcpIp]
+	"EnableDHCP"=dword:0
+	"DhcpMaxRetry"=dword:1
+	"DhcpRetryDialogue"=dword:ffffffff
+	"DhcpInitDelayInterval"=dword:0		; 0 removes unneeded delay in issuing DHCP request
+	"IpAddress"="0.0.0.0"
+	"Subnetmask"="0.0.0.0"
+	"DefaultGateway"="0.0.0.0"
+	"DNS"="0.0.0.0"
+	"WINS"="0.0.0.0"
+	"UseZeroBroadcast"=dword:0
+
+[HKEY_LOCAL_MACHINE\Software\Symbol Technologies, Inc.\NICTT]
+	"EncryptionMask"=dword:1f		; must override OS built-in value from NY
+
+[HKEY_LOCAL_MACHINE\Comm\EAP\Extension\13]
+	; Contrary to Microsoft documentation, one or both of these values
+	; DO NOT default to 1.  I'm not sure whether we need both of these
+	; values or not.  Without one/both of these values, the network 
+	; logon information sent to the EAP server won't be in the correct 
+	; format and authentication will fail.
+	"InvokeUserNameDialog"=dword:1
+	"InvokePasswordDialog"=dword:1
+
+;===============================================
+; WICUI PARAMETERS:  squelch beeps
+;===============================================
+[HKEY_CURRENT_USER\ControlPanel\Notifications\{748442BF-B804-4c3d-BC11-2CD4DA545DB1}]
+	"Default"="wicui"
+	"Options"=dword:0
+	"Duration"=dword:0
