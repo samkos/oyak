@@ -1,0 +1,38 @@
+Z0,1!pr1!2!GEN!PAYSAGE
+TXT!0!0!Essai 0 0
+TXT!10!16!Essai 10 16
+TXT!1!2!Essai 1 2;..R
+TXT!10!5!Essai 10 5
+TXT!5!20!Essai 5 20
+TAB!5!15!2=3=3=2!;T!__GRAS__quantite__gras__ (kg ou l);c=__GRAS__Designation__gras__;c=col3=col4!cont1=cont2=cont3=cont4!xxxx1 yyyy eeee fff cxxccv vcccccc=xxxx2=xxxx3=xxxx4!
+EJECT
+
+Format :
+1er caractere : cadrage
+c = centre
+g = gauche
+d = droite
+. = pas d'indication
+t = trait horizontal sur la colonne
+T = trait horizontal sur toute la ligne
+
+2eme caractere : trait verticaux       (optionel  si 1er caractere=t ou T)
+g = gauche
+d = droite
+. = aucun trait
+c = de chaque cote
+
+3e caractere : couleur         (optionel, obligatoire si 4e caractere existe)
+. = couleur par default
+g = gras
+i = italique
+G = grise
+R = rouge
+
+4e caractere : font
+. = font par defaut
+
+5e caractere : nb de colone sur lequel on imprime  (optionnel)
+01
+..
+99

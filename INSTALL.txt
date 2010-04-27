@@ -1,0 +1,237 @@
+1) installation des softs
+
+aller dans softs et installer sur le serveur tous
+les softs présents en double cliquant sur tous
+les logiciels présents
+
+Activesync
+easyPHP
+gs853w32
+gs48w32
+python-2.4.4
+7z442
+
+repondre oui/OK/continue a toutes les questions
+rebooter si demandé
+
+2) configuration
+
+copier le fichier copier.zip sur le serveur dans c:\
+
+quitter easyPHP : faire un clic droit sur le petit
+e clignotant dans la barre des taches et faire fermer
+
+cliquer droit, selectionner 7-zip/extraire ici
+repondre oui a tout si il demande s'il peut ecraser 
+un fichier.
+
+redemarrer easyPHP en passant par le menu
+  Demarrer/tous les programmes/easyphp/Easyphp
+
+
+C'est fait!
+
+
+
+A) reglage adresse IP du serveur
+
+  A.1 voir l'adresse en cours et récuperer les informations gateway DNS :
+
+      aller dans Demmarrer/executer
+      une fenetre  s'ouvre
+      
+      taper 
+        ipconfig /all
+
+      ici on voit : l'adresse IP, le masque, la gateway, les DNS
+
+
+C:\Documents and Settings\jawad>IPCONFIG /all
+
+Configuration IP de Windows
+
+        Nom de l'hôte . . . . . . . . . . : pc-jawad
+        Suffixe DNS principal . . . . . . :
+        Type de noud . . . . . . . . . . : Inconnu
+        Routage IP activé . . . . . . . . : Non
+        Proxy WINS activé . . . . . . . . : Non
+
+Carte Ethernet Connexion au réseau local:
+
+        Suffixe DNS propre à la connexion :
+        Description . . . . . . . . . . . : Intel(R) PRO/100 VE Network Connecti
+on
+        Adresse physique . . . . . . . . .: 00-0D-60-E5-A6-B7   <-- mac adresse du serveur
+        DHCP activé. . . . . . . . . . . : Oui
+        Configuration automatique activée . . . . : Oui
+        Adresse IP. . . . . . . . . . . . : 192.168.111.5       <-- adresse IP
+        Masque de sous-réseau . . . . . . : 255.255.255.0       <-- masque reseau
+        Passerelle par défaut . . . . . . : 192.168.111.1       <-- gateway  (machine par laquelle passer pour aller dehors)
+        Serveur DHCP. . . . . . . . . . . : 192.168.111.1
+        Serveurs DNS . . . . . . . . . .  : 192.168.111.1       <-- DNS celui qui traduit yahoo.fr en 217.146.186.221
+        Bail obtenu . . . . . . . . . . . : samedi 10 mars 2007 17:17:09
+        Bail expirant . . . . . . . . . . : mardi 13 mars 2007 17:17:09
+
+
+
+  A.2 mettre l'adresse IP fixe du serveur
+
+     Aller dans 
+        Poste de travail/favoris reseaux/afficher les connections reseaux
+        (s'il y en a plusieurs, enlever le fil qui est relié au routeur pour voir
+                laquelle tombe en rade ----> c'est celle la qu'il faudra modifier)
+
+     sur la connexion reseau désirées, faire
+         clic doit/Propriétés
+      
+     dans l'onglet général, selectionner 
+          Protocole internet TCP/IP
+     puis cliquer sur propriétés
+
+     choisir 'utiliser l'adresse IP suivante' et
+          renseigner les champs 
+
+          Adresse IP : 192.168.111.77        <- adresse que l'on donne au serveur
+          masque de sous-reseau : 255.255.255.0
+          passerelle par defaut : 192.168.111.1 <- adresse du routeur
+
+          DNS primaire : 192.168.111.1
+          DNS secondaire : vide ou un DNS pris sur un autre poste du client
+                           dont l'acces internet marche
+
+
+   A.3 verifier
+   
+      adresse IP modifiée
+         par un IPCONFIG /ALL
+
+
+      ping  du serveur
+        ping 192.168.111.1
+        si c'est OK on peut travailer en local
+
+      ping d'un site poujr valider les DNS
+
+        ping yahoo.fr
+        si c'est OK on peut faire de l'internet
+
+
+
+
+
+
+
+C) configuration apache et réseau
+
+double cliquer sur le 'e.' dans la barre des taches
+
+Si les deux feux ne sont pas au vert, il y a un pb!
+pour avoir une idée, on peut consulter les fichiers 
+logs (fichiers mouchard)
+   
+     cliquer droit sur 'e.'/fichier logs/erreur xxxx
+
+   pour un probleme apache, xxx=apache, on aura par exemple
+
+[Sat Mar 10 17:23:06 2007] [crit] make_sock: could not bind to address 192.168.111.7 port 80
+[Sat Mar 10 17:23:09 2007] [crit] make_sock: could not bind to address 192.168.111.7 port 80
+[Sat Mar 10 17:26:27 2007] [crit] make_sock: could not bind to address 192.168.111.7 port 80
+[Sat Mar 10 17:28:21 2007] [crit] make_sock: could not bind to address 192.168.111.7 port 80
+[Sat Mar 10 17:28:41 2007] [crit] make_sock: could not bind to address 192.168.111.7 port 80
+
+
+si appache ne demarre pas, c'est qu'il y a un probleme de
+numero d'adresse IP. Pour cela, il faut modifier
+la configuration d'apache en mettant l'adresse du
+serveur a 192.168.111.77 au lieu de 192.168.111.7 !
+
+     C.1 editer et modifier le fichier de configuration apache
+
+     cliquer droit sur 'e.'/configuration/apache
+
+     chercher l'adresse fautive (192.168.111.7) ou bien Listen
+
+     il ne doit rester que
+
+Listen 127.0.0.1:80
+Listen 192.168.111.77:80
+ 
+      80 est le port qui correspond a une demande de type http:
+
+
+     redemarrer apache : 
+       soit
+           cliquer droit sur 'e.'/redemarrer
+
+       soitk 
+           double cliquer sur 'e'  puis bouton apache, puis demarrer
+
+ 
+    C.2 verification
+ 
+     1) 
+
+         double cliquer sur 'e'   ->  on doit avoir 2 feux verts
+
+         minimiser la fenetre des deux feux, ne jamais la fermer sinon 
+         apache s'arrete!
+
+     2) tester apache par une requette web
+
+        soit dans firefox, regarder les adresses
+
+           http://127.0.0.1
+           http://192.168.111.77
+
+           --> on doit tomber sur la page web d'accueil oyak
+ 
+        soit
+           cliquer droit sur 'e'/web local
+
+
+
+
+D)   creer le repertoire de receptions des factures
+ 
+     creer le repertoire 
+         C:\ventesjour
+
+     pour tester, dans firefox aller a
+
+        http://127.0.0.1/phpmyfactures/admin/
+      
+
+    cliquer plusieurs fois sur 'creer des commandes de tests".
+    si tout marche
+
+        --> le compteur des commandes s'incrémente
+        --> autant de fichiers apparaissent dans c:\ventesjour
+
+     on voit la liste des commandes detaillée dans firefox
+
+      http://127.0.0.1/phpmyfactures/commandes/
+
+    
+      une fois que c'est validé, pensez a effacer les fichiers dans
+      c:\ventesjour. verifier par l'interface qu'il n'y a plus de commande
+
+ 
+
+
+E)  tester l'impression :
+
+     E.1 essayer d'imprimer un texte sous word
+
+
+     E.2
+       sous firefox, aller a 
+       
+       http://127.0.0.1/phpmyfactures/barcode/imprimer_barcode.php?id_cat=1
+
+     cocher les codes barres désirés, indiquer leur nombres, puis cliquer 
+        sur 'imprimer'
+
+       ---> l'imprimante doit sortir les étiquettes voulues
+
+
+

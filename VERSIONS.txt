@@ -1,0 +1,29 @@
+Historique des differentes versions
+
+
+Base SVN
+
+
+Oyak-v0.1
+---------
+
+reorganisatiton en repertoires serveur, cible et site web
+
+
+
+Oyak-v0 :
+---------
+version initiale
+
+
+
+soft Cible
+
+0.20
+  refonte complete de l'appli en cours
+   mono--fenetrage
+   barre de progression 
+   Bouton OK
+
+0.19
+  correction Bug serveur down

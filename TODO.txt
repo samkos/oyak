@@ -1,0 +1,105 @@
+installation serveur
+--------------------
+
+
+
+mettre des if pour refaire une install conditionnelle
+
+prendre en compte les vendeurs dans updateBase?
+
+ne pas faire apparaitre le warning dans le site web quand il
+n'y a pas encore de commande dans c:\ventesjour NOK
+
+tester si les logiciels sont deja installés! :script python 
+   prend le relai?
+
+
+
+appli
+-----
+
+effacement du . si on retourne en arrière
+
+lorsque un filtre n'a pas d'occurrence l'afficher a l'ecran
+
+virer le cas particulier dans ihm.show pour faire le focus dans l'article
+
+demarrer scanwedge et mottd
+
+activer le cache sur les listes
+
+vendeur modifie pour que l'on puisse saisir n'importe quoi dans
+la base
+
+Redemarrer scanwedge a chaque fois que l'on demarre
+l'appli
+
+test 41017210  --> imprimer les codes barres a 8
+
+bug quand on rentre un caractere dans la date ca plante
+
+mettre sur la device un fichier donnant son numero IP
+identifier la device automatiquement aupres du serveur
+
+virer la barre des tache en bas
+
+pouvoir double cliquer
+
+pouvoir appuyer sur return quand il y a des message
+
+mettre tout de suite un message a l'ecran
+
+pouvoir sortir facilement de l'appli
+
+voir l'appli qui se lance mal
+
+regler le pb quand il n'y a pas de serveur quand on choisit un
+vendeur "" 
+
+
+agrandir un peu la fenetre pour qu'elle cache appcenter
+
+se debrouiller pour qu'un seul programme puisse etre lancée à la fois
+
+ne pas toujours avoir abligatoirement Oyak en début de titre
+
+matcher pyw a python
+
+situation client, solde article
+
+
+recabler tous les fournisseurs!
+
+
+
+
+
+selectionner en griser le premier de la ligne apres un filtre en succes ok
+retailler la fenetre facture sur la device pour qu'elle occuppe tout l'ecran ok
+dans la vue facture quand on fait 'f.' ne montrer que les produits commencant par f ok
+faire apparaitre 'menu' en haut de la fenetre de choix de produit quand on a pas tapé de lettre ok
+grrossirr les boutons de selectio 'prix' qualite ou fournisseur ok
+prq le produit n'est pas automatiquement selectionné lorsque l'on rappelle une ligne?? ok
+virer 'copier' de la vue facture ok
+cabler'effacer' de la vue facture  ok
+
+que se passe-t-il si on fait nouvelle facture par le menu add facture? 
+
+lorsque l'on selectionne un article le prix se refixe au prix par defaut ok
+
+
+gaffe au lancement successig d'interrogaton via le menu
+
+factures 
+--------
+
+
+
+
+
+Pilote 
+---------
+
+faire un lancement du pilote depuis le site web
+
+faire une touche copie light du vendeur!!! ok

@@ -1,0 +1,8 @@
+Z0,1!pr1!2!GEN!PAYSAGE
+TXT!0!0!Essai 0 0
+TXT!10!16!Essai 10 16
+TXT!1!2!Essai 1 2;..R
+TXT!10!5!Essai 10 5
+TXT!5!20!Essai 5 20;..g
+TAB!5!15!2=3=3=2!;T!__GRAS__quantite__gras__ (kg ou l);cc=__GRAS__Designation__gras__;cd=col3;cd=col4;cd!;T!cont1;gg=cont2=cont3=cont4;gd!;t=a=;t=b!xxxx1 yyyy eeee fff cxxccv vcccccc;gg=xxxx2=xxxx3=xxxx4;gd!;T
+EJECT

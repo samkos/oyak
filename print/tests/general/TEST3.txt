@@ -1,0 +1,12 @@
+Z0,1!PR0!1!GEN!PORTRAIT
+TAB!0!1!4!__GRAS__Jawd Exotique Cedrus__gras__!Batiment C1!256 allée des anémones!94539 Rungis Cédex
+TAB!12!2!4!__GRAS__CLIENT__gras__!55 rue des Accacias!75005 PARIS
+TXT!12!1!__GRAS__RELEVE DE COMPTE__gras__
+TXT!12!4.5!Rungis Le 15 janvier 2007
+TAB!2!6!10!Messieurs,!Nous vous prions de bien vouloir trouver ci-dessous le relevé de votre compte pour la période du 01/01/08 au 31/01/08
+TAB!0!13!2=2.5=2.5=2=2=3!;T!Date ;cg= N/Référence ;cg= ;.g= Débit ;cgG = Crédit ;cg = ;..c !;T! 02/11/07 ;cg =071102086 ;cg= ;..c = 2276.82 ;gdG= ;..c= ;..c !03/11/07 ;cg =071103096 ;cg= 390.72 ;gdG= ;..c= ;..c !06/11/07 ;cg= 071106065 ;cg=544.98 ;gdG = ;..c= ;..c ! 07/11/07 ;cg =071107019 ;cg= ;..c =;354.86 ;gdG  = ;..c= ;..c ! 08/11/07 ;cg =071108053 ;cg= ;..c = 1379.37 ;gdG = 100.00 ;gd = ;..c ! 09/11/07 ;cg =071109082 ;cg= ;..c = 564.27 ;gdG= ;..c= ;..c ! 09/11/07 ;cg =071109109 ;cg= ;..c =45.99 ;gdG= ;..c= ;..c !Cumul Mois : 11/07 ;gg..03 = 5235.46 ;dgG = 100.00 ;dg =5135.46 ;dcg ! 02/12/07 ;cg=071102086 ;cg= ;..c:= 2276.82 ;gdG = ;..c= ;..c !03/12/07 ;cg =071203096 ;cg= ;..c:= 544.98;gdG =;..c=;..c! dg. ;06/12/07 ;cg=071206065 ;cg= ;..c:=  390.72;gdG =;..c=;..c!Cumul Mois : 12/07 ;gg..03 =2135.46 ;dgG = 0.00 ;dg=2135.46 ;dcg !;T!Situation Cumulée ;gg..03  =7370.92 ;dgG = 100.00 ;dg= 7270.92 ;dcg!;T
+TXT!2!20!Soit un total de : 7 270.92 Euros en votre aimable règlement.
+TXT!2!20.5 !Veuillez agréer , Messieurs, l’expression de nos salutations distinguées.
+TXT!12!22!La Comptabilité
+
+EJECT
