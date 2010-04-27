@@ -64,7 +64,6 @@ if (!$message) { $message="&nbsp;";}
            <a href="../factures/traite.php">Creer & Imprimer les factures </a></td>
       <td> <a href="../barcode/latex_barcode.php?action=file">Creer les etiquettes  </a> </br>
       <td> <a href="../impression/traite.php">imprimer les documents generaux  </a> </br></td>
-      <td> <a target=blank href="lancer.php?prog=batch&which=vendeur.bat">Device </a></td>
   </tr>
   <tr> <td> <br />
   <br />
