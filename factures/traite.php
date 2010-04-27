@@ -1,17 +1,18 @@
 <?php include("../inc/conf.php"); ?>
 <?php include("../inc/fonctions.php"); ?>
-<?php include("traite_inc.php"); ?>
 <?php
 
+$exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
+$exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
+
+//$dir_facture=""\Oyak\work\*";
+$dir_facture="\facprint\*";
 
 $header=1;
-<<<<<<< .mine
-=======
 $nb_lignes_facture=30;
->>>>>>> .r237
 
 include("../inc/header.php");
-$debug=01;
+$debug=0;
 
 // lecture des masques
 $dir=".";
@@ -42,15 +43,9 @@ if ($filenames) {
     echo "<BR> Traitement factture $filename................................................";
     $out=make_facture($filename);
     fwrite($file_out,$out);
-<<<<<<< .mine
-    if (!$keep_facture) {
-        unlink($filename);	     
-    }	
-=======
     if (!$debug)  {
        unlink($filename);
     }
->>>>>>> .r237
   }
 
   fwrite($file_out,$conclusion);
