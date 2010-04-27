@@ -107,7 +107,7 @@ for($index=1;($index*$nb_client)<$row[0];$index++)
 
 <center>
 <a href="ajouter_client.php">Ajouter un client</a> - 
-<a href="/<?php echo("$prefixe_dossier"); ?>welcome/index.php">Retour</a>
+<a href="/<?php echo("$prefixe_dossier"); ?>/index.php">Retour</a>
 </center>
 
 <?php include("../inc/footer.php"); ?>

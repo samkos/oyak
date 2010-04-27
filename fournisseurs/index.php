@@ -104,7 +104,7 @@ for($index=1;($index*$nb_fournisseur)<$row[0];$index++)
 
 <center>
 <a href="ajouter_fournisseur.php">Ajouter un fournisseur</a> - 
-<a href="/<?php echo("$prefixe_dossier"); ?>welcome/index.php">Retour</a>
+<a href="/<?php echo("$prefixe_dossier"); ?>index.php">Retour</a>
 </center>
 
 <?php include("../inc/footer.php"); ?>

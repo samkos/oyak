@@ -82,7 +82,7 @@ for($index=1;($index*$nb_vendeur)<$row[0];$index++)
 
 <center>
 <a href="ajouter_vendeur.php">Ajouter un vendeur</a> - 
-<a href="/<?php echo("$prefixe_dossier"); ?>welcome/index.php">Retour</a>
+<a href="/<?php echo("$prefixe_dossier"); ?>index.php">Retour</a>
 </center>
 
 <?php include("../inc/footer.php"); ?>

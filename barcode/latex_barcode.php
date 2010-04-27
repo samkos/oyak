@@ -202,7 +202,7 @@ print "resultat-> $status";
 
 function loadPage() {
 
-  document.location.href = "../welcome/index.php";
+  document.location.href = "../index.php";
 }
 
 //loadPage();
