@@ -1,3 +1,0 @@
-Z0,1!PRO!1!GEN!PORTRAIT
-TAB!0!0!12!__GRAS__ Courbeyre & Viallard__gras__VENTES  DE LA JOURNEE DU:061007           PAGE:  1 EDITION DE 22 Jan 2008
-TAB!0!1!.3=3=.2=.9=.9=.9=.7=.7=.7=.7=1=1!;T!N.F;cg=Code & Raison ;cg=Vd;cg=Ht;cg=Ht;cg=Dst;cg=Dst;cg=Tva;cg=Tva;cg=Total;cg=Total;cc!;cg=Sociale Client;cg=;cg=France;cg=Brut 19.6;cg=Frce;cg=Expo;cg=5.5%;cg=19.6%;cg=Ht;cg=Ttc;cc!;T!
