@@ -1,0 +1,18 @@
+git@github.com:samkos/oyak.git
+
+
+
+3 branches
+
+master
+  celle de svn
+
+mk
+  celle de papa
+
+sk
+  la mienne
+
+
+
+
