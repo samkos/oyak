@@ -44,7 +44,7 @@ text-decoration: underline;
       <td colspan="16" align="center"><hr size="1" color="#000000"></td>
    </tr>
    <tr>
-      <td width="12%" align="center"><a href="/<?php echo("$prefixe_dossier"); ?>welcome/">Accueil</a></td>
+      <td width="12%" align="center"><a href="/<?php echo("$prefixe_dossier"); ?>index.php">Accueil</a></td>
       <td width="12%" align="center"><a href="/<?php echo("$prefixe_dossier"); ?>barcode/index.php?id_cat=1">Impression <br> Code Bar</a></td>
       <td width="12%" align="center"><a href="/<?php echo("$prefixe_dossier"); ?>clients/">Clients</a></td>
       <td width="12%" align="center"><a href="/<?php echo("$prefixe_dossier"); ?>fournisseurs/">fournisseurs</a></td>
