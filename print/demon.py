@@ -1,8 +1,7 @@
-import os
+import getopt, sys, os
 import string
 import re
 import time,datetime
-import sys
 from stat import *
 
 timeTouchFile="/Oyak/ToPrint/PrintDemon.txt"
@@ -21,13 +20,60 @@ exe_facture="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/factures/traite.bat
 exe_etiq="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/barcode/traite.bat\" ";
 exe_imp="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/impression/traite.bat\" ";
 
-debug=01
+debug=0
 msg=1
+once=0
 
 now=datetime.datetime.now()
 timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
 
 #sys.stdout = open("c:/Oyak/print.log","a")
+
+def usage(message = None):
+    """ helping message"""
+    if message:
+        print message
+    print "  usage: \n \t python demon.py \
+             \n\t\t[ --help ] \
+             \n\t\t[ --once ] \
+             \n\t\t[ --debug ] \
+             \n\t\t[ --every=<probe every seconds> ] "
+
+    sys.exit(1)
+
+
+
+
+def parse():
+    global once_only,debug,timeOK,msg
+    
+    """ parse the command line and set global _flags according to it """
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "ht", 
+                                   ["help", "once", "every=", "trace=", "debug"])
+    except getopt.GetoptError, err:
+        # print help information and exit:
+        usage(err)
+
+    # first scan opf option to get prioritary one first
+    # those who sets the state of the process
+    # especially those only setting flags are expected here
+    for option, argument in opts:
+        if option in ("-h", "--help"):
+            usage("")
+        elif option in ("--once"):
+            once_only=1
+        elif option in ("--every"):
+            timeOK = int(argument)
+        elif option in ("--trace"):
+            msg = int(argument)
+        elif option in ("--debug"):
+            debug = 01
+        else:
+            usage("unhandled option %s" % option)
+
+
+
 
 def probeFacture():
     global timestamp
@@ -77,6 +123,11 @@ def probeImp():
 def probePrint(dir_print,printer="default"):
     global timestamp
 
+    if printer=="TEST":
+        print "%s"%timestamp+":"+ "pas d'impression pour l'imprimante TEST"
+        return
+    else:
+        print "%s"%timestamp+":"+ "impression des documents pour l'imprimante "+printer
     files=os.listdir(dir_print)
 
     nb=0
@@ -92,6 +143,7 @@ def probePrint(dir_print,printer="default"):
                 
             else:
             # mpression fichier
+
                 if printer=="default":
                    commande = exe_print+" "+filename
                 else:
@@ -142,7 +194,10 @@ def checkRunning():
             return 0
     except:
         return 0
-    
+
+
+parse()
+
 if not(os.path.exists(dir_printTODO)):
     os.mkdir(dir_printTODO)
 
@@ -175,3 +230,6 @@ else:
         probeImp()
         probePrint(dir_printTODO)
         time.sleep(10)
+        if once:
+            print "%s"%timestamp+"juste une execution"
+            sys.exit(0)
