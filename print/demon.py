@@ -7,18 +7,13 @@ from stat import *
 timeTouchFile="/Oyak/ToPrint/PrintDemon.txt"
 timeOK=30
 
+
 dir_printTODO='c:\Oyak\ToPrint'
-dir_workTODO="/Oyak/Work"
-dir_factureTODO="/facprint"
-dir_etiqTODO="/etiqprint"
-dir_impTODO="/impprint"
-exe_print="\"c:\Program Files\Ghostgum\gsview\gsprint.exe\" -printer \"test1\""
-exe_print="\"c:\Program Files\Ghostgum\gsview\gsprint.exe\" -printer \"test1\""
-exe_print="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/print/print.bat \""
-exe_printTo="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/print/printTo.bat \""
-exe_facture="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/factures/traite.bat\" ";
-exe_etiq="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/barcode/traite.bat\" ";
-exe_imp="\"c:/Program Files/EasyPHP1-8/www/phpmyfactures/impression/traite.bat\" ";
+dir_workTODO="c:/Oyak/Work"
+dir_factureTODO="c:/facprint"
+dir_etiqTODO="c:/etiqprint"
+dir_impTODO="c:/impprint"
+exe_print=exe_printTo=exe_facture=exe_etiq = "???exe_xxx"
 
 debug=0
 msg=1
@@ -45,7 +40,7 @@ def usage(message = None):
 
 
 def parse():
-    global once_only,debug,timeOK,msg
+    global once,debug,timeOK,msg
     
     """ parse the command line and set global _flags according to it """
     try:
@@ -62,7 +57,7 @@ def parse():
         if option in ("-h", "--help"):
             usage("")
         elif option in ("--once"):
-            once_only=1
+            once=1
         elif option in ("--every"):
             timeOK = int(argument)
         elif option in ("--trace"):
@@ -71,6 +66,43 @@ def parse():
             debug = 01
         else:
             usage("unhandled option %s" % option)
+
+def init_env():
+    global exe_print, exe_printTo,exe_facture,exe_etiq
+    
+    drive="c:"
+    drive_found=False
+    # checking the installed drive
+    for drive in ["c","e"]:
+        if not(drive_found):
+            if os.path.isfile(drive+":\Program Files\Ghostgum\gsview\gsprint.exe"):
+                drive_found=True
+                
+    if debug:
+        print "drive d'installation : ",drive
+
+
+    exe_print="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/print/print.bat \""
+    exe_printTo="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/print/printTo.bat \""
+    exe_facture="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/factures/traite.bat\" ";
+    exe_etiq="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/barcode/traite.bat\" ";
+    exe_imp="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/impression/traite.bat\" ";
+
+
+    if not(os.path.exists(dir_printTODO)):
+        os.mkdir(dir_printTODO)
+
+    if not(os.path.exists(dir_factureTODO)):
+        os.mkdir(dir_factureTODO)
+
+    if not(os.path.exists(dir_etiqTODO)):
+        os.mkdir(dir_etiqTODO)
+
+    if not(os.path.exists(dir_impTODO)):
+        os.mkdir(dir_impTODO)
+
+    if not(os.path.exists(dir_workTODO)):
+        os.mkdir(dir_workTODO)
 
 
 
@@ -84,6 +116,8 @@ def probeFacture():
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
         commande=exe_facture
+        if debug:
+            print "%s"%timestamp+":execution de ",commande
         os.system(commande)
     else:
         if msg:
@@ -99,6 +133,8 @@ def probeEtiq():
         if msg:
             print "%s"%timestamp+":"+"traitement des etiquettes en attente"
         commande=exe_etiq
+        if debug:
+            print "%s"%timestamp+":execution de ",commande
         os.system(commande)
     else:
         if msg:
@@ -114,6 +150,8 @@ def probeImp():
         if msg:
             print "%s"%timestamp+":"+"traitement des impressions generale en attente"
         commande=exe_imp
+        if debug:
+            print "%s"%timestamp+":execution de ",commande
         os.system(commande)
     else:
         if msg:
@@ -149,7 +187,7 @@ def probePrint(dir_print,printer="default"):
                 else:
                    commande = exe_printTo+" "+filename+" "+printer
                 if debug:
-                    print "%s"%timestamp+":"+commande
+                    print "%s"%timestamp+":execution de "+commande
                 os.system(commande)
         
                 if msg:
@@ -197,23 +235,9 @@ def checkRunning():
 
 
 parse()
+init_env()
 
-if not(os.path.exists(dir_printTODO)):
-    os.mkdir(dir_printTODO)
-
-if not(os.path.exists(dir_factureTODO)):
-    os.mkdir(dir_factureTODO)
-
-if not(os.path.exists(dir_etiqTODO)):
-    os.mkdir(dir_etiqTODO)
-
-if not(os.path.exists(dir_impTODO)):
-    os.mkdir(dir_impTODO)
-
-if not(os.path.exists(dir_workTODO)):
-    os.mkdir(dir_workTODO)
-
-if checkRunning():
+if checkRunning() and not(once):
     print "%s"%timestamp+":"+"Demon OK"
 else:
     touchDate()
@@ -229,7 +253,8 @@ else:
         probeEtiq()
         probeImp()
         probePrint(dir_printTODO)
-        time.sleep(10)
+        print once
         if once:
             print "%s"%timestamp+"juste une execution"
             sys.exit(0)
+        time.sleep(10)
