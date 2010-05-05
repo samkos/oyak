@@ -1,1 +1,2 @@
-c:\python24\python -u "C:\Program Files\EasyPHP1-8\www\phpmyfactures\print\demon.py" --once
+e:\python24\python -u "e:\Program Files\EasyPHP 2.0b1\www\phpmyfactures\print\demon.py" --once
+

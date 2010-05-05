@@ -157,7 +157,7 @@ print "]<BR>";
 
 //print_r($params);
 
-$files2update=glob("../*/*_MOD.*");
+$files2update=array_merge(glob("../*/*_MOD.*"),glob("../print/*/*_MOD.*"));
 //print_r($files2update);
 
 while ($file=array_pop($files2update)) {

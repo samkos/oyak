@@ -63,7 +63,7 @@ def parse():
         elif option in ("--trace"):
             msg = int(argument)
         elif option in ("--debug"):
-            debug = 01
+            debug = True
         else:
             usage("unhandled option %s" % option)
 
@@ -76,17 +76,39 @@ def init_env():
     for drive in ["c","e"]:
         if not(drive_found):
             if os.path.isfile(drive+":\Program Files\Ghostgum\gsview\gsprint.exe"):
-                drive_found=True
-                
+                drive_found=drive
+
+    if not drive_found:
+        print "erreur : drive not found"
+        sys.exit(1)
+
+    drive=drive_found
+    
     if debug:
         print "drive d'installation : ",drive
 
+    easyphp_found=False
+    # checking the installed drive
+    for drive in ["c","e"]:
+        for easyphp in ["EasyPHP 2.0b1","EasyPHP1-8"]:
+            if not(easyphp_found):
+                if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/phpmyfactures/index.php"):
+                    easyphp_found=drive+":/Program Files/"+easyphp
+                
+    if not easyphp_found:
+        print "erreur : easyphp not found"
+        sys.exit(1)
 
-    exe_print="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/print/print.bat \""
-    exe_printTo="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/print/printTo.bat \""
-    exe_facture="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/factures/traite.bat\" ";
-    exe_etiq="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/barcode/traite.bat\" ";
-    exe_imp="\""+drive+":/Program Files/EasyPHP1-8/www/phpmyfactures/impression/traite.bat\" ";
+    easyphp=easyphp_found
+    if debug:
+        print "easyphp d'installation : ",easyphp
+
+
+    exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
+    exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
+    exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
+    exe_etiq="\""+easyphp+"/www/phpmyfactures/barcode/traite.bat\" ";
+    exe_imp="\""+easyphp+"/www/phpmyfactures/print/impression/traite.bat\" ";
 
 
     if not(os.path.exists(dir_printTODO)):
@@ -235,6 +257,8 @@ def checkRunning():
 
 
 parse()
+if debug:
+    print "once=%s,debug=%s,timeOK=%s,msg=%s"%(once,debug,timeOK,msg)
 init_env()
 
 if checkRunning() and not(once):
@@ -253,7 +277,8 @@ else:
         probeEtiq()
         probeImp()
         probePrint(dir_printTODO)
-        print once
+        if debug:
+            print once
         if once:
             print "%s"%timestamp+"juste une execution"
             sys.exit(0)

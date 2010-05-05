@@ -1,7 +1,7 @@
 installation serveur
 --------------------
 
-
+modifier le path vers le bon easyphp dans print/print_once.bat start_demon.bat et les traite
 
 mettre des if pour refaire une install conditionnelle
 
