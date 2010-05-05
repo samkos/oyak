@@ -1,5 +1,5 @@
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
+<?php include("../../inc/conf.php"); ?>
+<?php include("../../inc/fonctions.php"); ?>
 <?php
 $nb_produit = 3000;
 if ($action == "delete")
@@ -10,7 +10,7 @@ $req = mysql_query("delete from ".$prefixe_table."produits where id=\"$id_produi
 ?>
 <?php 
 
-include("../inc/header.php"); 
+include("../../inc/header.php"); 
 
 extract($_POST, EXTR_SKIP);
 extract($_GET, EXTR_SKIP);
@@ -157,7 +157,7 @@ print "]<BR>";
 
 //print_r($params);
 
-$files2update=array_merge(glob("../*/*_MOD.*"),glob("../print/*/*_MOD.*"));
+$files2update=array_merge(glob("../../*/*_MOD.*"),glob("../../print/*/*_MOD.*"));
 //print_r($files2update);
 
 while ($file=array_pop($files2update)) {
@@ -182,4 +182,4 @@ while ($file=array_pop($files2update)) {
 </center>
 
 
-<?php include("../inc/footer.php"); ?>
+<?php include("../../inc/footer.php"); ?>

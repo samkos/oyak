@@ -1,5 +1,5 @@
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
+<?php include("../../inc/conf.php"); ?>
+<?php include("../../inc/fonctions.php"); ?>
 <?php
 
 $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
@@ -13,7 +13,7 @@ $header="";
 $orientation="portrait";
 $nb_lignes_imprime=18;
 
-include("../inc/header.php");
+include("../../inc/header.php");
 $debug=0;
 $not_deleting=0;
 
@@ -134,7 +134,7 @@ else {
 }
 
 
-print "<BR> <a href='../admin/index.php'>  Retour Administration </a>\n";
+print "<BR> <a href='../../admin/index.php'>  Retour Administration </a>\n";
 
 
 function print_all($orientation) {

@@ -1,6 +1,6 @@
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
-<?php include("../verif.php"); ?>
+<?php include("../../inc/conf.php"); ?>
+<?php include("../../inc/fonctions.php"); ?>
+<?php include("../../verif.php"); ?>
 <?php
 
 if ($action == "delete")
@@ -9,7 +9,7 @@ $req = mysql_query("delete from ".$prefixe_table."produits where id=\"$id_produi
 }
 
 ?>
-<?php include("../inc/header.php"); ?>
+<?php include("../../inc/header.php"); ?>
 
 <table border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#000000" width="770">
    <tr>
@@ -90,4 +90,4 @@ for($index=1;($index*$nb_produit)<$row[0];$index++)
 ?> ]</center>
 
 
-<?php include("../inc/footer.php"); ?>
+<?php include("../../inc/footer.php"); ?>

@@ -1,5 +1,5 @@
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
+<?php include("../../inc/conf.php"); ?>
+<?php include("../../inc/fonctions.php"); ?>
 <?php
 
 $header=1;
@@ -8,7 +8,7 @@ $nb_ligne=0;
 $total=0;
 
 if ($header) {
-  include("../inc/header.php");
+  include("../../inc/header.php");
   print "<center> \n";
 }
 
@@ -153,7 +153,7 @@ print "res=$status";
 
 
 if ($header) {
-  print "<BR> <a href='../admin/index.php>  Retour Administration\n";
+  print "<BR> <a href='../../admin/index.php>  Retour Administration\n";
 }
 
 

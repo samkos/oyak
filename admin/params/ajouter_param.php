@@ -1,5 +1,5 @@
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
+<?php include("../../inc/conf.php"); ?>
+<?php include("../../inc/fonctions.php"); ?>
 <?php
 
 if ($action == "send")
@@ -88,8 +88,8 @@ $clef = stripslashes($clef);
 }
 
 ?>
-<?php include("../verif.php"); ?>
-<?php include("../inc/header.php"); ?>
+<?php include("../../verif.php"); ?>
+<?php include("../../inc/header.php"); ?>
 
 <?php
 
@@ -185,4 +185,4 @@ echo("<center><font color=\"#ff0000\"><b>$msg</b></font></center><br>");
 <a href="index.php">Retour</a>
 </center>
 
-<?php include("../inc/footer.php"); ?>
+<?php include("../../inc/footer.php"); ?>

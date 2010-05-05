@@ -1,5 +1,5 @@
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
+<?php include("../../inc/conf.php"); ?>
+<?php include("../../inc/fonctions.php"); ?>
 <?php
 
 $req = mysql_query("select titre,id_cat,description,prix_vente_ht,id_taux_tva,stock,barcode,clef,fournisseur,poids from ".$prefixe_table."produits where clef=\"$clef_param\"");
@@ -82,7 +82,7 @@ $fournisseur = mysql_result($req,0,"fournisseur");
 
 
 ?>
-<?php include("../inc/header.php"); ?>
+<?php include("../../inc/header.php"); ?>
 
 <?php
 
@@ -129,4 +129,4 @@ echo("<center><font color=\"#ff0000\"><b>$msg</b></font></center><br>");
 <a href="index.php?start=<?php echo $start?>">Retour</a>
 </center>
 
-<?php include("../inc/footer.php"); ?>
+<?php include("../../inc/footer.php"); ?>

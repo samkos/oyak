@@ -1,5 +1,5 @@
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
+<?php include("../../inc/conf.php"); ?>
+<?php include("../../inc/fonctions.php"); ?>
 <?php
 
 $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
@@ -11,7 +11,7 @@ $dir_facture="\facprint\*";
 $header=1;
 $nb_lignes_facture=30;
 
-include("../inc/header.php");
+include("../../inc/header.php");
 $debug=0;
 
 // lecture des masques
@@ -74,7 +74,7 @@ else {
 //echo "<blockquote> $out </blockquote>";
 
 
-print "<BR> <a href='../admin/index.php>  Retour Administration\n";
+print "<BR> <a href='../../admin/index.php>  Retour Administration\n";
 
 
 
