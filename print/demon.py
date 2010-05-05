@@ -1,4 +1,4 @@
-import getopt, sys, os
+import getopt, sys, os, shutil
 import string
 import re
 import time,datetime
@@ -32,6 +32,9 @@ def usage(message = None):
              \n\t\t[ --help ] \
              \n\t\t[ --once ] \
              \n\t\t[ --debug ] \
+             \n\t\t[ --facture=<fichier facture a tester> ] \
+             \n\t\t[ --codebarre=<fichier code barre a tester> ] \
+             \n\t\t[ --bl=<fichier bordereau a tester> ] \
              \n\t\t[ --every=<probe every seconds> ] "
 
     sys.exit(1)
@@ -45,9 +48,8 @@ def parse():
     """ parse the command line and set global _flags according to it """
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ht", 
-                                   ["help", "once", "every=", "trace=", "debug"])
-    except getopt.GetoptError, err:
-        # print help information and exit:
+                                   ["help", "once", "every=", "facture=", "codebarre=", "bl=", "trace=", "debug"])
+    except getopt.GetoptError, err:        # print help information and exit:
         usage(err)
 
     # first scan opf option to get prioritary one first
@@ -62,6 +64,15 @@ def parse():
             timeOK = int(argument)
         elif option in ("--trace"):
             msg = int(argument)
+        elif option in ("--facture"):
+            fichier = argument
+            shutil.copy(fichier,dir_factureTODO)
+        elif option in ("--barrecode"):
+            fichier = argument
+            shutil.copy(fichier,dir_etiqTODO)
+        elif option in ("--bl"):
+            fichier = argument
+            shutil.copy(fichier,dir_impTODO)
         elif option in ("--debug"):
             debug = True
         else:

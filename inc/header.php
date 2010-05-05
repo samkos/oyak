@@ -52,7 +52,7 @@ text-decoration: underline;
 	                           <a href="/<?php echo("$prefixe_dossier"); ?>fournisseurs/">lister</a></td>
       <td width="12%" align="center" valign="top"> Produits<BR>
 	                             <a href="/<?php echo("$prefixe_dossier"); ?>produits/">lister</a><BR>
-                                     <a href="/<?php echo("$prefixe_dossier"); ?>produits/check.php">vérifier</a></td>
+                                     <a href="/<?php echo("$prefixe_dossier"); ?>produits/check.php">verifier</a></td>
       <td width="12%" align="center" valign="top">Vendeurs<BR><a href="/<?php echo("$prefixe_dossier"); ?>vendeurs/">lister</a></td>
       <td width="12%" align="center" valign="top"> Commandes 
                                       <a href="/<?php echo("$prefixe_dossier"); ?>print/commandes/">lister</a><br>
