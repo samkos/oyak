@@ -291,6 +291,6 @@ else:
         if debug:
             print once
         if once:
-            print "%s"%timestamp+"juste une execution"
+            print "%s"%timestamp+":juste une execution"
             sys.exit(0)
         time.sleep(10)

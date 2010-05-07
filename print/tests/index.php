@@ -7,13 +7,23 @@
 
 <center>
 
-<table border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#000000" width="770">
-   <tr>
-	  <td bgcolor="#99CCCC" align="center" width="25%"><b>Fichier</b></td>  
-	  <td bgcolor="#99CCCC" align="center" width="25%"><b>Fichier</b></td>
-	  <td bgcolor="#99CCCC" align="center" width="25%"><b>Fichier</b></td>
-	  <td bgcolor="#99CCCC" align="center" width="25%"><b>Fichier</b></td>
-   </tr>
+  <center>
+  <table border="0" cellpadding="2" cellspacing="0">
+    <tr>
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> imprimer les encours </b> </td> </tr> 
+    <tr >
+<!--      <td /> <a href="../query/releases.php?liste=1&header=1">Télécharger logiciel vendeur</a></td> 
+      <td> <a href="../factures/traite.php?noprint=1">Creer les factures  </a> </td> -->
+      <td>     <a href="../traite.php">tous </a></td>
+      <td>     <a href="../factures/traite.php">factures </a></td>
+      <td> <a href="../../barcode/latex_barcode.php?action=file">etiquettes  </a> 
+      <td> <a href="../impression/traite.php">autres documents   </a> </td>
+  </tr>
+  <tr></tr>
+  <tr></tr>
+  <tr></tr>
+  <tr>
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> tester des impressions specifiques</b> </td> </tr> 
 
 <?php 
 $files2test=array_merge(glob("./*/*"));
