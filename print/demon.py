@@ -32,9 +32,9 @@ def usage(message = None):
              \n\t\t[ --help ] \
              \n\t\t[ --once ] \
              \n\t\t[ --debug ] \
-             \n\t\t[ --facture=<fichier facture a tester> ] \
-             \n\t\t[ --codebarre=<fichier code barre a tester> ] \
-             \n\t\t[ --bl=<fichier bordereau a tester> ] \
+             \n\t\t[ --fac=<fichier facture a tester> ] \
+             \n\t\t[ --etiq=<fichier code barre a tester> ] \
+             \n\t\t[ --imp=<fichier bordereau a tester> ] \
              \n\t\t[ --every=<probe every seconds> ] "
 
     sys.exit(1)
@@ -48,7 +48,7 @@ def parse():
     """ parse the command line and set global _flags according to it """
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ht", 
-                                   ["help", "once", "every=", "facture=", "codebarre=", "bl=", "trace=", "debug"])
+                                   ["help", "once", "every=", "fac=", "etiq=", "imp=", "trace=", "debug"])
     except getopt.GetoptError, err:        # print help information and exit:
         usage(err)
 
@@ -64,13 +64,13 @@ def parse():
             timeOK = int(argument)
         elif option in ("--trace"):
             msg = int(argument)
-        elif option in ("--facture"):
+        elif option in ("--fac"):
             fichier = argument
             shutil.copy(fichier,dir_factureTODO)
-        elif option in ("--barrecode"):
+        elif option in ("--etiq"):
             fichier = argument
             shutil.copy(fichier,dir_etiqTODO)
-        elif option in ("--bl"):
+        elif option in ("--imp"):
             fichier = argument
             shutil.copy(fichier,dir_impTODO)
         elif option in ("--debug"):

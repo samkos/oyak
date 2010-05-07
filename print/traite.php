@@ -6,14 +6,16 @@ $exe_python=" demon.py";
 
 include("../inc/header.php");
 $debug=0;
-  system("python $exe_python --once > out");
-  $res=file("out");
+$commande="python $exe_python --debug --once $file";
+system("$commande > out");
+$res=file("out");
 
 ?>
 <center>
 <table>
     <tr>
     <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> <?php print $commande; ?></b> </td> </tr> 
     <tr >
       <tr> <td>
   <?php 

@@ -14,6 +14,7 @@
     <tr >
       <td>     <a href="../traite.php">tous </a></td>
       <td>     <a href="../factures/traite.php">factures </a></td>
+      <td> </td>
       <td> <a href="../../barcode/latex_barcode.php?action=file">etiquettes  </a> 
       <td> <a href="../impression/traite.php">autres documents   </a> </td>
   </tr>
@@ -28,17 +29,25 @@ $files2test=array_merge(glob("./*/*"));
 
 $new_line=1;
 $nb=0;
+$nb_per_line=1;
 while ($file=array_pop($files2test)) {
-      
   if (preg_match("/~$/",$file)==0 and preg_match("/.svn/",$file)==0) {
+    $file = str_replace("./","",$file);
+    $chunks = split("/",$file);
+    $file_to_print = "--".$chunks[0]."=tests/".$file;
     if ($new_line) { print "<tr bgcolor=\"#ffffff\">"; $new_line=0; }
     print "<td bgcolor=\"#ffffff\"><a href='$file'>$file</a></td>";
+    print "<td> <a href='../traite.php?dest=screen&file=$file_to_print'>ecran</a> 
+                <a href='../traite.php?dest=print&file=$file_to_print'>papier</a> </td>";
     $nb=$nb+1;
-    if ($nb>3) {
+    if ($nb>$nb_per_line) {
         print "</tr>";
 	$new_line=1;
 	$nb=0;
 	}
+    else {
+        print "      <td> &nbsp; &nbsp;</td>";
+    }
   }
 }
 if ($nb) {print"</tr>";}
