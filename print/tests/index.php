@@ -32,7 +32,7 @@ while ($file=array_pop($files2test)) {
       
   if (preg_match("/~$/",$file)==0 and preg_match("/.svn/",$file)==0) {
     if ($new_line) { print "<tr bgcolor=\"#ffffff\">"; $new_line=0; }
-    print "<td bgcolor=\"#ffffff\">$file</td>";
+    print "<td bgcolor=\"#ffffff\"><a href='$file'>$file</a></td>";
     $nb=$nb+1;
     if ($nb>3) {
         print "</tr>";
