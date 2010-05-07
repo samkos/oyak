@@ -6,7 +6,7 @@ $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
 $exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
 
 //$dir_facture=""\Oyak\work\*";
-$dir_facture="\facprint\*";
+$dir_facture="c:\facprint\*";
 
 $header=1;
 $nb_lignes_facture=30;
