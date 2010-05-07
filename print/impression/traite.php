@@ -17,6 +17,17 @@ include("../../inc/header.php");
 $debug=0;
 $not_deleting=0;
 
+
+
+?>
+<center>
+<table>
+    <tr>
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
+    <tr >
+      <tr> <td>
+  <?php 
+
 // lecture des masques
 $dir=".";
 
@@ -130,11 +141,20 @@ if ($filenames) {
 
 }
 else {
-	print "pas de imprime en attente <BR>";
+	print "pas de documents a imprimer en attente <BR>";
 }
 
 
-print "<BR> <a href='../../admin/index.php'>  Retour Administration </a>\n";
+  ?>
+  </td> <tr> <td align=center> 
+  	<a href='../tests/index.php'>  Retour test d'impression </a> </td> </tr>
+</table>
+
+</body>
+
+</html>
+
+<?php
 
 
 function print_all($orientation) {

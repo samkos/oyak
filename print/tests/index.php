@@ -12,15 +12,12 @@
     <tr>
     <td bgcolor="#99CCCC" colspan=6 align=center>  <b> imprimer les encours </b> </td> </tr> 
     <tr >
-<!--      <td /> <a href="../query/releases.php?liste=1&header=1">Télécharger logiciel vendeur</a></td> 
-      <td> <a href="../factures/traite.php?noprint=1">Creer les factures  </a> </td> -->
       <td>     <a href="../traite.php">tous </a></td>
       <td>     <a href="../factures/traite.php">factures </a></td>
       <td> <a href="../../barcode/latex_barcode.php?action=file">etiquettes  </a> 
       <td> <a href="../impression/traite.php">autres documents   </a> </td>
   </tr>
-  <tr></tr>
-  <tr></tr>
+  <tr><td><br></td></tr>
   <tr></tr>
   <tr>
     <td bgcolor="#99CCCC" colspan=6 align=center>  <b> tester des impressions specifiques</b> </td> </tr> 
@@ -38,7 +35,7 @@ while ($file=array_pop($files2test)) {
     print "<td bgcolor=\"#ffffff\">$file</td>";
     $nb=$nb+1;
     if ($nb>3) {
-        print "</tr>\n-";
+        print "</tr>";
 	$new_line=1;
 	$nb=0;
 	}

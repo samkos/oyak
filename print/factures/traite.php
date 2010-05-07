@@ -14,6 +14,17 @@ $nb_lignes_facture=30;
 include("../../inc/header.php");
 $debug=0;
 
+
+
+?>
+<center>
+<table>
+    <tr>
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
+    <tr >
+      <tr> <td>
+  <?php 
+
 // lecture des masques
 $dir=".";
 
@@ -74,9 +85,16 @@ else {
 //echo "<blockquote> $out </blockquote>";
 
 
-print "<BR> <a href='../../admin/index.php>  Retour Administration\n";
+  ?>
+  </td> <tr> <td align=center> 
+  	<a href='../tests/index.php'>  Retour test d'impression </a> </td> </tr>
+</table>
 
+</body>
 
+</html>
+
+<?php
 
 
 function make_facture ($file) {
