@@ -26,7 +26,20 @@ include("git_command.php");
     <tr >
       <tr> <td colspan=6><quote>
   <?php 
-  print join($res,"<br>");
+  if ($action="version") {
+    while ($res) {
+      $r = array_shift($res);
+      if ($r[0]=="*") {
+         print "$r<BR>";
+      }
+      else {	 
+        print "<a href='git.php?action=checkout $r'>$r</a><BR>";
+      }
+    }
+  }
+  else {
+    print join($res,"<br>");
+  }
   ?></quote>
   </td> <tr> <td align=center colspan=6> 
   	<a href='index.php'>  Retour administration </a> </td> </tr>
