@@ -76,6 +76,9 @@ if (!$message) { $message="&nbsp;";}
 <tr >
       <td > <a href="../query/interroge.php?header=1">Tester envoi de requete d'interrogation a la base</a></td>
   </tr>
+<?php 
+include("git_command.php"); 
+?>
 </table>
 </center>
 
