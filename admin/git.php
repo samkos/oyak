@@ -10,8 +10,8 @@ $commande="git $action";
 if ($comment) {
   $commande="git $action -m \"$comment\" ";
 }
-system("$commande > out 2>&1 ");
-$res=file("out");
+system("$commande > c:/oyak/out 2>&1 ");
+$res=file("c:/oyak/out");
 
 ?>
 <center>
