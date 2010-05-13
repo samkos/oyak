@@ -10,8 +10,27 @@ $commande="git $action";
 if ($comment) {
   $commande="git $action -m \"$comment\" ";
 }
-system("$commande > c:/oyak/out 2>&1 ");
-$res=file("c:/oyak/out");
+
+
+
+$outputfile= "c:/oyak/out";
+
+if (0) {
+// Setup the command to run from "run"
+$cmdline = "cmd /C $commande " . " > $outputfile 2>&1";
+print $cmdline;
+// Make a new instance of the COM object
+$WshShell = new COM("WScript.Shell");  
+// Make the command window but don't show it.
+$oExec = $WshShell->Run($cmdline, 0, true);
+// Read the file file.
+$res = file($outputfile);
+}
+else {
+     exec(  " $commande  2>&1", $res);
+}
+//exec("git status  2>&1 ",$status);
+//$status=file("c:/oyak/out");
 
 ?>
 <center>
@@ -19,6 +38,11 @@ $res=file("c:/oyak/out");
 <?php 
 include("git_command.php"); 
 ?>
+</tr>
+<tr> <td colspan=6 align=center> 
+<? print $status; ?>
+</td>
+</tr>
 <tr> <td colspan=6 align=center> 
   	<a href='index.php'>  Retour administration </a> </td> </tr>
     <tr> <tr> <td> &nbsp; </td> </tr>
@@ -26,7 +50,7 @@ include("git_command.php");
     <tr >
       <tr> <td colspan=6><quote>
   <?php 
-  if ($action="version") {
+  if ($action=="branch -a") {
     while ($res) {
       $r = array_shift($res);
       if ($r[0]=="*") {
@@ -37,9 +61,21 @@ include("git_command.php");
       }
     }
   }
+  else { if ($action=="log") {
+    while ($res) {
+      $r = array_shift($res);
+      $rs = split(" ",$r);
+      if ($rs[0]=="commit") {
+        print "commit <a href='git.php?action=checkout $rs[1]'>$rs[1]</a><BR>";
+      }
+      else {	 
+         print "$r<BR>";
+      }
+    }
+  }
   else {
     print join($res,"<br>");
-  }
+  } }
   ?></quote>
   </td> <tr> <td align=center colspan=6> 
   	<a href='index.php'>  Retour administration </a> </td> </tr>
