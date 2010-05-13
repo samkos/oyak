@@ -3,8 +3,9 @@
     <tr>
     <td bgcolor="#99CCCC" colspan=6 align=center>  <b> gerer les versions</b> </td> </tr> <tr>
     <tr >
-    	<td> <a href="git.php?action=log"> historique </a></td>
-    	<td> <a href="git.php?action=branch -a"> version </a></td>
+    	<td> <a href="git.php?action=log HEAD~5.."> historique recent </a> <BR>
+    	     <a href="git.php?action=log"> historique complet</a></td>
+    	<td align=center > <a href="git.php?action=branch -a"> branches </a></td>
 	<td> <a href="git.php?action=diff"> diff </a></td>
     </tr> <tr>
     	<td> <a href="git.php?action=push"> synchronise </a></td>
