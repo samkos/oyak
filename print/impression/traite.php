@@ -6,7 +6,7 @@ $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
 $exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
 
 //$dir_imprime=""\Oyak\work\*";
-$dir_imprime="\impprint\*";
+$dir_imprime="c:\impprint\*";
 //$dir_imprime="test\*";
 
 $header="";

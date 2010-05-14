@@ -61,7 +61,7 @@ include("git_command.php");
       }
     }
   }
-  else { if ($action=="log") {
+  else { if (substr($action,0,3)=="log") {
     while ($res) {
       $r = array_shift($res);
       $rs = split(" ",$r);

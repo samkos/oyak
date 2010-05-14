@@ -79,7 +79,7 @@ def parse():
             usage("unhandled option %s" % option)
 
 def init_env():
-    global exe_print, exe_printTo,exe_facture,exe_etiq
+    global exe_print, exe_printTo,exe_facture,exe_etiq,exe_imp
     
     drive="c:"
     drive_found=False
@@ -175,15 +175,18 @@ def probeEtiq():
         
 
 def probeImp():
-    global timestamp
+    global timestamp,debug,exe_imp
     
     files=os.listdir(dir_impTODO)
-
+    if debug:
+        print files
+        
     if files:
         if msg:
-            print "%s"%timestamp+":"+"traitement des impressions generale en attente"
+            print "%s"%timestamp+":"+"traitement des impressions generales en attente"
+            print exe_imp
         commande=exe_imp
-        if debug:
+        if 1 or debug:
             print "%s"%timestamp+":execution de ",commande
         os.system(commande)
     else:
