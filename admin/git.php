@@ -13,44 +13,7 @@ if ($comment) {
 }
 
 
-
-$outputfile= "c:/oyak/out";
-
-if (0) {
-   $cmd = " start /b $commande > $outputfile 2>&1";
-   if ( ($fh = popen($cmd, 'w')) === false )
-        die("Open failed: ${php_errormsg}\n");
-
-    fwrite($fh, "Line one\nLine two\n");
-
-    pclose($fh); 
-   PsExecute(" $commande > $outputfile 2>&1");
-   // Read the file file.
-   $res = file($outputfile);
-}
-else {
-    // exec(  ' start /B "xx" "git.exe" ', $res, $ret);
-    //exec('start /B "window_name" "path to your exe"',$output,$return); 
-    $done = "c:\\oyak\\done.txt";
-    $batch = 'c:/oyak/exec.bat';
-    @unlink($done);
-    $fp = fopen($batch, 'w');
-    fwrite($fp, "@echo off\n e:\ncd \"\\Program Files\\EasyPHP 2.0b1\\www\\phpmyfactures\\admin\"\n");
-    fwrite($fp, "$commande \n");  
-    fwrite($fp, "echo done > $done\n");  
-    fclose($fp);
-    $WshShell = new COM("WScript.Shell");
-    $oExec = $WshShell->Run("cmd /C $batch > $outputfile 2>&1", 0, true);
-    //print $oExec;
-    //sleep(1);
-
-    
-   // Read the file file.
-   $res = file($outputfile);
-
-}
-//exec("git status  2>&1 ",$status);
-//$status=file("c:/oyak/out");
+$res = my_exec($commande);
 
 ?>
 <center>
