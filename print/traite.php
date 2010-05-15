@@ -1,5 +1,6 @@
 <?php include("../inc/conf.php"); ?>
 <?php include("../inc/fonctions.php"); ?>
+<?php include("../admin/exec.php"); ?>
 <?php
 
 $exe_python=" demon.py";
@@ -7,8 +8,10 @@ $exe_python=" demon.py";
 include("../inc/header.php");
 $debug=0;
 $commande="python $exe_python --debug --once $file";
-system("$commande > out");
-$res=file("out");
+if ($no_print) {
+   $commande=$commande." --noprint";
+}
+$res=my_exec("$commande");
 
 ?>
 <center>

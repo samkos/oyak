@@ -1,5 +1,6 @@
 <?php include("../../inc/conf.php"); ?>
 <?php include("../../inc/fonctions.php"); ?>
+<?php include("../../inc/cmdline.php"); ?>
 <?php
 
 $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
@@ -11,19 +12,20 @@ $dir_facture="c:\facprint\*";
 $header=1;
 $nb_lignes_facture=30;
 
-include("../../inc/header.php");
 $debug=0;
 
+if (!(isset($nohtml))) {
+  include("../../inc/header.php");
 
-
-?>
+  echo  "
 <center>
 <table>
     <tr>
-    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
+    <td bgcolor='#99CCCC' colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
     <tr >
       <tr> <td>
-  <?php 
+";
+}
 
 // lecture des masques
 $dir=".";
@@ -51,7 +53,8 @@ if ($filenames) {
       fwrite($file_out,"\\clearpage");
     }
     $i=$i+1;
-    echo "<BR> Traitement factture $filename................................................";
+    if (!$nohtml) { echo "<BR";}
+    echo "Traitement factture $filename....................";
     $out=make_facture($filename);
     fwrite($file_out,$out);
     if (!$debug)  {
@@ -79,23 +82,21 @@ if ($filenames) {
 
 }
 else {
-  print "pas de facture en attente <BR>";
+  print "pas de facture en attente ";
 }
 
 //echo "<blockquote> $out </blockquote>";
 
-
+if (!isset($nohtml)) {
   ?>
-  </td> <tr> <td align=center> 
-  	<a href='../tests/index.php'>  Retour test d'impression </a> </td> </tr>
-</table>
+
 
 </body>
 
 </html>
 
 <?php
-
+}
 
 function make_facture ($file) {
   global $debug, $header, $footer,$body,$body_vide,
@@ -117,8 +118,7 @@ function make_facture ($file) {
   foreach ($lines as $line) {
     $champs = split("!",$line);
     $clef=array_shift($champs);
-#print "<BR>";
-#print_r($champs);
+
 
     $i=0;
 

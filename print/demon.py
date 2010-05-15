@@ -16,6 +16,7 @@ dir_impTODO="c:/impprint"
 exe_print=exe_printTo=exe_facture=exe_etiq = "???exe_xxx"
 
 debug=0
+noprint=0
 msg=1
 once=0
 
@@ -32,6 +33,7 @@ def usage(message = None):
              \n\t\t[ --help ] \
              \n\t\t[ --once ] \
              \n\t\t[ --debug ] \
+             \n\t\t[ --noprint ] \
              \n\t\t[ --fac=<fichier facture a tester> ] \
              \n\t\t[ --etiq=<fichier code barre a tester> ] \
              \n\t\t[ --imp=<fichier bordereau a tester> ] \
@@ -43,12 +45,13 @@ def usage(message = None):
 
 
 def parse():
-    global once,debug,timeOK,msg
+    global once,debug,noprint,timeOK,msg
     
     """ parse the command line and set global _flags according to it """
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ht", 
-                                   ["help", "once", "every=", "fac=", "etiq=", "imp=", "trace=", "debug"])
+                                   ["help", "once", "every=", "fac=", "etiq=", \
+                                    "imp=", "trace=", "debug", "noprint"])
     except getopt.GetoptError, err:        # print help information and exit:
         usage(err)
 
@@ -75,6 +78,8 @@ def parse():
             shutil.copy(fichier,dir_impTODO)
         elif option in ("--debug"):
             debug = True
+        elif option in ("--noprint"):
+            noprint = True
         else:
             usage("unhandled option %s" % option)
 
@@ -175,7 +180,7 @@ def probeEtiq():
         
 
 def probeImp():
-    global timestamp,debug,exe_imp
+    global timestamp,debug,noprint,exe_imp
     
     files=os.listdir(dir_impTODO)
     if debug:
@@ -272,7 +277,7 @@ def checkRunning():
 
 parse()
 if debug:
-    print "once=%s,debug=%s,timeOK=%s,msg=%s"%(once,debug,timeOK,msg)
+    print "once=%s,debug=%s,noprint=%s,timeOK=%s,msg=%s"%(once,debug,noprint,timeOK,msg)
 init_env()
 
 if checkRunning() and not(once):
