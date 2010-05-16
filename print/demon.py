@@ -292,8 +292,8 @@ else:
         touchDate()
         if msg:
             print "%s"%timestamp+":"+"checking files pending..."
-        probeFacture()
         probeEtiq()
+        probeFacture()
         probeImp()
         probePrint(dir_printTODO)
         if debug:

@@ -75,9 +75,12 @@ function arguments ( $args )
   }
 return $ret;
 }
-$ret=arguments($argv);
-//print_r($ret['options']);
+if (isset($argv)) {
+   $ret=arguments($argv);
 
-extract($ret['options'], EXTR_SKIP);
+   //print_r($ret['options']);
+
+   extract($ret['options'], EXTR_SKIP);
+}
 
 ?>

@@ -1,5 +1,7 @@
 <?php include("../../inc/conf.php"); ?>
 <?php include("../../inc/fonctions.php"); ?>
+<?php include("../../inc/cmdline.php"); ?>
+
 <?php
 
 $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
@@ -13,11 +15,18 @@ $header="";
 $orientation="portrait";
 $nb_lignes_imprime=18;
 
-include("../../inc/header.php");
+if (!(isset($nohtml))) {
+   include("../../inc/header.php");
+   $br="<BR>";
+}
+else {
+     $br="";
+}
 $debug=0;
 $not_deleting=0;
 
 
+if (!(isset($nohtml))) {
 
 ?>
 <center>
@@ -27,6 +36,7 @@ $not_deleting=0;
     <tr >
       <tr> <td>
   <?php 
+}
 
 // lecture des masques
 $dir=".";
@@ -51,7 +61,7 @@ if ($filenames) {
 
 		$orientation="PORTRAIT";
 		// traitement fichier en cours
-		echo "<BR> Traitement impression $filename................................................";
+		echo "$BR Traitement impression $filename................................................";
 		$out=make_imprime($filename);
 
 		// ecriture vers le fichier all_portrait ou all_landscape.tex
@@ -91,11 +101,11 @@ if ($filenames) {
 		}
 
 		if ($not_deleting) {
-			echo "<BR> Effacement $filename NON FAIT   NON FAIT.... <BR> <BR>.";
+			echo "$BR Effacement $filename NON FAIT   NON FAIT.... $BR $BR.";
 		}
 		else {
 			unlink($filename);
-			echo "<BR> Effacement $filename OK.... <BR> <BR>.";
+			echo "$BR Effacement $filename OK.... $BR $BR.";
 		}
 	}
 
@@ -109,18 +119,18 @@ if ($filenames) {
 		$l=array_shift($lines);
 		$msg="";
 		while($l){
-			$msg=$msg."$l <BR>";
+			$msg=$msg."$l $BR";
 			$l=array_shift($lines);
 		}
 
 		if (ereg("Emergency stop",$msg) or ereg("No pages of output",$msg))  {
 			$msg=ereg_replace("^.*aux))","ERREUR : ",$msg);
 			$msg=ereg_replace("No pages of output.*$","No pages of ouput",$msg);
-			print "<BR> <BOLD> <br> <B> ERREUR D'INTERPRETATION dans $filename !!!! </B> <BR> $msg <BR>";
+			print "$BR <BOLD> $br <B> ERREUR D'INTERPRETATION dans $filename !!!! </B> $BR $msg $BR";
 		}
 		else {
 			print_all("portrait");
-			print "<BR> <BOLD> <br> <B> semble ok dans $filename !!!! </B> <BR> $msg <BR>";
+			print "$BR <BOLD> $br <B> semble ok dans $filename !!!! </B> $BR $msg $BR";
 		}
 
 	}
@@ -136,16 +146,15 @@ if ($filenames) {
 
 	}
 
-	print "<BR> ".($nb_pages_portrait+$nb_pages_landscape)." crées<BR> ";
+	print "$BR ".($nb_pages_portrait+$nb_pages_landscape)." crées$BR ";
 
 
 }
 else {
-	print "pas de documents a imprimer en attente <BR>";
+	print "pas de documents a imprimer en attente $BR";
 }
-
-
-  ?>
+if (!(isset($nohtml))) {
+?>
   </td> <tr> <td align=center> 
   	<a href='../tests/index.php'>  Retour test d'impression </a> </td> </tr>
 </table>
@@ -153,7 +162,7 @@ else {
 </body>
 
 </html>
-
+}
 <?php
 
 
@@ -192,7 +201,7 @@ function make_imprime ($file) {
 		$champs = split("!",$line);
 		$what=array_shift($champs);
 
-		print "<BR> what  = $what";
+		print "$BR what  = $what";
 		if (ereg("^Z0,1",$what))  {
 			// nom de l'imprimante, nombre d'impression, type de document
 			$printer=array_shift($champs);

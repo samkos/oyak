@@ -1,4 +1,4 @@
 @echo off
 PATH=e:\Program Files\EasyPHP1-8\php\;e:\Program Files\EasyPHP1-8\php\extensions\;e:\program Files\ghostgum\gsview;e:\Program Files\EasyPHP 2.0b1\php5\;e:\Program Files\EasyPHP 2.0b1\php5\ext\;e:\program Files\ghostgum\gsview;e:\program Files\MiKTeX 2.6\miktex\bin;
-rem php.exe test.php --noheader=1
-php.exe traite.php --nohtml=1
+echo "traitement factures"
+rem php.exe traite.php --nohtml=1

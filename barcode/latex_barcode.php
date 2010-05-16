@@ -1,4 +1,4 @@
-<?
+<?php
 $hauteur_etiquette="2.5 cm";
 $largeur_etiquette="6.5 cm";
 $entre_ligne_etiquette="0.2 cm";
@@ -10,14 +10,29 @@ $nb_per_page=8;
 $exe_print="\"c:/Program Files/Ghostgum/gsview/gsprint.exe\"   ";
 $printer="default";
 
+include("../inc/conf.php"); 
+include("../inc/fonctions.php"); 
+include("../inc/cmdline.php"); 
+
+if (!isset($nohtml)) {
+ include("../inc/header.php"); 
+ $br="<br>";
+}
+else {
+  $br="";
+}
+
+if (!(isset($nohtml))) {
+
 ?>
-
-<?php include("../inc/conf.php"); ?>
-<?php include("../inc/fonctions.php"); ?>
-
-
-
-<?php include("../inc/header.php"); 
+<center>
+<table>
+    <tr>
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
+    <tr >
+      <tr> <td>
+  <?php 
+}
 
 
 /**
@@ -28,7 +43,7 @@ $printer="default";
 $format="|c|c|c|";
 $format=" c c c";
 
-print "$action ...<br />";
+if (isset($action) and isset($debug)) {print "action:$action ...$br";}
 
 if ($action=="print") {
   foreach (array_keys($GLOBALS) as $var) {
@@ -48,13 +63,14 @@ else  {
   $filenames=glob($dir_etiquette);
   $nb_etiq=0;
 
+if ($filenames) {
   foreach ($filenames as $filename) {
-    echo "<BR> Traitement fichier etiquette $filename................................................";
+    echo "$BR Traitement fichier etiquette $filename................................................";
     $lines=file($filename);
     foreach ($lines as $line) {
       $champs = split("!",$line);
       $clef=array_shift($champs);
-      //print "$line, xxxxxx $clef <BR>";
+      //print "$line, xxxxxx $clef $BR";
       
       if (ereg("^Z0,1",$clef))  { 
 	// nom de l'imprimante, nombre d'impression, type de document
@@ -70,14 +86,14 @@ else  {
 	$barcodes[$nb_etiq]=$barcode;
 	$quantites[$nb_etiq]=1;
 	$produits[$nb_etiq]=$produit;
-	print "$barcode : 1 x $produit <BR>";
+	print "$barcode : 1 x $produit $BR";
       }
     }
     unlink($filename);
   }
   print "----------------------------------";
 }
-
+}
 
   //print_r($barcodes);
   $ftex=fopen($tex_file,"w");
@@ -122,7 +138,7 @@ else  {
 
   $sql_query = "select id,titre,stock,barcode from ".$prefixe_table."produits  ";
 
-  print "<BR> $sql_query <BR>";
+  if (isset($debug)) {  print "$BR $sql_query $BR";}
   $req = mysql_query("$sql_query ");
 
   $nb=0;
@@ -130,6 +146,7 @@ else  {
   $name_line="";
   $etiquette_line="";
 
+if (isset($barcodes)) {
   foreach (array_keys($barcodes) as $key) {
     for ($i=1;$i<=$quantites[$key];$i++) {
       $python_line=sprintf('
@@ -188,31 +205,23 @@ print "resultat-> $status";
     copy ("work/barcodes.ps", "c:/Oyak/barcodes.ps");
   }
 
-
-
-
-
-?>
-
-<script language="JavaScript" type="text/javascript">
-
-
-
-
-
-function loadPage() {
-
-  document.location.href = "../index.php";
+}
+else {
+     print "pas d'etiquette en attente $br";
 }
 
-//loadPage();
 
-
-
+if (!(isset($nohtml))) {
+echo "
+ $br
+<script language='JavaScript' type='text/javascript'>
+function loadPage() {
+  document.location.href = '../index.php';
+}
 </script>
+";
 
+  include('../inc/footer.php'); 
+}
 
-
- 
-<br>
-<?php include("../inc/footer.php"); ?>
+?>
