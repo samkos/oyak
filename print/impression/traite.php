@@ -26,8 +26,8 @@ $debug=0;
 $not_deleting=0;
 
 
-if (!(isset($nohtml))) {
 
+if (!(isset($nohtml))) {
 ?>
 <center>
 <table>
@@ -153,6 +153,7 @@ if ($filenames) {
 else {
 	print "pas de documents a imprimer en attente $BR";
 }
+
 if (!(isset($nohtml))) {
 ?>
   </td> <tr> <td align=center> 
@@ -162,8 +163,9 @@ if (!(isset($nohtml))) {
 </body>
 
 </html>
-}
 <?php
+}
+
 
 
 function print_all($orientation) {
