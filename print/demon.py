@@ -294,7 +294,7 @@ else:
             print "%s"%timestamp+":"+"checking files pending..."
         probeEtiq()
         probeFacture()
-        #probeImp()
+        probeImp()
         probePrint(dir_printTODO)
         if debug:
             print once
