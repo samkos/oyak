@@ -144,18 +144,21 @@ def init_env():
 
 
 
-
 def probeFacture():
     global timestamp
     
     files=os.listdir(dir_factureTODO)
+    print files
 
-    if files:
+    
+
+    if len(files):
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
         commande=exe_facture
         if debug:
             print "%s"%timestamp+":execution de ",commande
+        
         os.system(commande)
     else:
         if msg:
@@ -178,7 +181,6 @@ def probeEtiq():
         if msg:
             print "%s"%timestamp+":"+"Pas d'etiquette en attente"
         
-
 def probeImp():
     global timestamp,debug,noprint,exe_imp
     
