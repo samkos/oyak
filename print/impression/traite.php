@@ -139,7 +139,7 @@ if ($filenames) {
 		fwrite($file_landscape_out,$conclusion);
 		fclose($file_landscape_out);
 
-		system("compile_landscape.bat > out");
+		system("compile_landscape.bat > out	");
 		//print "res=$status";
 
 		print_all("landscape");

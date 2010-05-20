@@ -83,9 +83,37 @@ def parse():
         else:
             usage("unhandled option %s" % option)
 
+def search_soft(soft,drives,versions,specific_file="",root="/Program Files/"):
+    # recherche easyphp
+    path_found=False
+    # checking the installed drive
+    for drive in drives:
+        for version in versions:
+            if not(path_found):
+                if os.path.isfile(drive+":"+root+version+specific_file):
+                    path_found=drive+":"+root+version
+                
+    if not path_found:
+        print "erreur : %s not found"%soft
+        sys.exit(1)
+
+    if debug:
+        print "%s installe dans  : %s"%(soft,path_found)
+
+    return path_found+"/"+specific_file
+        
+def init_env_bis():
+
+    drives = ["c","e"]
+
+    gs_env=search_soft("gs",drives,["Ghostgum/gsview/"],"gsprint.exe")
+    gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/phpmyfactures/index.php")
+    latex_env=search_soft("latex",drives,["MiKTeX 2.5","MiKTeX 2.6"],"/miktex/bin/pdflatex.exe")
+    
+
 def init_env():
     global exe_print, exe_printTo,exe_facture,exe_etiq,exe_imp
-    
+
     drive="c:"
     drive_found=False
     # checking the installed drive
@@ -103,6 +131,7 @@ def init_env():
     if debug:
         print "drive d'installation : ",drive
 
+    # recherche easyphp
     easyphp_found=False
     # checking the installed drive
     for drive in ["c","e"]:
@@ -148,11 +177,8 @@ def probeFacture():
     global timestamp
     
     files=os.listdir(dir_factureTODO)
-    print files
 
-    
-
-    if len(files):
+    if files:
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
         commande=exe_facture
@@ -210,6 +236,8 @@ def probePrint(dir_print,printer="default"):
     else:
         print "%s"%timestamp+":"+ "impression des documents pour l'imprimante "+printer
     files=os.listdir(dir_print)
+
+    # reading common environnement settings
 
     nb=0
     for file in files:
@@ -280,6 +308,7 @@ def checkRunning():
 parse()
 if debug:
     print "once=%s,debug=%s,noprint=%s,timeOK=%s,msg=%s"%(once,debug,noprint,timeOK,msg)
+init_env_bis()
 init_env()
 
 if checkRunning() and not(once):
