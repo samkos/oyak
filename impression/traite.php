@@ -293,9 +293,6 @@ function make_imprime ($file) {
 							switch($font) {
 								case "g": $in='\textbf{%s}'; break;
 								case "i": $in='\textsl{%s}'; break;
-								case "l": $in='\large{%s}'; break;
-								case "s": $in='\small{%s}'; break;
-								case "f": $in='\footnotesize{%s}'; break;
 								default : $in='%s';
 							}
 
