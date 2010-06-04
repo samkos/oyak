@@ -104,7 +104,7 @@ def search_soft(soft,drives,versions,specific_file="",root="/Program Files/"):
         
 def init_env_bis():
 
-    drives = ["c","e"]
+    drives = ["c","d"]
 
     gs_env=search_soft("gs",drives,["Ghostgum/gsview/"],"gsprint.exe")
     gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/phpmyfactures/index.php")
@@ -117,7 +117,7 @@ def init_env():
     drive="c:"
     drive_found=False
     # checking the installed drive
-    for drive in ["c","e"]:
+    for drive in ["c","d"]:
         if not(drive_found):
             if os.path.isfile(drive+":\Program Files\Ghostgum\gsview\gsprint.exe"):
                 drive_found=drive
@@ -135,7 +135,7 @@ def init_env():
     easyphp_found=False
     # checking the installed drive
     for drive in ["c","e"]:
-        for easyphp in ["EasyPHP 2.0b1","EasyPHP1-8"]:
+        for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
             if not(easyphp_found):
                 if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/phpmyfactures/index.php"):
                     easyphp_found=drive+":/Program Files/"+easyphp

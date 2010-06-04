@@ -27,7 +27,7 @@ function my_exec($cmd)
     $outputfile= "c:/oyak/out";
     $batch = 'c:/oyak/exec.bat';
     $fp = fopen($batch, 'w');
-    fwrite($fp, "@echo off\n e:\ncd $cwd \n");
+    fwrite($fp, "@echo off\ncd $cwd \n");
     fwrite($fp, "$cmd \n");  
     fclose($fp);
     $WshShell = new COM("WScript.Shell");
