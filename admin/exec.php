@@ -31,12 +31,24 @@ function my_exec($cmd)
     fwrite($fp, "$cmd \n");  
     fclose($fp);
     $WshShell = new COM("WScript.Shell");
-    $oExec = $WshShell->Run("cmd /C $batch > $outputfile 2>&1", 0, true);
+    //$oExec = $WshShell->Run("cmd /C $batch > $outputfile 2>&1", 0, true);
+    // fix provisoire easyphp 1.8
+    system("$batch > $outputfile 2>&1",$status);
 
     // Read the file file.
-    $res = file($outputfile);
+    print $outputfile;
+    //$res = file_get_contents($outputfile);
+    //print $res;
+    //return "xxxxxxxxxxx";
+    $f=fopen($outputfile,'rb');
 
-    return $res;
+    $data='';
+    $size=1024;
+    while(!feof($f))
+	$data.=fread($f,$size);
+    fclose($f);
+    print $data;
+    return "$data";
 }
 
 
