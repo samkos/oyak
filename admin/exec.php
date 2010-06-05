@@ -1,4 +1,4 @@
-<?php
+o<?php
 
 // through a Wscript
 function _exec($cmd)
@@ -47,7 +47,8 @@ function my_exec($cmd)
     while(!feof($f))
 	$data.=fread($f,$size);
     fclose($f);
-    print $data;
+    //print $data;
+    $data=str_replace("\n","<br>",$data);
     return "$data";
 }
 
