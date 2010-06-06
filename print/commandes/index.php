@@ -41,13 +41,18 @@ if (!$commande) {
    </tr>
 <?php
 	  $clefs=array();
+	  if (count($clefs)==0) {
+	    print "<tr><td colspan=9 align=center  bgcolor=\"#ffffff\">pas de commandes en cours... </td></tr>";
+	  }
+	  else
+	  {
 	  foreach ($files as $filename) {
 		    $clef=date("YmdHis", filectime($filename));
 				array_push($clefs,$clef);
 				$file_full[$clef]=$filename;
 		}
 		// print_r($clefs);
-    sort($clefs,SORT_STRING);
+                sort($clefs,SORT_STRING);
 		while ($clef=array_shift($clefs)){
 				
 				$filename=$file_full[$clef];
@@ -78,14 +83,14 @@ if (!$commande) {
 				// recuperaton nom Client
 		
 				$sql_order="select societe,ville from ".$prefixe_table."clients where clef='$ligne[1]'";
-        $req = mysql_query($sql_order);
+        			$req = mysql_query($sql_order);
 				//print $sql_order."<BR>";
-        while($ligne = mysql_fetch_array($req))
-        {
-         $societe    = $ligne["societe"];
-         $ville = $ligne["ville"];
-         $client_name="$societe <BR> ($ville)";
-        }
+        			while($ligne = mysql_fetch_array($req))
+        			{
+        			 $societe    = $ligne["societe"];
+        			 $ville = $ligne["ville"];
+        			 $client_name="$societe <BR> ($ville)";
+        			}                       
 				
 				if ($filename!="CVS") {
   	      echo "<tr> <td bgcolor=\"#ffffff\" align=\"center\" > $filename <BR> </td>";
@@ -97,7 +102,7 @@ if (!$commande) {
   	      echo "     <td bgcolor=\"#ffffff\" align=\"center\" > <a href=\"../factures/index.php?commande=$filename&action=imprimer&contenu=$commande[0]&vendeur=$vendeur_name&client=$client_name&date=$date\" >Générer</a> <BR> </td>";
 					echo "</tr>";
 				}
-   }
+   }}
 	 echo "</table> <br /> <br /> <br />";
 
 }
