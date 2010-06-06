@@ -135,7 +135,8 @@ def init_env():
     easyphp_found=False
     # checking the installed drive
     for drive in ["c","e"]:
-        for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
+#        for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
+        for easyphp in ["EasyPHP1-8"]:
             if not(easyphp_found):
                 if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/oyak/index.php"):
                     easyphp_found=drive+":/Program Files/"+easyphp

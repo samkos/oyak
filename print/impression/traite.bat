@@ -1,6 +1,6 @@
 @echo off
-PATH=c:\Program Files\EasyEasyPHP-5.3.2i\php\;c:\Program Files\EasyPHP-5.3.2i\php\ext\;c:\program Files\ghostgum\gsview;c:\program Files\MiKTeX 2.6\miktex\bin;
+PATH=c:\Program Files\EasyEasyPHP1-8\php\;c:\Program Files\EasyPHP1-8\php\ext\;c:\program Files\ghostgum\gsview;c:\program Files\MiKTeX 2.6\miktex\bin;
 c:
-cd "\Program Files\EasyPHP-5.3.2i\www\oyak\print\impression"
-"c:\Program Files\EasyPHP-5.3.2i\php\php.exe" traite.php  traite.php --nohtml=1
+cd "\Program Files\EasyPHP1-8\www\oyak\print\impression"
+"c:\Program Files\EasyPHP1-8\php\php.exe" traite.php --nohtml=1
 
