@@ -36,7 +36,7 @@ function my_exec($cmd)
     system("$batch > $outputfile 2>&1",$status);
 
     // Read the file file.
-    print $outputfile;
+    //print $outputfile;
     //$res = file_get_contents($outputfile);
     //print $res;
     //return "xxxxxxxxxxx";
@@ -48,8 +48,10 @@ function my_exec($cmd)
 	$data.=fread($f,$size);
     fclose($f);
     //print $data;
-    $data=str_replace("\n","<br>",$data);
-    return "$data";
+    //$data=str_replace("\n","<br>",$data);
+    $res = explode("\n",$data);
+    //print_r($res);
+    return $res;
 }
 
 

@@ -2,7 +2,8 @@
 
 // Configuration mySQL
 
-error_reporting((E_ALL ^ E_NOTICE) & ~E_DEPRECATED & E_USER_DEPRECATED);
+//error_reporting((E_ALL ^ E_NOTICE) & ~E_DEPRECATED & E_USER_DEPRECATED);
+error_reporting((E_ALL ^ E_NOTICE));
 
 extract($_POST, EXTR_SKIP);
 extract($_GET, EXTR_SKIP);

@@ -15,7 +15,7 @@ if ($comment) {
 //print $commande;
 $res = my_exec($commande);
 //$res="xxx";
-print $res;
+//print $res;
 ?>
 <center>
 <table>
