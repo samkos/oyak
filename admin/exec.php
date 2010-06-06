@@ -4,7 +4,7 @@ function my_exec($cmd)
 
    $cwd = getcwd();
 
-    $outputfile= "c:/oyak/out";
+    $outputfile= "c:/oyak/out_exec";
     $batch = 'c:/oyak/exec.bat';
     $fp = fopen($batch, 'w');
     fwrite($fp, "@echo off\ncd $cwd \n");
