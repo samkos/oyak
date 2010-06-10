@@ -4,17 +4,18 @@
 <?php
 
 $exe_python=" demon.py";
-
+//$action="log HEAD~1..";
 include("../inc/header.php");
 $debug=0;
-$commande="git $action";
+$commande="\"c:/Program Files/Git/bin/git.exe\" $action";
 if ($comment) {
-  $commande="git $action -m \"$comment\" ";
+  $commande="\"c:/Program Files/Git/bin/git.exe\" $action -m \"$comment\" ";
 }
 
-
+//print $commande;
 $res = my_exec($commande);
-
+//$res="xxx";
+//print $res;
 ?>
 <center>
 <table>
@@ -67,4 +68,5 @@ include("git_command.php");
 </body>
 
 </html>
+ 
 

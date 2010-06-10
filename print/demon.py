@@ -104,10 +104,10 @@ def search_soft(soft,drives,versions,specific_file="",root="/Program Files/"):
         
 def init_env_bis():
 
-    drives = ["c","e"]
+    drives = ["c","d"]
 
     gs_env=search_soft("gs",drives,["Ghostgum/gsview/"],"gsprint.exe")
-    gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/phpmyfactures/index.php")
+    gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/oyak/index.php")
     latex_env=search_soft("latex",drives,["MiKTeX 2.5","MiKTeX 2.6"],"/miktex/bin/pdflatex.exe")
     
 
@@ -117,7 +117,7 @@ def init_env():
     drive="c:"
     drive_found=False
     # checking the installed drive
-    for drive in ["c","e"]:
+    for drive in ["c","d"]:
         if not(drive_found):
             if os.path.isfile(drive+":\Program Files\Ghostgum\gsview\gsprint.exe"):
                 drive_found=drive
@@ -135,9 +135,10 @@ def init_env():
     easyphp_found=False
     # checking the installed drive
     for drive in ["c","e"]:
-        for easyphp in ["EasyPHP 2.0b1","EasyPHP1-8"]:
+#        for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
+        for easyphp in ["EasyPHP1-8"]:
             if not(easyphp_found):
-                if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/phpmyfactures/index.php"):
+                if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/oyak/index.php"):
                     easyphp_found=drive+":/Program Files/"+easyphp
                 
     if not easyphp_found:
@@ -149,11 +150,11 @@ def init_env():
         print "easyphp d'installation : ",easyphp
 
 
-    exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
-    exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
-    exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
-    exe_etiq="\""+easyphp+"/www/phpmyfactures/barcode/traite.bat\" ";
-    exe_imp="\""+easyphp+"/www/phpmyfactures/print/impression/traite.bat\" ";
+    exe_print="\""+easyphp+"/www/oyak/print/print.bat \""
+    exe_printTo="\""+easyphp+"/www/oyak/print/printTo.bat \""
+    exe_facture="\""+easyphp+"/www/oyak/print/factures/traite.bat\" ";
+    exe_etiq="\""+easyphp+"/www/oyak/barcode/traite.bat\" ";
+    exe_imp="\""+easyphp+"/www/oyak/print/impression/traite.bat\" ";
 
 
     if not(os.path.exists(dir_printTODO)):

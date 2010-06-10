@@ -2,7 +2,8 @@
 
 // Configuration mySQL
 
-error_reporting(E_ALL ^ E_NOTICE);
+//error_reporting((E_ALL ^ E_NOTICE) & ~E_DEPRECATED & E_USER_DEPRECATED);
+error_reporting((E_ALL ^ E_NOTICE));
 
 extract($_POST, EXTR_SKIP);
 extract($_GET, EXTR_SKIP);
@@ -12,7 +13,7 @@ $user_db = "root";
 $password_db = "";
 $bdd_db = "oyak";
 
-$prefixe_dossier = "phpmyfactures/"; // url du dossier où se trouvera le script (Ne pas commencer par un / mais terminer par un / exemple : factures/ )
+$prefixe_dossier = "oyak/"; // url du dossier où se trouvera le script (Ne pas commencer par un / mais terminer par un / exemple : factures/ )
 $prefixe_table = "pcfact_"; // préfixe des tables (par défaut)
 
 $pseudo_conf = "ciia"; // nom d'utilisateur pour l'espace d'administration
