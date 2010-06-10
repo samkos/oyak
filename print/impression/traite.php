@@ -200,6 +200,7 @@ function make_imprime ($file) {
 	$nb_ligne=0;
 
 	foreach ($lines as $line) {
+	        $line=str_replace("%","\\%",$line);
 		$champs = split("!",$line);
 		$what=array_shift($champs);
 
