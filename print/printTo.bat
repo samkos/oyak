@@ -1,4 +1,4 @@
-PATH=__DRIVE__:\program Files\MiKTeX 2.6\miktex\bin;C:\WINDOWS\system32;c:\windows;c:\program Files\ghostgum\gsview
+call ../inc/path.bat
 %gsprint -landscape  -printer %2 %1
 gsprint  -printer %2 %1
 echo "impression en cours"

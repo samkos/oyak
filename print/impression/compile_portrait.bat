@@ -1,5 +1,4 @@
-
-PATH=c:\program Files\MiKTeX 2.6\miktex\bin;C:\WINDOWS\system32;c:\windows;c:\program Files\ghostgum\gsview
+call ../../inc/path.bat
 latex "\nonstopmode\input" all_portrait.tex
 dvips all_portrait
 copy all_portrait.ps c:\Oyak\general_portrait.ps

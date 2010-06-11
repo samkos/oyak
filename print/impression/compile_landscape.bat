@@ -1,4 +1,4 @@
-PATH=c:\program Files\MiKTeX 2.6\miktex\bin;C:\WINDOWS\system32;c:\windows;c:\program Files\ghostgum\gsview
+call ../../inc/path.bat
 latex "\nonstopmode\input" all_landscape.tex
 dvips all_landscape
 copy all_landscape.ps c:\Oyak\general_landscape.ps

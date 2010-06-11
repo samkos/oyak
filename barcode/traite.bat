@@ -1,6 +1,6 @@
 @echo off
-PATH=e:\Program Files\EasyPHP1-8\php\;e:\Program Files\EasyPHP1-8\php\extensions\;e:\program Files\ghostgum\gsview;e:\Program Files\EasyPHP 2.0b1\php5\;e:\Program Files\EasyPHP 2.0b1\php5\ext\;e:\program Files\ghostgum\gsview;e:\program Files\MiKTeX 2.6\miktex\bin;
-e:
-cd "\Program Files\EasyPHP 2.0b1\www\phpmyfactures\barcode"
-php.exe latex_barcode.php --nohtml=1
+PATH=c:\Program Files\EasyPHP1-8\php\;c:\Program Files\EasyPHP1-8\php\extensions\;c:\program Files\ghostgum\gsview;c:\program Files\MiKTeX 2.6\miktex\bin;
+c:
+cd "\Program Files\EasyPHP1-8\www\phpmyfactures\barcode"
+"c:\Program Files\EasyPHP1-8\php\php.exe"  latex_barcode.php --nohtml=1
 
