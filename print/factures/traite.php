@@ -71,13 +71,13 @@ if ($filenames) {
 
   @mkdir ("c:/Oyak/ToPrint",0755);
   if ($printer=="default") {
-    copy ("all.ps", "c:/Oyak/ToPrint/facture.ps");
-    copy ("all.ps", "c:/Oyak/facture.ps");
+    copy ("all.pdf", "c:/Oyak/ToPrint/facture.pdf");
+    copy ("all.pdf", "c:/Oyak/facture.pdf");
   }
   else {
     @mkdir ("c:/Oyak/ToPrint/$printer",0755);
-    copy ("all.ps", "c:/Oyak/ToPrint/$printer/facture.ps");
-    copy ("all.ps", "c:/Oyak/facture.ps");
+    copy ("all.pdf", "c:/Oyak/ToPrint/$printer/facture.pdf");
+    copy ("all.pdf", "c:/Oyak/facture.pdf");
   }
 
 }

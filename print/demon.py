@@ -119,7 +119,7 @@ def init_env_bis():
     drives = ["c","e"]
 
     gs_env=search_soft("gs",drives,["Ghostgum/gsview/"],"gsprint.exe")
-    gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/oyak/index.php")
+    gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/phpmyfactures/index.php")
     latex_env=search_soft("latex",drives,["MiKTeX 2.5","MiKTeX 2.6"],"/miktex/bin/pdflatex.exe")
     
 
@@ -150,7 +150,7 @@ def init_env():
         for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
 #        for easyphp in ["EasyPHP1-8"]:
             if not(easyphp_found):
-                if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/oyak/index.php"):
+                if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/phpmyfactures/index.php"):
                     easyphp_found=drive+":/Program Files/"+easyphp
                 
     if not easyphp_found:
@@ -162,11 +162,11 @@ def init_env():
         print "easyphp d'installation : ",easyphp
 
 
-    exe_print="\""+easyphp+"/www/oyak/print/print.bat \""
-    exe_printTo="\""+easyphp+"/www/oyak/print/printTo.bat \""
-    exe_facture="\""+easyphp+"/www/oyak/print/factures/traite.bat\" ";
-    exe_etiq="\""+easyphp+"/www/oyak/barcode/traite.bat\" ";
-    exe_imp="\""+easyphp+"/www/oyak/print/impression/traite.bat\" ";
+    exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
+    exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
+    exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
+    exe_etiq="\""+easyphp+"/www/phpmyfactures/barcode/traite.bat\" ";
+    exe_imp="\""+easyphp+"/www/phpmyfactures/print/impression/traite.bat\" ";
 
 
     if not(os.path.exists(dir_printTODO)):

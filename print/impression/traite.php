@@ -74,9 +74,9 @@ if ($filenames) {
 			else {
 				@unlink("all_landscape.tex");
 				@unlink("all_landscape.dvi");
-				@unlink("all_landscape.ps");
+				@unlink("all_landscape.pdf");
 				@unlink("all_landscape.aux");
-				@unlink('c:/Oyak/imprime_landscape.ps');
+				@unlink('c:/Oyak/imprime_landscape.pdf');
 				$file_landscape_out=fopen("all_landscape.tex","w");
 				fwrite($file_landscape_out,$preambule_landscape);
 			}
@@ -90,9 +90,9 @@ if ($filenames) {
 			else {
 				@unlink("all_portrait.tex");
 				@unlink("all_portrait.dvi");
-				@unlink("all_portrait.ps");
+				@unlink("all_portrait.pdf");
 				@unlink("all_portrait.aux");
-				@unlink('c:/Oyak/imprime_portrait.ps');
+				@unlink('c:/Oyak/imprime_portrait.pdf');
 				$file_portrait_out=fopen("all_portrait.tex","w");
 				fwrite($file_portrait_out,$preambule_portrait);
 			}
@@ -173,13 +173,13 @@ function print_all($orientation) {
 
 	@mkdir ("c:/Oyak/ToPrint",0755);
 	if ($printer=="default") {
-		copy ("all_$orientation.ps", "c:/Oyak/ToPrint/imprime_$orientation.ps");
-		copy ("all_$orientation.ps", "c:/Oyak/imprime_$orientation.ps");
+		copy ("all_$orientation.pdf", "c:/Oyak/ToPrint/imprime_$orientation.pdf");
+		copy ("all_$orientation.pdf", "c:/Oyak/imprime_$orientation.pdf");
 	}
 	else {
 		@mkdir ("c:/Oyak/ToPrint/$printer",0755);
-		copy ("all_$orientation.ps", "c:/Oyak/ToPrint/$printer/imprime_$orientation.ps");
-		copy ("all_$orientation.ps", "c:/Oyak/imprime_$orientation.ps");
+		copy ("all_$orientation.pdf", "c:/Oyak/ToPrint/$printer/imprime_$orientation.pdf");
+		copy ("all_$orientation.pdf", "c:/Oyak/imprime_$orientation.pdf");
 	}
 }
 
