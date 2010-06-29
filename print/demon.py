@@ -4,7 +4,7 @@ import re
 import time,datetime
 from stat import *
 
-timeTouchFile="/Oyak/ToPrint/PrintDemon.txt"
+timeTouchFile="c:/Oyak/ToPrint/PrintDemon.txt"
 timeOK=30
 
 
@@ -25,6 +25,18 @@ timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
 
 #sys.stdout = open("c:/Oyak/print.log","a")
 
+if not(os.path.exists("c:\\facprint")):
+    os.mkdir("c:\\facprint")
+
+if not(os.path.exists("c:\\etiqprint")):
+    os.mkdir("c:\\etiqprint")
+
+if not(os.path.exists("c:\\Oyak")):
+    os.mkdir("c:\\Oyak")
+
+if not(os.path.exists("c:\\Oyak\\ToPrint")):
+    os.mkdir("c:\\Oyak\\ToPrint")
+    
 def usage(message = None):
     """ helping message"""
     if message:
@@ -104,7 +116,7 @@ def search_soft(soft,drives,versions,specific_file="",root="/Program Files/"):
         
 def init_env_bis():
 
-    drives = ["c","d"]
+    drives = ["c","e"]
 
     gs_env=search_soft("gs",drives,["Ghostgum/gsview/"],"gsprint.exe")
     gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/oyak/index.php")
@@ -135,8 +147,8 @@ def init_env():
     easyphp_found=False
     # checking the installed drive
     for drive in ["c","e"]:
-#        for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
-        for easyphp in ["EasyPHP1-8"]:
+        for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
+#        for easyphp in ["EasyPHP1-8"]:
             if not(easyphp_found):
                 if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/oyak/index.php"):
                     easyphp_found=drive+":/Program Files/"+easyphp
