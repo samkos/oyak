@@ -10,7 +10,7 @@ $exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
 $dir_facture="c:\facprint\*";
 
 $header=1;
-$nb_lignes_facture=30;
+$nb_lignes_facture=15;
 
 $debug=0;
 
