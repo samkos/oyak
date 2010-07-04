@@ -10,7 +10,8 @@ $exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
 $dir_facture="c:\facprint\*";
 
 $header=1;
-$nb_lignes_facture=15;
+$nb_lignes_facture1=22;
+$nb_lignes_facture2=18;
 
 $debug=0;
 
@@ -100,7 +101,9 @@ if (!isset($nohtml)) {
 
 function make_facture ($file) {
   global $debug, $header, $footer,$body,$body_vide,
-    $nb_lignes_facture,$footer2,$header2,$printer,$copies;
+    $nb_lignes_facture1,
+    $nb_lignes_facture2,
+    $footer2,$header2,$printer,$copies;
   
 
   $document="";
@@ -114,6 +117,7 @@ function make_facture ($file) {
   $lines=file($file);
 
   $nb_ligne=0;
+  $nb_lignes_facture=$nb_lignes_facture1;
 
   foreach ($lines as $line) {
     $line=str_replace("%","\\%",$line);
@@ -145,6 +149,7 @@ function make_facture ($file) {
       if ($nb_ligne>$nb_lignes_facture) {
 	$out = $out.$footer2.$header2;
 	$nb_ligne=0;
+        $nb_lignes_facture=$nb_lignes_facture2;
 	echo "new pag!!!";
       }
 
