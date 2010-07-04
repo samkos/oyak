@@ -158,6 +158,9 @@ function make_facture ($file) {
 	$c=array_shift($champs);
 	$i=$i+1;
 	$cherche=sprintf("#Z5,%d#",$i);
+	//print strlen($c); print"\n";
+	if (strlen($c)>=41) {print strlen($c),"new_line /$c/\n";$nb_ligne=$nb_ligne+1;}
+	//$c=str_replace(" ",'\ ',$c);
 	$current=str_replace($cherche,$c,$current);
         //print "<BR> $cherche -> $c";
       }
