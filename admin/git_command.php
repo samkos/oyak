@@ -8,7 +8,9 @@
     	<td align=center > <a href="git.php?action=branch -a"> branches </a></td>
 	<td> <a href="git.php?action=diff"> diff </a></td>
     </tr> <tr>
-    	<td> <a href="git.php?action=push"> synchronise </a></td>
+    	<td> <a href="git.php?action=pull origin courbeyre"> met à jour </a></td>
+    </tr> <tr>
+    	<td> <a href="git.php?action=push origin"> envoie </a></td>
     <td align=right>
    <form  enctype="multipart/form-data"  action="git.php" method="post">
   			  Sauvegarde  : &nbsp;
