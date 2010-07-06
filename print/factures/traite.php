@@ -164,7 +164,7 @@ function make_facture ($file) {
 	   print strlen($c); print "new_line /$c/\n"; 
 	   //$c="\\shorstack{".substr($c,1,32)."\\hfill\\ ".substr($c,33,99)."}";
 	   //$c="$\\shorstack[l]{".substr($c,0,32)."\\\\".substr($c,31,99)."}$";
-	   $c="\\hyphenation{".substr($c,0,$width)."-".substr($c,$width-1,99)."}";
+	   $c=substr($c,0,$width-1)."-".substr($c,$width-2,99);
 	   $nb_ligne=$nb_ligne+1;
 	}
 	$c=str_replace(" ",'~',$c);
