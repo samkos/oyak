@@ -13,7 +13,7 @@ dir_workTODO="c:/Oyak/Work"
 dir_factureTODO="c:/facprint"
 dir_etiqTODO="c:/etiqprint"
 dir_impTODO="c:/impprint"
-exe_print=exe_printTo=exe_facture=exe_etiq = "???exe_xxx"
+exe_view=exe_print=exe_printTo=exe_facture=exe_etiq = "???exe_xxx"
 
 debug=0
 noprint=0
@@ -124,7 +124,7 @@ def init_env_bis():
     
 
 def init_env():
-    global exe_print, exe_printTo,exe_facture,exe_etiq,exe_imp
+    global exe_view, exe_print, exe_printTo,exe_facture,exe_etiq,exe_imp
 
     drive="c:"
     drive_found=False
@@ -161,7 +161,7 @@ def init_env():
     if debug:
         print "easyphp d'installation : ",easyphp
 
-
+    exe_view="\""+easyphp+"/www/phpmyfactures/print/view.bat \""    
     exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
     exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
     exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
@@ -241,7 +241,7 @@ def probeImp():
         
 
 def probePrint(dir_print,printer="default"):
-    global timestamp
+    global timestamp, noprint
 
     if printer=="TEST":
         print "%s"%timestamp+":"+ "pas d'impression pour l'imprimante TEST"
@@ -265,22 +265,25 @@ def probePrint(dir_print,printer="default"):
                 
             else:
             # mpression fichier
+            
+              if noprint:
+                  print "%s"%timestamp+":"+ "Non impression de %s "%filename
+                  commande = exe_view +" "+filename
+              else:
+                  if printer=="default":
+                     commande = exe_print+" "+filename
+                  else:
+                     commande = exe_printTo+" "+filename+" "+printer
+                  if debug:
+                      print "%s"%timestamp+":execution de "+commande
+                  if msg:
+                      print "%s"%timestamp+":"+ "Impression de %s "%filename
 
-                if printer=="default":
-                   commande = exe_print+" "+filename
-                else:
-                   commande = exe_printTo+" "+filename+" "+printer
-                if debug:
-                    print "%s"%timestamp+":execution de "+commande
-                os.system(commande)
-        
-                if msg:
-                    print "%s"%timestamp+":"+ "Impression de %s "%filename
+              os.system(commande)
+              os.remove(filename)
 
-                os.remove(filename)
-
-                if msg:
-                    print "%s"%timestamp+":"+ "Effacement de %s "%filename
+              if msg:
+                 print "%s"%timestamp+":"+ "Effacement de %s "%filename
 
 
     return
