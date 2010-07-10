@@ -2,5 +2,6 @@ PATH=c:\program Files\MiKTeX 2.6\miktex\bin;C:\WINDOWS\system32;c:\windows;c:\pr
 set www=c:\Program Files\EasyPHP1-8\www\phpmyfactures\
 gsprint %1
 echo "impression en cours"
+del %1
 							
 

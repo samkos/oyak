@@ -280,11 +280,6 @@ def probePrint(dir_print,printer="default"):
                       print "%s"%timestamp+":"+ "Impression de %s "%filename
 
               os.system(commande)
-              os.remove(filename)
-
-              if msg:
-                 print "%s"%timestamp+":"+ "Effacement de %s "%filename
-
 
     return
 
