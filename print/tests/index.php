@@ -12,7 +12,7 @@
     <tr>
     <td bgcolor="#99CCCC" colspan=6 align=center>  <b> imprimer les encours </b> </td> </tr> 
     <tr >
-      <td>     <a href="../traite.php">tous </a></td>
+    <td> tous (<a xref="../traite.php&dest=screen&no_print=1">ecran</a> <a href="../traite.php">imprimante</a>)</td> </tr> <tr>
       <td>     <a href="../factures/traite.php">factures </a></td>
       <td> </td>
       <td> <a href="../../barcode/latex_barcode.php?action=file">etiquettes  </a> 
@@ -24,17 +24,37 @@
     <td bgcolor="#99CCCC" colspan=6 align=center>  <b> tester des impressions specifiques</b> </td> </tr> 
 
 <?php 
-$files2test=array_merge(glob("./*/*"));
+$files2test=array();
+
+# fichier en test
+$testing_files=array_merge(glob("./*/*")); 
+if ($testing_files) {
+  $waiting_files=array();
+  while ($file=array_pop($testing_files)) {
+    array_push($waiting_files,"../tests/"."$file");
+  }
+  $files2test=array_merge($files2test,$waiting_files);
+ }
 //print_r($files2test);
+
+# factures en attente
+$waiting_factures=glob("/facprint/*");
+print $waiting_factures;
+if ($waiting_factures) {
+  $files2test=array_merge($files2test,$waiting_factures);
+ }
+//print_r($files2test); 
 
 $new_line=1;
 $nb=0;
 $nb_per_line=1;
 while ($file=array_pop($files2test)) {
   if (preg_match("/~$/",$file)==0 and preg_match("/.svn/",$file)==0) {
-    $file = str_replace("./","",$file);
-    $chunks = split("/",$file);
-    $file_to_print = "--".$chunks[0]."=tests/".$file;
+    if (strpos($file,"fac/")>-1) { $chunk="fac";}
+    if (strpos($file,"facprint/")>-1) { $chunk="fac";}
+    $file_to_print = "--".$chunk."=$file";
+    $file=str_replace("../","",$file);
+    $file=str_replace("./","",$file);
     if ($new_line) { print "<tr bgcolor=\"#ffffff\">"; $new_line=0; }
     print "<td bgcolor=\"#ffffff\"><a href='$file'>$file</a></td>";
     print "<td> <a href='../traite.php?dest=screen&file=$file_to_print&no_print=1'>ecran</a> 

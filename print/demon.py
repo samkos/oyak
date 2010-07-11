@@ -19,6 +19,7 @@ debug=0
 noprint=0
 msg=1
 once=0
+fichier=0
 
 now=datetime.datetime.now()
 timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
@@ -57,7 +58,7 @@ def usage(message = None):
 
 
 def parse():
-    global once,debug,noprint,timeOK,msg
+    global once,debug,noprint,timeOK,msg,fichier
     
     """ parse the command line and set global _flags according to it """
     try:
@@ -81,13 +82,13 @@ def parse():
             msg = int(argument)
         elif option in ("--fac"):
             fichier = argument
-            shutil.copy(fichier,dir_factureTODO)
+            #shutil.copy(fichier,dir_factureTODO)
         elif option in ("--etiq"):
             fichier = argument
-            shutil.copy(fichier,dir_etiqTODO)
+            #shutil.copy(fichier,dir_etiqTODO)
         elif option in ("--imp"):
             fichier = argument
-            shutil.copy(fichier,dir_impTODO)
+            #shutil.copy(fichier,dir_impTODO)
         elif option in ("--debug"):
             debug = True
         elif option in ("--noprint"):
@@ -187,7 +188,7 @@ def init_env():
 
 
 def probeFacture():
-    global timestamp
+    global timestamp,noprint,fichier
     
     files=os.listdir(dir_factureTODO)
 
@@ -195,6 +196,10 @@ def probeFacture():
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
         commande=exe_facture
+        if (noprint):
+            commande = commande+" --noprint=1"
+        if (fichier):
+            commande = commande+" --file="+fichier
         if debug:
             print "%s"%timestamp+":execution de ",commande
         
@@ -243,6 +248,13 @@ def probeImp():
 def probePrint(dir_print,printer="default"):
     global timestamp, noprint
 
+    if noprint:
+        commande = exe_view +" c:\oyak\screen.pdf"
+        print commande 
+        os.system(commande)
+        return
+
+
     if printer=="TEST":
         print "%s"%timestamp+":"+ "pas d'impression pour l'imprimante TEST"
         return
@@ -264,7 +276,8 @@ def probePrint(dir_print,printer="default"):
                 probePrint(filename,file)
                 
             else:
-            # mpression fichier
+
+            # impression fichier
             
               if noprint:
                   print "%s"%timestamp+":"+ "Non impression de %s "%filename

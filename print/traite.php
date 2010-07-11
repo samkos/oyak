@@ -11,6 +11,7 @@ $commande="c:\\Python24\\python.exe -u $exe_python --debug --once $file";
 if ($no_print) {
    $commande=$commande." --noprint";
 }
+//print $commande;
 $res=my_exec("$commande");
 
 ?>

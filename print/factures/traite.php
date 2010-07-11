@@ -8,12 +8,14 @@ $exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
 
 //$dir_facture=""\Oyak\work\*";
 $dir_facture="c:\facprint\*";
+$filenames=glob($dir_facture);
 
 $header=1;
 $nb_lignes_facture1=24;
 $nb_lignes_facture2=24;
 
 $debug=0;
+@unlink("c:/Oyak/screen.pdf");
 
 if (!(isset($nohtml))) {
   include("../../inc/header.php");
@@ -26,6 +28,15 @@ if (!(isset($nohtml))) {
     <tr >
       <tr> <td>
 ";
+}
+$del_file=1;
+
+if ((isset($file))) {
+  print_r($filenames);
+  $filenames=array();
+  array_push($filenames,$file);
+  print_r($filenames);
+  $del_file=0;
 }
 
 // lecture des masques
@@ -44,7 +55,7 @@ $copies=1;
 
 
 $i=0;
-$filenames=glob($dir_facture);
+
 if ($filenames) {
   $file_out=fopen("all.tex","w");
   fwrite($file_out,$preambule);
@@ -58,7 +69,7 @@ if ($filenames) {
     echo "Traitement factture $filename....................";
     $out=make_facture($filename);
     fwrite($file_out,$out);
-    if (!$debug)  {
+    if (!$debug and $del_file)  {
        unlink($filename);
     }
   }
@@ -70,17 +81,25 @@ if ($filenames) {
   //print "res=$status";
   print "<BR> $i crées<BR> ";
 
-  @mkdir ("c:/Oyak/ToPrint",0755);
-  if ($printer=="default") {
-    copy ("all.pdf", "c:/Oyak/ToPrint/facture.pdf");
-    copy ("all.pdf", "c:/Oyak/facture.pdf");
+  
+  // impression...
+  if (isset($noprint)) {
+    print "<BR> ecran only";
+    copy ("all.pdf", "c:/Oyak/screen.pdf");
   }
   else {
-    @mkdir ("c:/Oyak/ToPrint/$printer",0755);
-    copy ("all.pdf", "c:/Oyak/ToPrint/$printer/facture.pdf");
-    copy ("all.pdf", "c:/Oyak/facture.pdf");
-  }
 
+    @mkdir ("c:/Oyak/ToPrint",0755);
+    if ($printer=="default") {
+      copy ("all.pdf", "c:/Oyak/ToPrint/facture.pdf");
+      copy ("all.pdf", "c:/Oyak/facture.pdf");
+    }
+    else {
+      @mkdir ("c:/Oyak/ToPrint/$printer",0755);
+      copy ("all.pdf", "c:/Oyak/ToPrint/$printer/facture.pdf");
+      copy ("all.pdf", "c:/Oyak/facture.pdf");
+    }
+  }
 }
 else {
   print "pas de facture en attente ";

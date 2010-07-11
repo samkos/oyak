@@ -1,3 +1,4 @@
 call ../../inc/path.bat
+del all.pdf
 pdflatex "\nonstopmode\input" all.tex
-copy all.pdf c:\Oyak\facture.pdf
+rem copy all.pdf c:\Oyak\facture.pdf
