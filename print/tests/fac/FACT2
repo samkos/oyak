@@ -1,0 +1,25 @@
+Z0,1!PR2!1!Facture
+Z1,1!070808040
+Z1,2!08/08/07
+Z1,3!070907
+Z1,5!C999
+Z1,6!               
+Z1,7!
+Z1,8!39.03
+
+Z3,1!                         
+Z3,2!
+Z3,3!
+Z3,4!
+Z3,5!      
+Z3,6!Tel :0.055
+Z3,7!Fax: 5.50
+
+Z5,1!0902!DAURADE GRISE*SPONDYLIOSOMA CANTHA/F4920401!ATL NE!!!Kg !12.000!2.50!30.00!1
+Z5,2!0899!SARDINES BRETAGNE*SARDINA PILCHARDUS/F4920401!ATL NE!!!Kg !4.000!1.50!6.00!1
+Z5,3!!
+Z5,4!!
+Z6,1!0!16.000!36.00!1.98!0.88!0.17!2.15!__GRAS__39.03__gras__
+Z7,1!Reglement  de      39.03 En Espece      
+Z7,2!     Ancien Solde      5327.98  au  080807   Nouveau Solde :      5367.01
+Z8,1!C999                            !08/08/07!070808040!5327.98!080807!5367.01

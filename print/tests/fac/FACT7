@@ -1,0 +1,25 @@
+Z0,1!PR2!1!Facture
+Z1,1!070907026
+Z1,2!07/09/07
+Z1,3!071007
+Z1,5!C999
+Z1,6!               
+Z1,7!
+Z1,8!120.83
+
+Z3,1!                         
+Z3,2!
+Z3,3!
+Z3,4!
+Z3,5!      
+Z3,6!Tel :0.055
+Z3,7!Fax: 5.50
+
+Z5,1!4150!HOMARD EUROPEEN*HOMARUS GAMMARUS/F4920401!ATL NE!!!Kg !-4.000!4.77!-19.08!1
+Z5,2!4150!HOMARD EUROPEEN*HOMARUS GAMMARUS/F4920401!ATL NE!!!Kg !4.770!28.00!133.56!1
+Z5,3!!!
+Z5,4!!!
+Z6,1!0!0.770!114.48!6.30!0.04!0.01!6.31!__GRAS__120.83__gras__
+Z7,1!Reglement  de     120.83 Par Cheque     
+Z7,2!     Ancien Solde      6064.26  au  070907   Nouveau Solde :      6185.09
+Z8,1!C999                            !07/09/07!070907026!6064.26!070907!6185.09
