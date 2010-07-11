@@ -192,7 +192,7 @@ def probeFacture():
     
     files=os.listdir(dir_factureTODO)
 
-    if files:
+    if files or fichier:
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
         commande=exe_facture
