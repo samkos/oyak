@@ -1,11 +1,13 @@
 <?php
-$hauteur_etiquette="2.5 cm";
-$largeur_etiquette="6.5 cm";
+$hauteur_etiquette="1 cm";
+$largeur_etiquette="4.5 cm";
 $entre_ligne_etiquette="0.2 cm";
 $vertical_offset="-6.2 cm";
 $horizontal_offset="-3.4 cm";
-$nb_per_line=3;
-$nb_per_page=8;
+$largeur_nom="13cm";
+
+$nb_per_line=1;
+$nb_per_page=18;
 
 $exe_print="\"c:/Program Files/Ghostgum/gsview/gsprint.exe\"   ";
 $printer="default";
@@ -41,7 +43,7 @@ if (!(isset($nohtml))) {
 @set_time_limit(300);
 
 $format="|c|c|c|";
-$format=" c c c";
+$format="|c|l|";
 
 if (isset($action) and isset($debug)) {print "action:$action ...$br";}
 
@@ -122,6 +124,9 @@ if ($filenames) {
 
    \setlength{\marginparwidth}{0pt}
    \setlength{\marginparsep}{0pt}   %
+
+   \pagestyle{empty}
+
    \begin{document}
 
    \begin{small}
@@ -143,8 +148,8 @@ if ($filenames) {
 
   $nb=0;
   
-  $name_line="";
-  $etiquette_line="";
+  $catalog_line="";
+
 
 if (isset($barcodes)) {
   foreach (array_keys($barcodes) as $key) {
@@ -153,22 +158,24 @@ if (isset($barcodes)) {
 			    ("%s", "%s", "%s"),',$barcodes[$key],$produits[$key],"99.99", $barcodes[$key]); 
       fwrite ($fpython, $python_line);
       fwrite ($fpython, $python_line);
-      $produit=substr($produits[$key],0,17);
+      $produit=$produits[$key];
 		 
-      $name_line=$name_line."\n \\begin{bf} \\begin{large} \\parbox{6cm}{\\begin{center}".$produit."\\end{center}} \\end{large} \\end{bf} ";
-      $etiquette_line=$etiquette_line.sprintf("\includegraphics[height=$hauteur_etiquette,width=$largeur_etiquette]{%s.eps}  ",$barcodes[$key]);
+      $catalog_line=$catalog_line."\n".
+         sprintf("\includegraphics[height=$hauteur_etiquette,width=$largeur_etiquette]{%s.eps}  ",
+                 $barcodes[$key]).
+         "& ".
+         "\\parbox[l]{ $largeur_nom }{ $produit \\\\ } \n ";
       $nb=$nb+1;
       if ($nb<$nb_per_line) {
-	$name_line=$name_line."&";
-	$etiquette_line=$etiquette_line."&";
+	$catalog_line=$catalog_line."&";
       }
       else {
 	$nb=0;
 	$nb_lignes=$nb_lignes+1;
-	fwrite($ftex,"  $name_line \\\\   ");
-	fwrite($ftex," \\vspace{-0.7cm} \\\\ $etiquette_line \\\\   ");
-	$name_line="";
-	$etiquette_line="";
+	fwrite($ftex,"  $catalog_line \\\\   ");
+	fwrite($ftex," \\hline \\\\    ");
+	//fwrite($ftex," \\vspace{-0.7cm} \\\\   ");
+	$catalog_line="";
   
 	if ($nb_lignes==$nb_per_page) {
 	  fwrite ($ftex,' \\ \end{tabular} \eject \n' );
@@ -176,14 +183,13 @@ if (isset($barcodes)) {
 	  $nb_lignes=0;
 	}
 	else {
-	  fwrite($ftex," \\vspace{-0.6cm} \\\\ \\vspace{".$entre_ligne_etiquette."} \\\\    ");
+	  //fwrite($ftex," \\vspace{-0.6cm} \\\\ \\vspace{".$entre_ligne_etiquette."} \\\\    ");
 	}
       }
     }
   }
 	
-fwrite($ftex," $name_line\\\\   ");
-fwrite($ftex," $etiquette_line \\\\  ");
+fwrite($ftex," $catalog_line\\\\   ");
 fwrite ($ftex,"\\end{tabular}    \\end{small} \\end{document}\n");
 fwrite($fpython,"];
 		");
@@ -195,15 +201,15 @@ fclose($fpython);
 system("compile.bat  ",$status);
 print "resultat-> $status";
 
-  if ($printer=="default") {
-    copy ("work/barcodes.ps", "c:/Oyak/ToPrint/barcodes.ps");
-    copy ("work/barcodes.ps", "c:/Oyak/barcodes.ps");
-  }
-  else {
-    @mkdir ("c:/Oyak/ToPrint/$printer",0755);
-    copy ("work/barcodes.ps", "c:/Oyak/ToPrint/$printer/barcodes.ps");
-    copy ("work/barcodes.ps", "c:/Oyak/barcodes.ps");
-  }
+  // if ($printer=="default") {
+  //   copy ("work/barcodes.ps", "c:/Oyak/ToPrint/barcodes.ps");
+  //   copy ("work/barcodes.ps", "c:/Oyak/barcodes.ps");
+  // }
+  // else {
+  //   @mkdir ("c:/Oyak/ToPrint/$printer",0755);
+  //   copy ("work/barcodes.ps", "c:/Oyak/ToPrint/$printer/barcodes.ps");
+  //   copy ("work/barcodes.ps", "c:/Oyak/barcodes.ps");
+  // }
 
 }
 else {
