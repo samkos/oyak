@@ -268,7 +268,7 @@ def probePrint(dir_print,printer="default"):
     for file in files:
 
         if not(file=="PrintDemon.txt"):
-            filename=dir_print+"/"+file
+            filename=dir_print+"\\"+file
 
             # est-ce un repertoire, si oui on recurse
             mode = os.stat(filename)[ST_MODE]
