@@ -16,10 +16,13 @@ dir_impTODO="c:/impprint"
 exe_view=exe_print=exe_printTo=exe_facture=exe_etiq = "???exe_xxx"
 
 debug=0
+
 noprint=0
 msg=1
 once=0
-fichier=0
+fichier_fac=0
+fichier_imp=0
+fichier_etiq=0
 
 now=datetime.datetime.now()
 timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
@@ -58,7 +61,7 @@ def usage(message = None):
 
 
 def parse():
-    global once,debug,noprint,timeOK,msg,fichier
+    global once,debug,noprint,timeOK,msg,fichier_fac,fichier_imp,fichier_etiq
     
     """ parse the command line and set global _flags according to it """
     try:
@@ -84,10 +87,10 @@ def parse():
             fichier = argument
             #shutil.copy(fichier,dir_factureTODO)
         elif option in ("--etiq"):
-            fichier = argument
-            #shutil.copy(fichier,dir_etiqTODO)
+            fichier_fac = argument
+            #shutil.copy(fichier_fac,dir_etiqTODO)
         elif option in ("--imp"):
-            fichier = argument
+            fichier_imp = argument
             #shutil.copy(fichier,dir_impTODO)
         elif option in ("--debug"):
             debug = True
@@ -188,18 +191,18 @@ def init_env():
 
 
 def probeFacture():
-    global timestamp,noprint,fichier
+    global timestamp,noprint,fichier_fac
     
     files=os.listdir(dir_factureTODO)
 
-    if files or fichier:
+    if files or fichier_fac:
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
         commande=exe_facture
         if (noprint):
             commande = commande+" --noprint=1"
-        if (fichier):
-            commande = commande+" --file="+fichier
+        if (fichier_fac):
+            commande = commande+" --file="+fichier_fac
         if debug:
             print "%s"%timestamp+":execution de ",commande
         
@@ -226,18 +229,22 @@ def probeEtiq():
             print "%s"%timestamp+":"+"Pas d'etiquette en attente"
         
 def probeImp():
-    global timestamp,debug,noprint,exe_imp
+    global timestamp,debug,noprint,exe_imp,fichier_imp
     
     files=os.listdir(dir_impTODO)
     if debug:
         print files
         
-    if files:
+    if files or fichier_imp:
         if msg:
             print "%s"%timestamp+":"+"traitement des impressions generales en attente"
             print exe_imp
         commande=exe_imp
-        if 1 or debug:
+        if (noprint):
+            commande = commande+" --noprint=1"
+        if (fichier_imp):
+            commande = commande+" --file="+fichier_imp
+        if debug:
             print "%s"%timestamp+":execution de ",commande
         os.system(commande)
     else:

@@ -7,9 +7,11 @@
 $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
 $exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
 
-//$dir_imprime=""\Oyak\work\*";
+
+@unlink("c:/Oyak/screen.pdf");
+
+
 $dir_imprime="c:\impprint\*";
-//$dir_imprime="test\*";
 
 $header="";
 $orientation="portrait";
@@ -24,6 +26,14 @@ else {
 }
 $debug=0;
 $not_deleting=0;
+
+if ((isset($file))) {
+  print_r($filenames);
+  $filenames=array();
+  array_push($filenames,$file);
+  print_r($filenames);
+  $not_deleting=1;
+}
 
 
 

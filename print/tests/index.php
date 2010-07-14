@@ -39,7 +39,11 @@ if ($testing_files) {
 
 # factures en attente
 $waiting_factures=glob("/facprint/*");
-print $waiting_factures;
+if ($waiting_factures) {
+  $files2test=array_merge($files2test,$waiting_factures);
+ }
+# impression generale en attente
+$waiting_factures=glob("/impprint/*");
 if ($waiting_factures) {
   $files2test=array_merge($files2test,$waiting_factures);
  }
@@ -52,6 +56,8 @@ while ($file=array_pop($files2test)) {
   if (preg_match("/~$/",$file)==0 and preg_match("/.svn/",$file)==0) {
     if (strpos($file,"fac/")>-1) { $chunk="fac";}
     if (strpos($file,"facprint/")>-1) { $chunk="fac";}
+    if (strpos($file,"imp/")>-1) { $chunk="imp";}
+    if (strpos($file,"impprint/")>-1) { $chunk="imp";}
     $file_to_print = "--".$chunk."=$file";
     $file=str_replace("../","",$file);
     $file=str_replace("./","",$file);
