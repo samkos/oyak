@@ -27,6 +27,7 @@ else {
 $debug=0;
 $not_deleting=0;
 
+$filenames=glob($dir_imprime);
 if ((isset($file))) {
   print_r($filenames);
   $filenames=array();
@@ -42,7 +43,7 @@ if (!(isset($nohtml))) {
 <center>
 <table>
     <tr>
-    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d impression </b> </td> </tr> 
     <tr >
       <tr> <td>
   <?php 
@@ -62,7 +63,7 @@ $copies=1;
 
 $nb_pages_portrait=0;
 $nb_pages_landscape=0;
-$filenames=glob($dir_imprime);
+
 
 if ($filenames) {
 
@@ -167,7 +168,7 @@ else {
 if (!(isset($nohtml))) {
 ?>
   </td> <tr> <td align=center> 
-  	<a href='../tests/index.php'>  Retour test d'impression </a> </td> </tr>
+  	<a href='../tests/index.php'>  Retour test d impression </a> </td> </tr>
 </table>
 
 </body>
@@ -179,17 +180,23 @@ if (!(isset($nohtml))) {
 
 
 function print_all($orientation) {
-	global $printer;
+  global $printer,$noprint;
 
 	@mkdir ("c:/Oyak/ToPrint",0755);
-	if ($printer=="default") {
-		copy ("all_$orientation.pdf", "c:/Oyak/ToPrint/imprime_$orientation.pdf");
-		copy ("all_$orientation.pdf", "c:/Oyak/imprime_$orientation.pdf");
+	if (isset($noprint)) {
+	  print "<BR> ecran only";
+	  copy ("all_$orientation.pdf", "c:/Oyak/screen.pdf");
 	}
 	else {
-		@mkdir ("c:/Oyak/ToPrint/$printer",0755);
-		copy ("all_$orientation.pdf", "c:/Oyak/ToPrint/$printer/imprime_$orientation.pdf");
-		copy ("all_$orientation.pdf", "c:/Oyak/imprime_$orientation.pdf");
+	  if ($printer=="default") {
+	    copy ("all_$orientation.pdf", "c:/Oyak/ToPrint/imprime_$orientation.pdf");
+	    copy ("all_$orientation.pdf", "c:/Oyak/imprime_$orientation.pdf");
+	  }
+	  else {
+	    @mkdir ("c:/Oyak/ToPrint/$printer",0755);
+	    copy ("all_$orientation.pdf", "c:/Oyak/ToPrint/$printer/imprime_$orientation.pdf");
+	    copy ("all_$orientation.pdf", "c:/Oyak/imprime_$orientation.pdf");
+	  }
 	}
 }
 
