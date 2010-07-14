@@ -220,6 +220,9 @@ function make_imprime ($file) {
 	$lines=file($file);
 
 	$nb_ligne=0;
+        $current_ligne=0;
+	$esp_ligne=0.2;
+	$esp_tab_ligne=0.43;
 
 	foreach ($lines as $line) {
 	        $line=str_replace("%","\\%",$line);
@@ -243,6 +246,7 @@ function make_imprime ($file) {
 			if ($debug) print " <-- <B> OK </B>";
 			next;
 			$box_open=0;
+			$current_ligne=0;
 		}
 
 		{
@@ -252,17 +256,16 @@ function make_imprime ($file) {
 		  $y=trim(array_shift($champs));
 		  if ($debug) print "x=$x,y=$y<BR>";
 		  if ($x=="-" and $y=="-") {
-		    if ($box_open) {
-		      $out=$out."}}\n";	
-		      $box_open=0;
-		    }
+		    $current_ligne=$current_ligne+$esp_ligne;
+		    $x=1; $y=$current_ligne;
 		  } 
-		  else {
+		  {
 		    if (!($x=="." and $y==".")) {  
+		      $current_ligne=$y;
 		      if ($box_open) {
 			$out=$out."}}\n";	
 		      }
-		      $out=$out."%x=/$x/;y=/$y/\n".'\put('.$x.','.(29-$y).'){\shortstack[l]{' ;
+		      $out=$out."%x=/$x/;y=/$y/;c=/$current_ligne/\n".'\put('.$x.','.(29-$y).'){\shortstack[l]{' ;
 		    $box_open=1;
 		    
 		    }
@@ -278,6 +281,8 @@ function make_imprime ($file) {
 		    $texte=ereg_replace('}','\}',$texte);
 		    $texte=ereg_replace('%','\%',$texte);
 		    $out=$out."$texte";
+		    $current_ligne=$current_ligne+$esp_ligne;
+
 		    if ($debug) print " <-- <B> OK </B>";
 		    next;
 		  }
@@ -286,6 +291,8 @@ function make_imprime ($file) {
 		  if ($what=="TAB") {
 		    $tailles=split("=",array_shift($champs));
 		    
+		    $current_ligne=$current_ligne+$esp_ligne;
+
 		    $out=$out.'\mbox{'."\n".'\begin{tabular}[t]{';
 		    
 		    $col=1;
@@ -376,7 +383,8 @@ function make_imprime ($file) {
 		      if ($masque!=$hline) {
 			$out=$out.'\\\\ '."\n";
 		      }
-				}
+		      $current_ligne=$current_ligne+$esp_tab_ligne;
+		    }
 		    
 		    
 		    $out=$out.'\end{tabular}}'."\n";
