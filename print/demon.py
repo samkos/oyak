@@ -191,7 +191,7 @@ def init_env():
 
 
 def probeFacture():
-    global timestamp,noprint,fichier_fac
+    global timestamp,noprint,fichier_fac,debug
     
     files=os.listdir(dir_factureTODO)
 
@@ -201,6 +201,8 @@ def probeFacture():
         commande=exe_facture
         if (noprint):
             commande = commande+" --noprint=1"
+        if (debug):
+            commande = commande+" --debug=1"
         if (fichier_fac):
             commande = commande+" --file="+fichier_fac
         if debug:
@@ -242,6 +244,8 @@ def probeImp():
         commande=exe_imp
         if (noprint):
             commande = commande+" --noprint=1"
+        if (debug):
+            commande = commande+" --debug=1"
         if (fichier_imp):
             commande = commande+" --file="+fichier_imp
         if debug:

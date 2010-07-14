@@ -3,9 +3,9 @@ if  exist %*  goto ok
 msg /time:5 * fichier %* inexistant, une erreur est survenue a son visionnement
 echo !
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-echo !                                    ERREUR D'IMPRESSION A L'ECRAN
+echo "!                                   <b> ERREUR D'IMPRESSION A L'ECRAN </b>"
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-echo !!!!!!!!!!!!   fichier %* inexistant, une erreur est survenue 
+echo "!!!!!!!!!!!!                <b> fichier %* inexistant, <b> une erreur est survenue </b>"
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo !
 goto fin

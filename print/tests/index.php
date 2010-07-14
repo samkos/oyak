@@ -62,7 +62,7 @@ while ($file=array_pop($files2test)) {
     $file=str_replace("../","",$file);
     $file=str_replace("./","",$file);
     if ($new_line) { print "<tr bgcolor=\"#ffffff\">"; $new_line=0; }
-    print "<td bgcolor=\"#ffffff\"><a href='$file'>$file</a></td>";
+    print "<td bgcolor=\"#ffffff\"><a href='../$file'>$file</a></td>";
     print "<td> <a href='../traite.php?dest=screen&file=$file_to_print&no_print=1'>ecran</a> 
                 <a href='../traite.php?dest=print&file=$file_to_print'>imprimante</a> </td>";
     $nb=$nb+1;
