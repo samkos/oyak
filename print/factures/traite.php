@@ -1,6 +1,7 @@
 <?php include("../../inc/conf.php"); ?>
 <?php include("../../inc/fonctions.php"); ?>
 <?php include("../../inc/cmdline.php"); ?>
+<?php include("../process.php"); ?>
 <?php
 
 $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
@@ -28,7 +29,7 @@ if (!(isset($nohtml))) {
     <tr >
       <tr> <td>
 ";
-}
+ }
 $del_file=1;
 
 if ((isset($file))) {
@@ -37,7 +38,7 @@ if ((isset($file))) {
   array_push($filenames,$file);
   print_r($filenames);
   $del_file=0;
-}
+ }
 
 // lecture des masques
 $dir=".";
@@ -70,61 +71,43 @@ if ($filenames) {
     $out=make_facture($filename);
     fwrite($file_out,$out);
     if (!$debug and $del_file)  {
-       unlink($filename);
+      unlink($filename);
     }
   }
 
   fwrite($file_out,$conclusion);
   fclose($file_out);
 
-  system("compile.bat > out",$status);
-  //print "res=$status";
-  $lines=file("out");
-  $l=array_shift($lines);
-  $msg="";
-  while($l){
-    $msg=$msg."$l $BR";
-    $l=array_shift($lines);
-  }
-  //print "//////////: $msg ////////////////";
-  if (ereg("Emergency stop",$msg) or ereg("No pages of output",$msg) or ereg("ERREUR",$msg))  {
-    $msg=ereg_replace("^.*aux))","ERREUR : ",$msg);
-    $msg=ereg_replace("No pages of output.*$","No pages of ouput",$msg);
-    print "$BR <BOLD> $br <B> ERREUR D'INTERPRETATION dans $filename !!!! </B> $BR $msg $BR";
-    system("msg * erreur de compilation dans $filename");
-    $erreur=1;
-  }
-  else {
-    if ($debug) print "$BR $br <B> tout semble ok dans $filename !!!! </B> $BR $msg $BR";
-  }
+  if (!latex_and_check("compile.bat", $filename)) {
 
-
-  //print "res=$status";
-  print "<BR> $i crées<BR> ";
+    //print "res=$status";
+    print "<BR> $i crées<BR> ";
 
   
-  // impression...
-  if (isset($noprint)) {
-    print "<BR> ecran only";
-    copy ("all.pdf", "c:/Oyak/screen.pdf");
-  }
-  else {
-
-    @mkdir ("c:/Oyak/ToPrint",0755);
-    if ($printer=="default") {
-      copy ("all.pdf", "c:/Oyak/ToPrint/facture.pdf");
-      copy ("all.pdf", "c:/Oyak/facture.pdf");
+    // impression...
+    if (isset($noprint)) {
+      print "<BR> ecran only";
+      copy ("all.pdf", "c:/Oyak/screen.pdf");
     }
     else {
-      @mkdir ("c:/Oyak/ToPrint/$printer",0755);
-      copy ("all.pdf", "c:/Oyak/ToPrint/$printer/facture.pdf");
-      copy ("all.pdf", "c:/Oyak/facture.pdf");
+      
+      @mkdir ("c:/Oyak/ToPrint",0755);
+      if ($printer=="default") {
+	copy ("all.pdf", "c:/Oyak/ToPrint/facture.pdf");
+	copy ("all.pdf", "c:/Oyak/facture.pdf");
+      }
+      else {
+	@mkdir ("c:/Oyak/ToPrint/$printer",0755);
+	copy ("all.pdf", "c:/Oyak/ToPrint/$printer/facture.pdf");
+	copy ("all.pdf", "c:/Oyak/facture.pdf");
+      }
     }
   }
-}
-else {
-  print "pas de facture en attente ";
-}
+ }
+
+ else {
+   print "pas de facture en attente ";
+ }
 
 //echo "<blockquote> $out </blockquote>";
 
@@ -132,12 +115,12 @@ if (!isset($nohtml)) {
   ?>
 
 
-</body>
+  </body>
 
-</html>
+    </html>
 
-<?php
-}
+    <?php
+    }
 
 function make_facture ($file) {
   global $debug, $header, $footer,$body,$body_vide,
@@ -171,16 +154,16 @@ function make_facture ($file) {
 # Z0,1!PR1!1!Bon de Livraison
     if (ereg("^Z0,1",$clef))  { 
       // nom de l'imprimante, nombre d'impression, type de document
-	$printer=array_shift($champs);
-	$copies=array_shift($champs);
-	$document=array_shift($champs);	
+      $printer=array_shift($champs);
+      $copies=array_shift($champs);
+      $document=array_shift($champs);	
 
-	$cherche=sprintf("#%s#",$clef);
-	$par=$document;
-	array_push($find,$cherche);
-	array_push($replace,$par);
+      $cherche=sprintf("#%s#",$clef);
+      $par=$document;
+      array_push($find,$cherche);
+      array_push($replace,$par);
     
-        }
+    }
 
     if (ereg("^Z5,",$clef))  { // nouvelle ligne
       $nb_ligne=$nb_ligne+1;
@@ -201,11 +184,11 @@ function make_facture ($file) {
 	$width=33;
 	//print strlen($c); print"\n";
         if (strlen($c)>$width) {
-	   print strlen($c); print "new_line /$c/\n"; 
-	   //$c="\\shorstack{".substr($c,1,32)."\\hfill\\ ".substr($c,33,99)."}";
-	   //$c="$\\shorstack[l]{".substr($c,0,32)."\\\\".substr($c,31,99)."}$";
-	   $c=substr($c,0,$width-1)."-".substr($c,$width-2,99);
-	   $nb_ligne=$nb_ligne+1;
+	  print strlen($c); print "new_line /$c/\n"; 
+	  //$c="\\shorstack{".substr($c,1,32)."\\hfill\\ ".substr($c,33,99)."}";
+	  //$c="$\\shorstack[l]{".substr($c,0,32)."\\\\".substr($c,31,99)."}$";
+	  $c=substr($c,0,$width-1)."-".substr($c,$width-2,99);
+	  $nb_ligne=$nb_ligne+1;
 	}
 	$c=str_replace(" ",'~',$c);
 	$current=str_replace($cherche,$c,$current);
@@ -255,7 +238,7 @@ function make_facture ($file) {
     $out=$out.$body_vide;
   }
 
-  # traitement type de document
+# traitement type de document
   if ($document=="") {
     $document="Facture";
   }
@@ -273,14 +256,7 @@ function make_facture ($file) {
   $out=ereg_replace("#Z.,.#","",$out);
 
   // traitement des choses en gras et petit caractères
-
-
-  $out=ereg_replace("__PETIT__","{\\tiny ",$out);
-  $out=ereg_replace("__GRAS__","\\textbf{ ",$out);
-  $out=ereg_replace("__GRIS__","\\colorbox[gray]{0.8}{ ",$out);
-  $out=ereg_replace("__petit__","}",$out);
-  $out=ereg_replace("__gras__","}",$out);
-  $out=ereg_replace("__gris__","}",$out);
+  $out = code2latex($out);
 
   return $out;
 }

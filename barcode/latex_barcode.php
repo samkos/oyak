@@ -1,13 +1,13 @@
 <?php
-$hauteur_etiquette="1 cm";
+$hauteur_etiquette="0.8cm";
 $largeur_etiquette="4.5 cm";
 $entre_ligne_etiquette="0.2 cm";
-$vertical_offset="-6.2 cm";
-$horizontal_offset="-3.4 cm";
+$vertical_offset="-3.9 cm";
+$horizontal_offset="-2.4 cm";
 $largeur_nom="13cm";
 
 $nb_per_line=1;
-$nb_per_page=18;
+$nb_per_page=27;
 
 $exe_print="\"c:/Program Files/Ghostgum/gsview/gsprint.exe\"   ";
 $printer="default";
@@ -114,13 +114,7 @@ if ($filenames) {
    \setlength{\textwidth}{550pt}
 
    \setlength{\topmargin}{1cm}
-   \setlength{\textheight}{2cm}
-
-   \setlength{\headheight}{90pt}
-
-   \setlength{\headsep}{0pt}
-   \setlength{\parindent}{1cm}
-   \setlength{\parskip}{0.2cm}
+   \setlength{\textheight}{29cm}
 
    \setlength{\marginparwidth}{0pt}
    \setlength{\marginparsep}{0pt}   %
@@ -131,6 +125,7 @@ if ($filenames) {
 
    \begin{small}
    \begin{tabular}{'.$format.'}
+   \hline
    ');
 
   fwrite($fpython,"codebarlist = [\\");
@@ -173,13 +168,13 @@ if (isset($barcodes)) {
 	$nb=0;
 	$nb_lignes=$nb_lignes+1;
 	fwrite($ftex,"  $catalog_line \\\\   ");
-	fwrite($ftex," \\hline \\\\    ");
+	fwrite($ftex," \\hline    ");
 	//fwrite($ftex," \\vspace{-0.7cm} \\\\   ");
 	$catalog_line="";
   
 	if ($nb_lignes==$nb_per_page) {
-	  fwrite ($ftex,' \\ \end{tabular} \eject \n' );
-	  fwrite ($ftex,'\begin{tabular}{'.$format.'} ');
+	  fwrite ($ftex,'  \end{tabular} \eject \n' );
+	  fwrite ($ftex,'\begin{tabular}{'.$format.'} \hline ');
 	  $nb_lignes=0;
 	}
 	else {
@@ -189,7 +184,7 @@ if (isset($barcodes)) {
     }
   }
 	
-fwrite($ftex," $catalog_line\\\\   ");
+fwrite($ftex," $catalog_line    ");
 fwrite ($ftex,"\\end{tabular}    \\end{small} \\end{document}\n");
 fwrite($fpython,"];
 		");

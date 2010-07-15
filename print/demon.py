@@ -84,10 +84,10 @@ def parse():
         elif option in ("--trace"):
             msg = int(argument)
         elif option in ("--fac"):
-            fichier = argument
+            fichier_fac = argument
             #shutil.copy(fichier,dir_factureTODO)
         elif option in ("--etiq"):
-            fichier_fac = argument
+            fichier = argument
             #shutil.copy(fichier_fac,dir_etiqTODO)
         elif option in ("--imp"):
             fichier_imp = argument
