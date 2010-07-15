@@ -1,4 +1,18 @@
+@echo off
 call ../../inc/path.bat
-del all.pdf
-pdflatex "\nonstopmode\input" all.tex
-rem copy all.pdf c:\Oyak\facture.pdf
+if exist all.pdf del all.pdf
+if exist erreur.log del erreur.log
+pdflatex  -interaction nonstopmode  all.tex > erreur.log
+if  exist all.pdf  goto ok
+msg /time:5 * fichier all.pdf inexistant, une erreur est survenue a son visionnement
+echo !
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo "!                                   <b> ERREUR DE CREATION DU FICHIER A IMPRIMER </b>"
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo "!!!!!!!!!!!!                <b> fichier all.pdf  inexistant, <b> une erreur est survenue </b>"
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo !
+type erreur.log
+goto fin
+:ok
+:FIN

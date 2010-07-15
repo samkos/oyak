@@ -79,6 +79,27 @@ if ($filenames) {
 
   system("compile.bat > out",$status);
   //print "res=$status";
+  $lines=file("out");
+  $l=array_shift($lines);
+  $msg="";
+  while($l){
+    $msg=$msg."$l $BR";
+    $l=array_shift($lines);
+  }
+  //print "//////////: $msg ////////////////";
+  if (ereg("Emergency stop",$msg) or ereg("No pages of output",$msg) or ereg("ERREUR",$msg))  {
+    $msg=ereg_replace("^.*aux))","ERREUR : ",$msg);
+    $msg=ereg_replace("No pages of output.*$","No pages of ouput",$msg);
+    print "$BR <BOLD> $br <B> ERREUR D'INTERPRETATION dans $filename !!!! </B> $BR $msg $BR";
+    system("msg * erreur de compilation dans $filename");
+    $erreur=1;
+  }
+  else {
+    if ($debug) print "$BR $br <B> tout semble ok dans $filename !!!! </B> $BR $msg $BR";
+  }
+
+
+  //print "res=$status";
   print "<BR> $i crées<BR> ";
 
   
