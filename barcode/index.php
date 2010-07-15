@@ -46,6 +46,24 @@ $nb_produit = 1000;
 if(!$start) {$start=0;}
 
 
+// lecture des fournisseurs
+$req = mysql_query("select id,clef,societe,ville from ".
+		   $prefixe_table."fournisseurs ");
+while($ligne = mysql_fetch_array($req))
+{
+  $id = $ligne["id"];
+  $clef = $ligne["clef"];
+  $nom = $ligne["societe"];
+  $ville = $ligne["ville"]; 
+  $nom_fournisseur[$clef]="$nom/$ville";
+}
+
+
+
+
+
+
+// lecture des produits
 $sql_query = "select id,titre,stock,barcode,fournisseur from ".$prefixe_table."produits ";
 
 $sql_filtre=" where id_cat=\"$id_cat\"  ";
@@ -118,6 +136,7 @@ echo("<tr>
 	  <input name='quantite$nb' type=integer value='$nb_print'   /> </td>
 	  <input name='produit$nb' type=hidden value='$titre'   /> </td>
 		<input name='id$nb' type=hidden value='$id'   /> </td>
+		<input name='fournisseur$nb' type=hidden value='$nom_fournisseur[$fournisseur]'   /> </td>
    <td bgcolor=\"#ffffff\" align=\"left\" width=\"60%\">$fournisseur</td>
    <td bgcolor=\"#ffffff\" align=\"left\" width=\"60%\">$titre</td>
    <td bgcolor=\"#ffffff\" align=\"center\" width=\"20%\">$barcode</td>

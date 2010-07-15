@@ -17,24 +17,24 @@ include("../inc/fonctions.php");
 include("../inc/cmdline.php"); 
 
 if (!isset($nohtml)) {
- include("../inc/header.php"); 
- $br="<br>";
-}
-else {
-  $br="";
-}
+  include("../inc/header.php"); 
+  $br="<br>";
+ }
+ else {
+   $br="";
+ }
 
 if (!(isset($nohtml))) {
 
-?>
-<center>
-<table>
+  ?>
+  <center>
+    <table>
     <tr>
-    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d'impression </b> </td> </tr> 
+    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> resultat d impression </b> </td> </tr> 
     <tr >
-      <tr> <td>
-  <?php 
-}
+    <tr> <td>
+    <?php 
+    }
 
 
 /**
@@ -48,60 +48,65 @@ $format="|c|l|";
 if (isset($action) and isset($debug)) {print "action:$action ...$br";}
 
 if ($action=="print") {
+  //print_r($GLOBALS);
   foreach (array_keys($GLOBALS) as $var) {
     if (preg_match("/^choisis([0-9]+)/",$var,$reg)) {
-      print $GLOBALS[$var]." : ".$GLOBALS["quantite".$reg[1]]."x".$GLOBALS["produit".$reg[1]]."<BR>";
+      print $GLOBALS[$var]." : ".
+	$GLOBALS["quantite".$reg[1]]." x ".$GLOBALS["produit".$reg[1]].
+	"/".$GLOBALS["fournisseur".$reg[1]].
+	"<BR>";
       $barcodes[$reg[1]]=$GLOBALS["choisis".$reg[1]];
       $quantites[$reg[1]]=$GLOBALS["quantite".$reg[1]];
       $produits[$reg[1]]=$GLOBALS["produit".$reg[1]];
+      $fournisseurs[$reg[1]]=$GLOBALS["fournisseur".$reg[1]];
     }
   }
   //  $GLOBALS[$var]=$_SESSION[$var];
   print "----------------------------------";
-}
+ }
 
-else  {
-  $dir_etiquette="\etiqprint\*";
-  $filenames=glob($dir_etiquette);
-  $nb_etiq=0;
+ else  {
+   $dir_etiquette="\etiqprint\*";
+   $filenames=glob($dir_etiquette);
+   $nb_etiq=0;
 
-if ($filenames) {
-  foreach ($filenames as $filename) {
-    echo "$BR Traitement fichier etiquette $filename................................................";
-    $lines=file($filename);
-    foreach ($lines as $line) {
-      $champs = split("!",$line);
-      $clef=array_shift($champs);
-      //print "$line, xxxxxx $clef $BR";
+   if ($filenames) {
+     foreach ($filenames as $filename) {
+       echo "$BR Traitement fichier etiquette $filename................................................";
+       $lines=file($filename);
+       foreach ($lines as $line) {
+	 $champs = split("!",$line);
+	 $clef=array_shift($champs);
+	 //print "$line, xxxxxx $clef $BR";
       
-      if (ereg("^Z0,1",$clef))  { 
-	// nom de l'imprimante, nombre d'impression, type de document
-	$printer=array_shift($champs);
-	$copies=array_shift($champs);
-	$document=array_shift($champs);	
-      }
+	 if (ereg("^Z0,1",$clef))  { 
+	   // nom de l'imprimante, nombre d'impression, type de document
+	   $printer=array_shift($champs);
+	   $copies=array_shift($champs);
+	   $document=array_shift($champs);	
+	 }
 
-      if (ereg("^Z2,",$clef))  { // nouvelle etiquette
-	$nb_etiq=$nb_etiq+1;
-	$barcode=array_shift($champs);
-	$produit=array_shift($champs);
-	$barcodes[$nb_etiq]=$barcode;
-	$quantites[$nb_etiq]=1;
-	$produits[$nb_etiq]=$produit;
-	print "$barcode : 1 x $produit $BR";
-      }
-    }
-    unlink($filename);
-  }
-  print "----------------------------------";
-}
-}
+	 if (ereg("^Z2,",$clef))  { // nouvelle etiquette
+	   $nb_etiq=$nb_etiq+1;
+	   $barcode=array_shift($champs);
+	   $produit=array_shift($champs);
+	   $barcodes[$nb_etiq]=$barcode;
+	   $quantites[$nb_etiq]=1;
+	   $produits[$nb_etiq]=$produit;
+	   print "$barcode : 1 x $produit $BR";
+	 }
+       }
+       unlink($filename);
+     }
+     print "----------------------------------";
+   }
+ }
 
-  //print_r($barcodes);
-  $ftex=fopen($tex_file,"w");
-  $fpython=fopen($python_file,"w");
-  fwrite($ftex,
-	 '\documentclass[a4paper]{article}
+//print_r($barcodes);
+$ftex=fopen($tex_file,"w");
+$fpython=fopen($python_file,"w");
+fwrite($ftex,
+       '\documentclass[a4paper]{article}
    %
    \usepackage{graphicx}
    %
@@ -128,22 +133,22 @@ if ($filenames) {
    \hline
    ');
 
-  fwrite($fpython,"codebarlist = [\\");
+fwrite($fpython,"codebarlist = [\\");
 	 
-  $nb_lignes=0;
+$nb_lignes=0;
 
 
 
-  // capture info code barre
+// capture info code barre
 
-  $sql_query = "select id,titre,stock,barcode from ".$prefixe_table."produits  ";
+$sql_query = "select id,titre,stock,barcode from ".$prefixe_table."produits  ";
 
-  if (isset($debug)) {  print "$BR $sql_query $BR";}
-  $req = mysql_query("$sql_query ");
+if (isset($debug)) {  print "$BR $sql_query $BR";}
+$req = mysql_query("$sql_query ");
 
-  $nb=0;
+$nb=0;
   
-  $catalog_line="";
+$catalog_line="";
 
 
 if (isset($barcodes)) {
@@ -156,10 +161,10 @@ if (isset($barcodes)) {
       $produit=$produits[$key];
 		 
       $catalog_line=$catalog_line."\n".
-         sprintf("\includegraphics[height=$hauteur_etiquette,width=$largeur_etiquette]{%s.eps}  ",
-                 $barcodes[$key]).
-         "& ".
-         "\\parbox[l]{ $largeur_nom }{ $produit \\\\ } \n ";
+	sprintf("\includegraphics[height=$hauteur_etiquette,width=$largeur_etiquette]{%s.eps}  ",
+		$barcodes[$key]).
+	"& ".
+	"\\parbox[l]{ $largeur_nom }{ $produit ($barcodes[$key]) \\\\ $fournisseurs[$key] } \n ";
       $nb=$nb+1;
       if ($nb<$nb_per_line) {
 	$catalog_line=$catalog_line."&";
@@ -184,36 +189,26 @@ if (isset($barcodes)) {
     }
   }
 	
-fwrite($ftex," $catalog_line    ");
-fwrite ($ftex,"\\end{tabular}    \\end{small} \\end{document}\n");
-fwrite($fpython,"];
+  fwrite($ftex," $catalog_line    ");
+  fwrite ($ftex,"\\end{tabular}    \\end{small} \\end{document}\n");
+  fwrite($fpython,"];
 		");
 
-fclose($ftex);
-fclose($fpython);
+  fclose($ftex);
+  fclose($fpython);
 
-//system("compile.bat > work/compile.out ",$status);
-system("compile.bat  ",$status);
-print "resultat-> $status";
+  system("compile.bat  ",$status);
+  print "resultat-> $status";
 
-  // if ($printer=="default") {
-  //   copy ("work/barcodes.ps", "c:/Oyak/ToPrint/barcodes.ps");
-  //   copy ("work/barcodes.ps", "c:/Oyak/barcodes.ps");
-  // }
-  // else {
-  //   @mkdir ("c:/Oyak/ToPrint/$printer",0755);
-  //   copy ("work/barcodes.ps", "c:/Oyak/ToPrint/$printer/barcodes.ps");
-  //   copy ("work/barcodes.ps", "c:/Oyak/barcodes.ps");
-  // }
 
-}
-else {
-     print "pas d'etiquette en attente $br";
-}
+ }
+ else {
+   print "pas d'etiquette en attente $br";
+ }
 
 
 if (!(isset($nohtml))) {
-echo "
+  echo "
  $br
 <script language='JavaScript' type='text/javascript'>
 function loadPage() {
@@ -223,6 +218,6 @@ function loadPage() {
 ";
 
   include('../inc/footer.php'); 
-}
+ }
 
 ?>
