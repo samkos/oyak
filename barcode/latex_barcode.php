@@ -1,13 +1,13 @@
 <?php
-$hauteur_etiquette="0.8cm";
+$hauteur_etiquette="1cm";
 $largeur_etiquette="4.5 cm";
 $entre_ligne_etiquette="0.2 cm";
-$vertical_offset="-3.9 cm";
+$vertical_offset="-4.2 cm";
 $horizontal_offset="-2.4 cm";
 $largeur_nom="13cm";
 
 $nb_per_line=1;
-$nb_per_page=27;
+$nb_per_page=25;
 
 $exe_print="\"c:/Program Files/Ghostgum/gsview/gsprint.exe\"   ";
 $printer="default";
@@ -164,7 +164,7 @@ if (isset($barcodes)) {
 	sprintf("\includegraphics[height=$hauteur_etiquette,width=$largeur_etiquette]{%s.eps}  ",
 		$barcodes[$key]).
 	"& ".
-	"\\parbox[l]{ $largeur_nom }{ $produit ($barcodes[$key]) \\\\ $fournisseurs[$key] } \n ";
+	"\\raisebox{0.35cm}{\\parbox[l]{ $largeur_nom }{ $produit ($barcodes[$key]) \\\\ $fournisseurs[$key] }}\n";
       $nb=$nb+1;
       if ($nb<$nb_per_line) {
 	$catalog_line=$catalog_line."&";
