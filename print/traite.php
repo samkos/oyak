@@ -7,7 +7,10 @@ $exe_python=" demon.py";
 
 include("../inc/header.php");
 $debug=0;
-$commande="c:\\Python24\\python.exe -u $exe_python --debug --once $file";
+$commande="c:\\Python24\\python.exe -u $exe_python  --once $file";
+if ($debug) {
+   $commande=$commande." --debug";
+}
 if ($no_print) {
    $commande=$commande." --noprint";
 }

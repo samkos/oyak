@@ -15,7 +15,10 @@ $header=1;
 $nb_lignes_facture1=24;
 $nb_lignes_facture2=24;
 
-$debug=0;
+if (!isset($debug)) {
+  $debug=0;
+ }
+
 @unlink("c:/Oyak/screen.pdf");
 
 if (!(isset($nohtml))) {
