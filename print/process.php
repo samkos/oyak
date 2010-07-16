@@ -37,8 +37,13 @@ function latex_and_check($command, $filename) {
   global $debug;
 
   system("$command > out",$status);
-
-  return search_in_log("out")+search_in_log("error.log")+search_in_log("all.log");
+  
+  if ($debug) {
+    return search_in_log("out")+search_in_log("error.log")+search_in_log("all.log");
+  }
+  print "no checking....";
+  return 0;
+  
 
 }
 
