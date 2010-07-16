@@ -144,9 +144,9 @@ function make_facture ($file) {
 
   foreach ($lines as $line) {
     $line=str_replace("%","\\%",$line);
-
+    $line=rtrim($line);
     $champs = split("!",$line);
-    $clef=array_shift($champs);
+    $clef=trim(array_shift($champs));
 
 
     $i=0;
@@ -254,6 +254,7 @@ function make_facture ($file) {
 
   // remplacement des champs non remplis par des blancs
   $out=ereg_replace("#Z.,.#","",$out);
+  $out=ereg_replace("#Z.,..#","",$out);
 
   // traitement des choses en gras et petit caractères
   $out = code2latex($out);
