@@ -1,5 +1,5 @@
 @echo off
-call ../../inc/path.bat
+call ../../inc/path28.bat
 if exist all.pdf del all.pdf
 if exist erreur.log del erreur.log
 echo | time | find "actuelle" >> perf.out
