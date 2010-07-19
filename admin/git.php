@@ -12,7 +12,9 @@ if ($comment) {
   $commande="\"c:/Program Files/Git/bin/git.exe\" $action -m \"$comment\" ";
 }
 
-//print $commande;
+
+if (isset($dir)) chdir($dir);
+
 $res = my_exec($commande);
 //$res="xxx";
 //print $res;
