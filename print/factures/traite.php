@@ -146,7 +146,8 @@ function make_facture ($file) {
   $nb_lignes_facture=$nb_lignes_facture1;
 
   foreach ($lines as $line) {
-    $line=str_replace("%","\\%",$line);
+    // traitement des choses en gras et petit caractères
+    $line = code2latex($line);
     $line=rtrim($line);
     $champs = split("!",$line);
     $clef=trim(array_shift($champs));
@@ -190,7 +191,7 @@ function make_facture ($file) {
 	  print strlen($c); print "new_line /$c/\n"; 
 	  //$c="\\shorstack{".substr($c,1,32)."\\hfill\\ ".substr($c,33,99)."}";
 	  //$c="$\\shorstack[l]{".substr($c,0,32)."\\\\".substr($c,31,99)."}$";
-	  $c=substr($c,0,$width-1)."-".substr($c,$width-2,99);
+	  $c=substr($c,0,$width-1)."\\-".substr($c,$width-1,99);
 	  $nb_ligne=$nb_ligne+1;
 	}
 	$c=str_replace(" ",'~',$c);
@@ -260,7 +261,7 @@ function make_facture ($file) {
   $out=ereg_replace("#Z.,..#","",$out);
 
   // traitement des choses en gras et petit caractères
-  $out = code2latex($out);
+  $out = accent2latex($out);
 
   return $out;
 }

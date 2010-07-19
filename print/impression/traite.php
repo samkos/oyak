@@ -206,7 +206,9 @@ function make_imprime ($file) {
   $esp_tab_ligne=0.43;
 
   foreach ($lines as $line) {
-    $line=str_replace("%","\\%",$line);
+    // traitement des choses en gras et petit caractères
+    $line = code2latex($line);
+    //$line=str_replace("%","\\%",$line);
     $champs = split("!",$line);
     $what=array_shift($champs);
 
@@ -379,7 +381,7 @@ function make_imprime ($file) {
   //	$out=$out."}}\n";
   $out=$out.$footer."\n\n";
 
-  $out = code2latex($out);
+  $out = accent2latex($out);
 
 
   return $out;
