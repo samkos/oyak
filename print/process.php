@@ -58,6 +58,26 @@ function code2latex($in) {
   $out=ereg_replace("__gras__","}",$out);
   $out=ereg_replace("é","\'e",$out);
   $out=ereg_replace("è","\`e",$out);
+  $out=ereg_replace("_","\_",$out);
+  //$out=ereg_replace("^","\^",$out);
+  $out=ereg_replace("%","\%",$out);
+
+  return $out;
+
+}
+
+function accent2latex($in) {
+  // traitement des choses en gras et petit caractères
+  
+  $out=ereg_replace("é","\'e",$in);
+  $out=ereg_replace("è","\`e",$out);
+  $out=ereg_replace("ù","\`u",$out);
+  $out=ereg_replace("à","\`a",$out);
+  $out=ereg_replace("ê","\^e",$out);
+  $out=ereg_replace("â","\^a",$out);
+  $out=ereg_replace("û","\^u",$out);
+  $out=ereg_replace("î","\^i",$out);
+  $out=ereg_replace("ô","\^o",$out);
 
   return $out;
 
