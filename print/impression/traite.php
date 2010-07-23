@@ -269,7 +269,14 @@ function make_imprime ($file) {
 	if ($debug) print " <-- <B> OK </B>";
 	next;
       }
-		  
+
+      // template
+      if ($what=="INS") {
+	$file2insert=array_shift($champs);
+	$txt2insert = implode("\n",file("c:/Program Files/EasyPHP1-8/www/phpmyfactures/print/impression//$file2insert"));
+	$out=$out."\n% INSERTION $file2insert\n";
+	$out=$out.$txt2insert;	
+      }		  
       // tableau
       if ($what=="TAB") {
 	$tailles=split("=",array_shift($champs));

@@ -1,0 +1,18 @@
+Z1,1!100424002
+Z1,2!24/04/10
+Z1,3!240510
+Z1,5!C2233
+Z1,6!N° 7           
+Z1,7!
+Z1,8!26.90
+
+Z3,1!N° 7                     
+Z3,2!
+Z3,3!81 AVE BOSQUET
+Z3,4!
+Z3,5!75007 PARIS
+Z3,6!Tel :0147530152
+Z3,7!Fax: 
+
+Z0,1!PRO!1!GEN!PORTRAIT!facture
+INS!23!0!facture_header.tex
