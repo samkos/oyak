@@ -1,3 +1,6 @@
+Z0,1!PRO!1!GEN!PORTRAIT!facture
+INS!23!0!facture_header.tex
+
 Z1,1!100424002
 Z1,2!24/04/10
 Z1,3!240510
@@ -14,5 +17,4 @@ Z3,5!75007 PARIS
 Z3,6!Tel :0147530152
 Z3,7!Fax: 
 
-Z0,1!PRO!1!GEN!PORTRAIT!facture
-INS!23!0!facture_header.tex
+

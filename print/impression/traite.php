@@ -190,6 +190,7 @@ function make_imprime ($file) {
   global $debug, $orientation,$header, $footer,$body,$body_vide,
     $nb_lignes_imprime,$footer2,$header2,$printer,$copies;
 
+  $pattern2replace=array();
 
   $document="";
   $nb_ligne=0;
@@ -232,6 +233,12 @@ function make_imprime ($file) {
       $current_ligne=0;
     }
 
+    if (ereg("^Z",$what))  {
+      $value=trim(array_shift($champs));
+      $pattern2replace{$what}=$value;
+    }
+
+    if (($what=="TXT") or ($what=="TAB"))
     {
 
 
@@ -272,6 +279,8 @@ function make_imprime ($file) {
 
       // template
       if ($what=="INS") {
+	if ($debug) print " what = $what";
+	if ($debug) print_r($champs);		
 	$file2insert=array_shift($champs);
 	$txt2insert = implode("\n",file("c:/Program Files/EasyPHP1-8/www/phpmyfactures/print/impression//$file2insert"));
 	$out=$out."\n% INSERTION $file2insert\n";
@@ -387,6 +396,7 @@ function make_imprime ($file) {
   }
   //	$out=$out."}}\n";
   $out=$out.$footer."\n\n";
+  print_r($pattern2replace);
 
   $out = accent2latex($out);
 
