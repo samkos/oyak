@@ -6,6 +6,7 @@
 
 $exe_print="\"c:\\Program Files\\Ghostgum\\gsview\\gsprint.exe\"   ";
 $exe_python="c:\\Python24\\python.exe ..\\print\\demon.pyw";
+@mkdir("c:\Oyak\Printing");
 
 //$dir_facture=""\Oyak\work\*";
 $dir_facture="c:\facprint\*";
@@ -65,16 +66,19 @@ if ($filenames) {
   fwrite($file_out,$preambule);
 
   foreach ($filenames as $filename) {
+    // saving current file in oyak/printing
+    $printing_name = "c:/Oyak/printing/".basename($filename);
+    rename($filename,$printing_name);
     if ($i>0) {
       fwrite($file_out,"\\clearpage");
     }
     $i=$i+1;
     if (!$nohtml) { echo "<BR";}
-    echo "Traitement factture $filename....................";
-    $out=make_facture($filename);
+    echo "Traitement factture $filename ($printing_name)....................";
+    $out=make_facture($printing_name);
     fwrite($file_out,$out);
     if (!$debug and $del_file)  {
-      unlink($filename);
+      unlink($printing_name);
     }
   }
 
@@ -95,6 +99,7 @@ if ($filenames) {
     else {
       
       @mkdir ("c:/Oyak/ToPrint",0755);
+      @mkdir ("c:/Oyak/Printing",0755);
       if ($printer=="default") {
 	copy ("all.pdf", "c:/Oyak/ToPrint/facture.pdf");
 	copy ("all.pdf", "c:/Oyak/facture.pdf");
