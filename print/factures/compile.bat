@@ -17,4 +17,5 @@ echo !
 type erreur.log
 goto fin
 :ok
+copy all.pdf c:\oyak\facture.pdf
 :FIN
