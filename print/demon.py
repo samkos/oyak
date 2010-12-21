@@ -297,11 +297,14 @@ def probePrint(dir_print,printer="default"):
                   if printer=="default":
                      commande = exe_print+" "+filename
                   else:
-                     commande = exe_printTo+" "+filename+" "+printer
-                  if debug:
+                      if printer.find("@")>=0:
+                          (printer,server)=printer.split("@")
+                          printer = '"\\\\%s\\%s"'%(server,printer)
+                      commande = exe_printTo+" "+filename+" "+printer
+                  if True or debug:
                       print "%s"%timestamp+":execution de "+commande
                   if msg:
-                      print "%s"%timestamp+":"+ "Impression de %s "%filename
+                      print "%s"%timestamp+":"+ "Impression de %s "%filename+"sur imprimante %s"%printer
 
               os.system(commande)
 
