@@ -166,6 +166,7 @@ function make_facture ($file) {
       $par=$document;
       array_push($find,$cherche);
       array_push($replace,$par);
+      print " $BR printer : !!$printer!!$BR  copies : !!$copies!!$BR document : !!$document!!$BR orientation : !!$orientation!!";
     
     }
 

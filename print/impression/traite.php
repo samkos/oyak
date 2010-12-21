@@ -219,6 +219,7 @@ function make_imprime ($file) {
       $copies=array_shift($champs);
       $document=array_shift($champs);
       $orientation=array_shift($champs);
+      print " $BR printer : !!$printer!!$BR  copies : !!$copies!!$BR document : !!$document!!$BR orientation : !!$orientation!!";
       if ($debug) print " <-- <B> OK </B>";
       next;
     }
