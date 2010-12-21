@@ -159,6 +159,7 @@ function make_facture ($file) {
     if (ereg("^Z0,1",$clef))  { 
       // nom de l'imprimante, nombre d'impression, type de document
       $printer=array_shift($champs);
+      $printer=ereg_replace("\\\\_","_",$printer);
       $copies=array_shift($champs);
       $document=array_shift($champs);	
 
