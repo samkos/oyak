@@ -9,8 +9,8 @@ extract($_POST, EXTR_SKIP);
 extract($_GET, EXTR_SKIP);
 
 $host_db = "localhost";
-$user_db = "root";
-$password_db = "";
+$user_db = "oyak";
+$password_db = "oyak";
 $bdd_db = "oyak";
 
 $prefixe_dossier = "~samy/oyak/"; // url du dossier où se trouvera le script (Ne pas commencer par un / mais terminer par un / exemple : factures/ )
