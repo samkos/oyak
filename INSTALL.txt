@@ -1,0 +1,8 @@
+
+
+django-admin startproject oyak
+cd oyak
+python manage.py syncdb --settings=settings
+
+python manage.py runserver 4444
+
