@@ -1,0 +1,115 @@
+# Create your views here.
+import os, sys, time, string
+
+from django import forms
+from django.contrib.auth.forms import *
+
+from django.shortcuts import get_object_or_404, render_to_response
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.urlresolvers import reverse
+from django.template import RequestContext, Context, loader
+from django.contrib.auth import authenticate, login
+from django.core.context_processors import csrf
+from django.shortcuts import render_to_response
+
+
+
+import mimetypes
+from django.core.servers.basehttp import FileWrapper
+
+from django.views.decorators.cache import cache_control
+# from django.views.decorators.vary import vary_on_cookie
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_response_exempt
+
+from django.http import QueryDict
+
+import config, sys, traceback
+
+
+# everything fine... start list
+try:
+    HOME = os.environ['HOME']
+except:
+    print "[VIEW] ERROR Problem occured when loading vishnu module"
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    print "*** print_tb:"
+    traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
+    print "*** print_exception:"
+    traceback.print_exception(exc_type, exc_value, exc_traceback,
+                              limit=2, file=sys.stdout)
+    sys.exit(1)
+
+@cache_control(must_revalidate=True, max_age=6)
+def index(request , url):
+    if len(url)==0:
+        t = loader.get_template('index.html')
+        c = Context({
+            'oyak_version':  config.oyak_version,
+            })
+        return HttpResponse(t.render(c))
+    if url=="init_page":
+        out= ihm_www.create_init_page()
+        return HttpResponse(out)
+    if url=="cartouche":
+        out= ihm_www.wrap(None,"cartouche")
+        return HttpResponse(out)
+    if url[0:3]=="xxx":
+        filename = "../DOCS/%s" % url[3:]
+        if config.PORTAL_DEBUG:
+            print "[VIEW]  file  : ",filename
+        if os.path.isfile(filename):
+            l = open(filename,"r").read()
+            l=page_framed(filename)
+        else:        
+            l=page_message("to come not!")
+    else:
+        filename = "../%s" % url
+        if config.PORTAL_DEBUG:
+            print "[VIEW]  fichier : ---> ",filename
+        if os.path.isfile(filename):
+            l = open(filename,"r").read()
+        else:
+            print "[VIEW]  ZZZZZ file non existing : ",filename
+            l=page_message("nothing yet!")
+    return  HttpResponse(l)
+
+
+
+@cache_control(must_revalidate=True, max_age=6000)
+def image(request , url,ext):
+    filename = "../%s.%s" % (url,ext)
+    if config.PORTAL_DEBUG:
+        print "image : ---> ",filename
+    if os.path.isfile(filename):   
+        image_data = open(filename, "rb").read()
+        return HttpResponse(image_data, mimetype="image/%s" % ext[1:])
+    else:
+        print "ZZZZZ image non existing : ",filename
+        l=page_message("nothing yet!")
+        return  HttpResponse(l)
+
+
+
+
+def fichier_o(request , url):
+    filename = "../%s" % url
+    print "download ",filename,os.stat(filename).st_size
+    l = HttpResponse(mimetype='application/force-download') 
+    l['Pragma'] = 'no-cache'
+    l['Cache-Control'] = 'no-cache must-revalidate proxy-revalidate'
+    l['Content-Disposition']='attachment;filename="%s"'%filename
+    l["X-Sendfile"] = filename
+    l['Content-length'] = os.stat(filename).st_size
+    return l
+
+
+def fichier(request,url):
+    filename = "../%s" % url
+    basename = os.path.basename(filename)
+    print "download ",filename,os.stat(filename).st_size,basename
+    response = HttpResponse(FileWrapper(open(filename)),
+                           content_type=mimetypes.guess_type(filename)[0])
+    response['Content-Length'] = os.path.getsize(filename)    
+    response['Content-Disposition'] = "attachment; filename=%s" % basename
+    return response
