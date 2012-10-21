@@ -5,6 +5,8 @@ import os,sys
 ROOT_PATH = os.path.dirname(__file__)
 
 
+print "ROOT_PATH=%s" % ROOT_PATH
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -112,7 +114,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-)
+   "%s/templates" % ROOT_PATH
+   )
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -149,3 +152,37 @@ LOGGING = {
         },
     }
 }
+
+
+# own authentication
+
+ADMIN_LOGIN = 'admin'
+ADMIN_PASSWORD = 'sha1$4e987$afbcf42e21bd417fb71db8c66b321e9fc33051de'
+
+AUTHENTICATION_BACKENDS = "portal.authenticate.sshLoginBackend"
+
+args = open("args.txt","rt").readlines()
+vishnu_args = list()
+for a in args:
+    vishnu_args.append(a[:-1])
+    
+
+import config        
+config.parse(vishnu_args)
+
+if config.PROD:
+    DEBUG = False 
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': '/var/tmp/django_cache',
+            'TIMEOUT': 60,
+            'OPTIONS': {
+                'MAX_ENTRIES': 1000
+                }
+            }
+        }
+
+    CACHE_MIDDLEWARE_SECONDS = 60
+
+
