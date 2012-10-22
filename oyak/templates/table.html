@@ -16,10 +16,13 @@
       {% endfor %}
       <td bgcolor="#99CCCC" colspan=2>  <input type="submit" value="Filtrer"> </td>
   </tr>
+  {% for nb,valeur in valeurs.items %}
   <tr>
+    <td bgcolor=\"#ffffff\" align=\"left\" width=\"15%\">{{ valeur}}</td> 
     <td bgcolor=\"#ffffff\" align=\"center\" width=\"20%\"><a href=\"#null\" onclick=\"javascript:if(confirm('Etes-vous sUr de vouloir supprimer ce fournisseur ?')) document.location.replace('index.php?action=delete&id_fournisseur=$id');\">Supprimer</a></td>
     <td bgcolor=\"#ffffff\" align=\"center\" width=\"20%\"><a href=\"modifier_fournisseur.php?id_fournisseur=$id\">Modifier</a></td>
   </tr>
+  {% endfor %}
 
 </table>
 

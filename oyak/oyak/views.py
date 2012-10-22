@@ -58,7 +58,7 @@ def index(request , url):
     print "url=/%s/"%url
     if url[-1]=="/":
         url=url[:-1]
-    if url in ("fournisseurs","vendeurs"):
+    if url in ("fournisseurs","vendeurs","clients","produits"):
         out= browse(url)
         return HttpResponse(out)
     if url=="cartouche":
@@ -100,23 +100,22 @@ def browse(table):
        i=i+1
 
    print colonnes
-
+   
+   valeurs = {}
    i = 0
    for ligne in c:
-
-       print ligne
-       # post_dict[i] = {
-       #     "id" : row.id,
-       #     "tweet":row.tweet,
-       #     "author":  row.author,
-       #     "published":row.published,
-       #     "read":row.read
-       #     }
+       valeurs[i] = {}
+       for j in range(len(ligne)):
+          valeurs[i][j] = ligne[j] 
        i=i+1
 
+   print valeurs
     #print post_dict
    c = render_to_string('index.html' , {'oyak_version': config.oyak_version, 
-                                               'table' : table
+                                        'table' : table,
+                                        'colonnes' : colonnes,
+                                        'nb_colonnes' : i,
+                                        'valeurs' : valeurs
                                                })
    return c
     
