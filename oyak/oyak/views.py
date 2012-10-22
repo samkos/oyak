@@ -11,6 +11,7 @@ from django.template import RequestContext, Context, loader
 from django.contrib.auth import authenticate, login
 from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
+from django.template.loader import render_to_string
 
 
 
@@ -26,6 +27,12 @@ from django.http import QueryDict
 
 import config, sys, traceback
 
+
+import sqlite3
+ROOT_PATH = os.path.dirname(__file__)
+print "ouverture base %s/../db.sqlite" % ROOT_PATH
+conn = sqlite3.connect('%s/../db.sqlite' % ROOT_PATH)
+conn.row_factory = sqlite3.Row                # acces facile aux colonnes
 
 # everything fine... start list
 try:
@@ -49,8 +56,10 @@ def index(request , url):
             })
         return HttpResponse(t.render(c))
     print "url=/%s/"%url
-    if url[0:12]=="fournisseurs":
-        out= browse(url[0:12])
+    if url[-1]=="/":
+        url=url[:-1]
+    if url in ("fournisseurs","vendeurs"):
+        out= browse(url)
         return HttpResponse(out)
     if url=="cartouche":
         out= ihm_www.wrap(None,"cartouche")
@@ -78,11 +87,28 @@ def index(request , url):
 
 
 def browse(table):
-    t = loader.get_template('%s.html' % table)
-    c = Context({
-            'oyak_version':  config.oyak_version,
-            })
-    return t.render(c)
+ 
+   c = conn.cursor()  
+   c.execute("SELECT * FROM pcfact_%s " % table)
+
+   values = {}
+   i = 0
+   for ligne in c:
+       print ligne
+       # post_dict[i] = {
+       #     "id" : row.id,
+       #     "tweet":row.tweet,
+       #     "author":  row.author,
+       #     "published":row.published,
+       #     "read":row.read
+       #     }
+       i=i+1
+
+    #print post_dict
+   c = render_to_string('index.html' , {'oyak_version': config.oyak_version, 
+                                               'table' : table
+                                               })
+   return c
     
 
 @cache_control(must_revalidate=True, max_age=6000)
