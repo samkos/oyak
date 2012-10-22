@@ -48,8 +48,9 @@ def index(request , url):
             'oyak_version':  config.oyak_version,
             })
         return HttpResponse(t.render(c))
-    if url=="init_page":
-        out= ihm_www.create_init_page()
+    print "url=/%s/"%url
+    if url[0:12]=="fournisseurs":
+        out= browse(url[0:12])
         return HttpResponse(out)
     if url=="cartouche":
         out= ihm_www.wrap(None,"cartouche")
@@ -75,6 +76,14 @@ def index(request , url):
     return  HttpResponse(l)
 
 
+
+def browse(table):
+    t = loader.get_template('%s.html' % table)
+    c = Context({
+            'oyak_version':  config.oyak_version,
+            })
+    return t.render(c)
+    
 
 @cache_control(must_revalidate=True, max_age=6000)
 def image(request , url,ext):

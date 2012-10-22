@@ -217,3 +217,8 @@ def print_debug(s,r="nulll"):
     else:
       print s,":",r
       
+import os,sys
+ROOT_PATH = os.path.dirname(__file__)
+
+import sqlite3
+conn = sqlite3.connect('%s/db.sqlite' % ROOT_PATH)
