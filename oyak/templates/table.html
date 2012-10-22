@@ -1,0 +1,26 @@
+
+<table border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#000000" width="770">
+  <tr>
+    {% for nb,key in colonnes.items %}
+    <td bgcolor="#99CCCC" align="center" width="14%"><b>{{ key.name }}</b></td>
+    {% endfor%}
+    <td bgcolor="#99CCCC" align="center" width="40%" colspan="3"><b>Actions</b></td>
+  </tr>
+  <tr>
+    <form action="">
+      
+      {% for nb,key in colonnes.items %}
+      <td bgcolor="#99CCCC" colspan=1> 
+	<input type=text name=filtre_{{key.name}} clef size=15 value=""> 
+      </td>
+      {% endfor %}
+      <td bgcolor="#99CCCC" colspan=2>  <input type="submit" value="Filtrer"> </td>
+  </tr>
+  <tr>
+    <td bgcolor=\"#ffffff\" align=\"center\" width=\"20%\"><a href=\"#null\" onclick=\"javascript:if(confirm('Etes-vous sUr de vouloir supprimer ce fournisseur ?')) document.location.replace('index.php?action=delete&id_fournisseur=$id');\">Supprimer</a></td>
+    <td bgcolor=\"#ffffff\" align=\"center\" width=\"20%\"><a href=\"modifier_fournisseur.php?id_fournisseur=$id\">Modifier</a></td>
+  </tr>
+
+</table>
+
+ 

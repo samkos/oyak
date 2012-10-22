@@ -90,10 +90,20 @@ def browse(table):
  
    c = conn.cursor()  
    c.execute("SELECT * FROM pcfact_%s " % table)
+   
+   print c.description
 
-   values = {}
+   colonnes = {}
+   i = 0
+   for col in c.description:   
+       colonnes[i] = {"name"  : col[0]}
+       i=i+1
+
+   print colonnes
+
    i = 0
    for ligne in c:
+
        print ligne
        # post_dict[i] = {
        #     "id" : row.id,
