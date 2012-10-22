@@ -125,9 +125,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -154,12 +154,8 @@ LOGGING = {
 }
 
 
-# own authentication
-
-ADMIN_LOGIN = 'admin'
-ADMIN_PASSWORD = 'sha1$4e987$afbcf42e21bd417fb71db8c66b321e9fc33051de'
-
-AUTHENTICATION_BACKENDS = "portal.authenticate.sshLoginBackend"
+#
+#AUTHENTICATION_BACKENDS = "portal.authenticate.sshLoginBackend"
 
 args = open("args.txt","rt").readlines()
 vishnu_args = list()
