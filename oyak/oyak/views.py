@@ -91,7 +91,7 @@ def browse(table):
    c = conn.cursor()  
    c.execute("SELECT * FROM pcfact_%s " % table)
    
-   print c.description
+   #print c.description
 
    colonnes = {}
    i = 0
@@ -99,17 +99,16 @@ def browse(table):
        colonnes[i] = {"name"  : col[0]}
        i=i+1
 
-   print colonnes
+   #print colonnes
    
    valeurs = {}
    i = 0
    for ligne in c:
-       valeurs[i] = {}
-       for j in range(len(ligne)):
-          valeurs[i][j] = ligne[j] 
+       #print ligne
+       valeurs[i] = "</td><td>".join(map(lambda x:"%s"%x,ligne))
        i=i+1
 
-   print valeurs
+   #print "valeurs : ",valeurs
     #print post_dict
    c = render_to_string('index.html' , {'oyak_version': config.oyak_version, 
                                         'table' : table,
