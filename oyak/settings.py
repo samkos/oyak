@@ -182,3 +182,21 @@ if config.PROD:
     CACHE_MIDDLEWARE_SECONDS = 60
 
 
+
+# from sqlalchemy import *
+# from sqlalchemy.orm import *
+
+# import re
+
+# engine = create_engine('sqlite+pysqlite:%s/db.sqlite' % ROOT_PATH, pool_recycle=3600)
+# metadata = MetaData(engine)
+# connection = engine.connect()
+# fournisseurs_sql = Table('pfact_fournisseurs', metadata, autoload=True)
+# produits_sql = Table('pfact_produits', metadata, autoload=True)
+# vendeurs_sql = Table('pfact_vendeurs', metadata, autoload=True)
+# clients_sql = Table('pfact_clients', metadata, autoload=True)
+# compteur_sql = Table('pfact_compteur', metadata, autoload=True)
+
+
+import sqlite3
+conn = sqlite3.connect('%s/db.sqlite' % ROOT_PATH)
