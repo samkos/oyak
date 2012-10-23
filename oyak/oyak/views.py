@@ -36,7 +36,7 @@ show_colonnes = { "fournisseurs" : "id,clef,societe,ville",
 import sqlite3
 ROOT_PATH = os.path.dirname(__file__)
 print "ouverture base %s/../db.sqlite" % ROOT_PATH
-conn = sqlite3.connect('%s/../db.sqlite' % ROOT_PATH)
+conn = sqlite3.connect('%s/../db.sqlite' % ROOT_PATH, check_same_thread = False  )
 conn.row_factory = sqlite3.Row                # acces facile aux colonnes
 
 # everything fine... start list
