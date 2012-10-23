@@ -1,0 +1,108 @@
+/*@import "../../js/dojo-0.9.0beta/dojo/resources/dojo.css";*/
+/*@import "../../js/dojo-0.9.0beta/dijit/themes/dijit.css";*/
+/*@import "../../js/dojo-0.9.0beta/dijit/tests/css/dijitTests.css"; */
+
+/*html, body { height: 100%; width: 100%; padding: 0; border: 0; background-color: #D0DCE0;} */
+/* #main { height: 100%; width: 100%; padding: 0; border: 10; } */
+/* #header, #mainSplit { margin: 10px; } */
+
+
+
+
+
+/*body {font-family: "Times New Roman",serif; font-size: 12pt; background-color: #D0DCE0} */
+/*div {font-family: "Times New Roman",serif; font-size: 12pt; color: #000000 background-color:#D0DCE0}*/
+/*table {font-family: "Times New Roman",serif; font-size: 12pt; background-color: #D0DCE0} */
+
+/* .heada {font-family: "Times New Roman",serif; font-size: 12pt; color: #000000} */
+/* .headaCnt {font-family: "Times New Roman",serif; font-size: 10pt; color: #000000} */
+/* .parent {font-family: "Times New Roman",serif; color: #000000; text-decoration: none} */
+/* .child {font-family: "Times New Roman",serif; font-size: 10pt; color: #333399; text-decoration: none} */
+/* .item, .item:active, .item:hover, .tblItem, .tblItem:active {font-size: 10pt; color: #333399; text-decoration: none} */
+/* .tblItem:hover {color: #FF0000; text-decoration: underline} */
+/* .td     { background-color: #D0DCE0; } */
+/* .td1     { background-color: #D0DCE0; } */
+/* .td2     { background-color: #ffffcc; } */
+/* .tdgreen { background-color: #6AFB92; }  */
+/* .tdred   { background-color: #FF0000; } */
+/* .tdorange   { background-color: #FF8040; } */
+
+
+/* menu styles */
+#jsddm
+{	margin: 0;
+	padding: 0}
+
+	#jsddm li
+	{	float: left;
+		list-style: none;
+		font: Tahoma, Arial}
+
+	#jsddm li a
+	{	display: block;
+		background-image:url("../IMAGES/header/navOngletInactif.gif");
+		background-repeat:repeat-x;
+		padding: 5px 12px;
+		text-decoration: none;
+		border-right: 1px solid white;
+		width: 70px;
+		color: #EAFFED;
+		white-space: nowrap}
+
+	#jsddm li a:hover
+	{	background-image:url("../IMAGES/header/navOngletActif.gif");
+		background-repeat:repeat-x;}
+		
+		
+		#jsddm li ul
+		{	margin: 0;
+			padding: 0;
+			position: absolute;
+			visibility: hidden;
+		        z-index:1000;
+			border-top: 1px solid white;
+			border-right: 1px solid black;
+			border-left: 1px solid black;
+			border-bottom: 1px solid black;
+						
+		        background:none repeat scroll 0 0 #FFFFFF;}
+		
+			#jsddm li ul li
+			{	float: none;
+				display: inline}
+			
+			#jsddm li ul li a
+			{	width: auto;
+				background: #FFFFFF; 
+				font-size: 13px;
+				text-align: left;
+				color: #24313C}
+			
+			#jsddm li ul li a:hover
+			{	background: #FFFFFF;
+			        color: #FF8900;}
+
+
+
+.tooltip {
+    display:none;
+    background-color:#ffa;
+    border:1px solid #cc9;
+    padding:3px;
+    font-size:13px;
+    -moz-box-shadow: 2px 2px 11px #666;
+    -webkit-box-shadow: 2px 2px 11px #666;
+}
+
+
+
+		
+div.graph
+{
+   width: 400px;
+   height: 300px;
+   float: left;
+   border: 1px dashed gainsboro;
+}
+		
+/*.ui-progressbar-value { background-image: url(../IMAGES/pbar-ani.gif); }*/

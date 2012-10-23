@@ -1,32 +1,53 @@
 <?xml version="1.0"?><reponse><message>{% if success %}---NEWBLOC---redirect---CONTENT---{{ next_url }}{% endif %}---NEWBLOC---cartouche---CONTENT---
-<table border="0" align="center" width="770">
-   <tr>
-      <td colspan="16" align="center"><hr size="1" color="#000000"><a href="/index.php">Oyak v {{ oyak_version }}</a></td>
-   </tr>
-   <tr>
-      <td colspan="16" align="center"><hr size="1" color="#000000"></td>
-   </tr>
-   <tr>
-      <td width="12%" align="center" valign="top">Etiquettes<BR>
-                                     <a href="/barcode/index.php?id_cat=1">lister</a></td>
-      <td width="12%" align="center" valign="top">Clients<BR>
-                                     <a href="/clients/">lister</a></td>
-      <td width="12%" align="center" valign="top">Fournisseurs<BR>
-	                           <a href="/fournisseurs/">lister</a></td>
-      <td width="12%" align="center" valign="top"> Produits<BR>
-	                             <a href="/produits/">lister</a><BR>
-                                     <a href="/produits/check.php">verifier</a></td>
-      <td width="12%" align="center" valign="top">Vendeurs<BR><a href="/vendeurs/">lister</a></td>
-      <td width="12%" align="center" valign="top"> Commandes 
-                                      <a href="/print/commandes/">lister</a><br>
-                                      <a href="/print/tests/">tester</a></td>
-     <td width="12%" align="center" valign="top"> Administrer<BR>
-     <a href="/admin/">gerer</a> <BR>
-     <a href="/admin/params/">options</a> <BR>
-     
-			</td>
-   </tr>
-   <tr>
-      <td colspan="16" align="center"><hr size="1" color="#000000"></td>
-   </tr>
-</table>---NEWBLOC---</message></reponse>
+<ul id="jsddm"> 
+ <li><a onclick="current_machine='unknown';load2Id('corps','bgp/jobs')" href="#" id="jobs_machine_1">Etiquettes</a> 
+	 <ul style="visibility: hidden;">
+		<li><a onclick="current_machine='bgp';load2Id('corps','bgp/jobs')" href="#" id="jobs_1">Jobs en cours</a></li>
+		<li><a onclick="current_machine='bgp';load2Id('corps','bgp/classes')" href="#" id="classes_1">Files d'attente</a></li>
+	 </ul>
+</li>
+ <li><a onclick="current_machine='unknown';load2Id('corps','/clients')" href="#" id="jobs_machine_2">Clients</a> 
+	 <ul>
+		<li><a onclick="current_machine='ivanoe';load2Id('corps','/clients')" href="#" id="jobs_2">lister</a></li>
+	 </ul>
+</li>
+ <li><a onclick="current_machine='unknown';load2Id('corps',/fournisseurs')" href="#" id="jobs_machine_3">Fournisseurs</a> 
+	 <ul style="visibility: hidden;">
+		<li><a onclick="current_machine='bgq';load2Id('corps','/fournisseurs')" href="#" id="jobs_3">lister</a></li>
+		<li><a onclick="current_machine='bgq';load2Id('corps','/fournisseurs/check')" href="#" id="classes_3">verifier</a></li>
+	 </ul>
+</li>
+ <li><a onclick="current_machine='unknown';load2Id('corps','/produits')" href="#" id="jobs_machine_4">Produits</a> 
+	 <ul style="visibility: hidden;">
+		<li><a onclick="current_machine='aster4';load2Id('corps','/produits')" href="#">lister</a></li>
+		<li><a onclick="current_machine='aster4';load2Id('corps','/produits/check')" href="#">verifier</a></li>
+	 </ul>
+</li>
+ <li><a onclick="current_machine='unknown';load2Id('corps','/commandes')" href="#" id="jobs_machine_5">Commmandes</a> 
+	 <ul style="visibility: hidden;">
+		<li><a onclick="current_machine='vishnu';load2Id('corps','/commandes')" href="#">lister</a></li>
+		<li><a onclick="current_machine='vishnu';load2Id('corps','/commandes/test')" href="#">tester</a></li>
+	 </ul>
+</li>
+ <li><a onclick="current_machine='unknown';load2Id('corps','/admin')" href="#" id="jobs_machine_6">Administrer</a> 
+	 <ul style="visibility: hidden;">
+		<li><a onclick="current_machine='vishnu';load2Id('corps','/admin')" href="#">gerer</a></li>
+		<li><a onclick="current_machine='vishnu';load2Id('corps','/admin/params')" href="#">options</a></li>
+	 </ul>
+</li>
+</ul>
+ 		<div clef="0" class="contextMenu" id="myMenu_jobs" style="-moz-user-select: none;">
+			<li class="edit"><a href="#infojob"> Infos</a></li>
+			<li class="cut separator"><a href="#cut">Jobs de cet utilisateur</a></li>
+		</div>
+                
+		<div clef="0" class="contextMenu" id="myMenu_sessions">
+			<li class="delete"><a href="#delete">Kill</a></li>
+		</div>
+		<div clef="5" class="contextMenu" id="myMenu_ls">
+			<li class="edit"><a href="#cat">Cat</a></li>
+			<li class="edit"><a href="#head">Head</a></li>
+			<li class="edit"><a href="#tail">Tail</a></li>
+			<li class="quit"><a href="#logout">Logout</a></li>
+		</div></div>
+---NEWBLOC---</message></reponse>
