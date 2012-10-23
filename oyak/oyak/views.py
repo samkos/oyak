@@ -1,5 +1,6 @@
 # Create your views here.
 import os, sys, time, string
+from datetime import datetime, date, time
 
 from django import forms
 from django.contrib.auth.forms import *
@@ -122,11 +123,11 @@ def browse(table):
 
    #print "valeurs : ",valeurs
     #print post_dict
-   c = render_to_string('table.html' , {'oyak_version': config.oyak_version, 
-                                        'table' : table,
+   dt = datetime.now() 
+   c = render_to_string('table.html' , {'date' : dt.strftime("%A, %d. %B %Y %I:%M%p"),
                                         'colonnes' : colonnes,
-                                        'nb_colonnes' : i,
-                                        'valeurs' : valeurs
+                                         'valeurs' : valeurs,
+                                        'titre' : "Liste des %s" % table
                                                })
    return c
     

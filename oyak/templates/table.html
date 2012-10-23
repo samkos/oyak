@@ -1,7 +1,5 @@
-<?xml version="1.0"?><reponse><message>---NEWBLOC---entete---CONTENT--- <table    align='left' border='1' cellpadding='0' cellspacing='0' width='100%' ><tbody><tr> <td colspan='25' align='center'>  <div id='titre' style='float: left; text-align: left;' > </div> <div id='message' >Tue Oct 23 16:13:52 CEST 2012</div><input type='hidden' id='machine' value='bgq'><input type='hidden' id='access' value='ssh'> </td> </tr> 
-<tr> <td colspan='25' align='center'>   </td> </tr> 
-<tr> <td colspan='25' align='center'>  <div >512 Cores Active / 65536 Cores Available  = 0 % d'occupation</div> </td> </tr> 
-</tbody></table> <BR />---NEWBLOC---titre---CONTENT---Jobs en cours sur IBM BG/Q---NEWBLOC---corps---CONTENT---<duv> <table  context='jobs' id='jobsbgq' class='tablet' align='left' border='1' cellpadding='0' cellspacing='0' width='100%'><thead>
+<?xml version="1.0"?><reponse><message>---NEWBLOC---entete---CONTENT--- <table    align='left' border='1' cellpadding='0' cellspacing='0' width='100%' ><tbody><tr> <td colspan='25' align='center'>  <div id='titre' style='float: left; text-align: left;' > </div> <div id='message' > {{ date }}</div><input type='hidden' id='machine' value='bgq'><input type='hidden' id='access' value='ssh'> </td> </tr> 
+</tbody></table> <BR />---NEWBLOC---titre---CONTENT---{{ titre }}---NEWBLOC---corps---CONTENT---<duv> <table  context='jobs' id='jobsbgq' class='tablet' align='left' border='1' cellpadding='0' cellspacing='0' width='100%'><thead>
   <tr>
     {% for nb,key in colonnes.items %}
     <th>{{ key.name }}</th>
