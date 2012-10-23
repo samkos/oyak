@@ -1,3 +1,36 @@
 {% include "header.html" %} 
-{%if table  %} {% include "table.html" %}  {% endif %}
+</div>
+            <table  align='center' border='0' cellpadding='0' cellspacing='0' width='985'>
+               <tbody>
+                <tr>
+                 <td colspan='25'  align='right' > 
+		   <div class='wrapper'>
+			<!-- Debut header -->
+                          <img style='position:relative;top:0px;left:-440px;z-index:-1' alt='EDF' src='IMAGES/header/logo_edf.gif' /> 
+                          <img style='position:absolute;top:86px;left:-500px;z-index:-1' src='IMAGES/header/accroche_edf_fr.gif' class='accroche'/> 
+                          <IMG  src='IMAGES/header/vishnu_logo.png' />
+                        <!-- <IMG style='position:absolute;top:2px;left:750px;z-index:2' src='IMAGES/header/logo_rd.gif' > -->
+		  </div>
+    		  <!-- Fin header -->
+                 </td>
+               </tr>
+               <tr> 
+                 <td colspan='25'  align='center' > 
+                      <div id='cartouche'></div>
+   	              <font color='red' align='center'> 
+                         <div  id='loading'> <img src='IMAGES/ajax-loader.gif'></div>
+                      </font>
+                 </td>
+               </tr>
+               <tr>
+                  <td  colspan='25' width='900'>
+	             <div  id='entete'  style='padding:10px;  '  > </div> 
+	             <div  id='graphique' > </div> 
+	             <div  id='corps'  style='padding:10px;  '> {%if table  %} {% include "table.html" %}  {% endif %}</div> 
+                  </td>
+               </tr>
+              </tbody>
+            </table>
+ </body>
+</div>
 {% include "footer.html" %} 

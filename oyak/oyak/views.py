@@ -28,6 +28,11 @@ from django.http import QueryDict
 import config, sys, traceback
 
 
+show_colonnes = { "fournisseurs" : "id,clef,societe,ville",
+                 "clients"      : "id,clef,societe,ville",
+                 "produits"     : "id,titre,stock,barcode,prix_vente_ht,prix_plancher_ht,fournisseur,clef,poids",
+                 "vendeurs"     : "id,nom,prenom"}
+
 import sqlite3
 ROOT_PATH = os.path.dirname(__file__)
 print "ouverture base %s/../db.sqlite" % ROOT_PATH
@@ -58,6 +63,13 @@ def index(request , url):
     print "url=/%s/"%url
     if url[-1]=="/":
         url=url[:-1]
+    if url=="cartouche":
+        t = loader.get_template('cartouche.html')
+        c = Context({
+            'oyak_version':  config.oyak_version,
+            })
+        return HttpResponse(t.render(c))
+        
     if url in ("fournisseurs","vendeurs","clients","produits"):
         out= browse(url)
         return HttpResponse(out)
@@ -74,7 +86,7 @@ def index(request , url):
         else:        
             l=page_message("to come not!")
     else:
-        filename = "../%s" % url
+        filename = "%s" % url
         if config.PORTAL_DEBUG:
             print "[VIEW]  fichier : ---> ",filename
         if os.path.isfile(filename):
@@ -89,7 +101,7 @@ def index(request , url):
 def browse(table):
  
    c = conn.cursor()  
-   c.execute("SELECT * FROM pcfact_%s " % table)
+   c.execute("SELECT %s FROM pcfact_%s " % (show_colonnes[table],table))
    
    #print c.description
 

@@ -6,6 +6,7 @@
     {% endfor%}
     <td bgcolor="#99CCCC" align="center" width="40%" colspan="3"><b>Actions</b></td>
   </tr>
+  {% if filtre %}
   <tr>
     <form action="">
       
@@ -16,11 +17,11 @@
       {% endfor %}
       <td bgcolor="#99CCCC" colspan=2>  <input type="submit" value="Filtrer"> </td>
   </tr>
+  {% endif %}
   {% for nb,valeur in valeurs.items %}
   <tr bgcolor="#ffffff" align="left">
     <td> {{ valeur|safe|escape }} </td>
-    <td bgcolor="#ffffff" align="center" width="20%"><a href="#null" onclick="javascript:if(confirm('Etes-vous sUr de vouloir supprimer ce fournisseur ?')) document.location.replace('index.php?action=delete&id_fournisseur=$id');">Supprimer</a></td>
-    <td bgcolor="#ffffff" align="center" width="20%"><a href="modifier_fournisseur.php?id_fournisseur=$id">Modifier</a></td>
+    <td bgcolor="#ffffff" align="center" width="20%"><a href="#null" onclick="javascript:if(confirm('Etes-vous sUr de vouloir supprimer ce fournisseur ?')) document.location.replace('index.php?action=delete&id_fournisseur=$id');">Supprimer</a> &nbsp; <a href="modifier_fournisseur.php?id_fournisseur=$id">Modifier</a></td>
   </tr>
   {% endfor %}
 
