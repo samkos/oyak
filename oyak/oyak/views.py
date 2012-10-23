@@ -122,7 +122,7 @@ def browse(table):
 
    #print "valeurs : ",valeurs
     #print post_dict
-   c = render_to_string('index.html' , {'oyak_version': config.oyak_version, 
+   c = render_to_string('table.html' , {'oyak_version': config.oyak_version, 
                                         'table' : table,
                                         'colonnes' : colonnes,
                                         'nb_colonnes' : i,
