@@ -29,10 +29,14 @@ from django.http import QueryDict
 import config, sys, traceback
 
 
-show_colonnes = { "fournisseurs" : "id,clef,societe,ville",
-                 "clients"      : "id,clef,societe,ville",
-                 "produits"     : "id,titre,stock,barcode,prix_vente_ht,prix_plancher_ht,fournisseur,clef,poids",
-                 "vendeurs"     : "id,nom,prenom"}
+show_colonnes = { "fournisseurs" : [ "id,clef,societe,ville", "clef","societe"],
+                  "clients"      : [ "id,clef,societe,ville", "clef","societe"],
+                  "produits"     : [ "id,titre,stock,barcode,prix_vente_ht,prix_plancher_ht,"+\
+                                         "fournisseur,clef,poids", "clef","titre"],
+                  "vendeurs"     : [ "id,nom,prenom", "id","nom"] }
+
+
+data = {}
 
 import sqlite3
 ROOT_PATH = os.path.dirname(__file__)
@@ -102,14 +106,21 @@ def index(request , url):
 def browse(table):
  
    c = conn.cursor()  
-   c.execute("SELECT %s FROM pcfact_%s " % (show_colonnes[table],table))
+   fields,nom_clef,nom_valeur = show_colonnes[table]
+   c.execute("SELECT %s FROM pcfact_%s " % (fields,table))
    
    #print c.description
 
    colonnes = {}
+   colname = {}
    i = 0
    for col in c.description:   
        colonnes[i] = {"name"  : col[0]}
+       if col[0]==nom_clef:
+           clef = i
+       if col[0]==nom_valeur:
+           valeur = i
+       colname[i] = col[0]
        i=i+1
 
    #print colonnes
@@ -117,10 +128,22 @@ def browse(table):
    valeurs = {}
    i = 0
    for ligne in c:
+       j = 0
+       u = list()
+       for l in ligne:
+           key = "%ss-%s" % (colname[j],l)
+           #print "key : ",key
+           if key in data.keys():
+               u.append("%s (%s)" % (data[key],l))
+           else:
+               u.append(l)
+           j = j+1
        #print ligne
-       valeurs[i] = "</td><td>".join(map(lambda x:"%s"%x,ligne))
+       valeurs[i] = "</td><td>".join(map(lambda x:"%s"%x,u))
+       data [ "%s-%s" % (table,ligne[clef]) ] = ligne[valeur]
        i=i+1
-
+   
+   #print data
    #print "valeurs : ",valeurs
     #print post_dict
    dt = datetime.now() 
