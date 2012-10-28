@@ -68,6 +68,13 @@ def index(request , url):
     print "url=/%s/"%url
     if url[-1]=="/":
         url=url[:-1]
+    if url=="commandes/test":
+        c = render_to_string('tests.html' , {'date' : dt.strftime("%A, %d. %B %Y %I:%M%p"),
+                                        'colonnes' : colonnes,
+                                         'valeurs' : valeurs,
+                                        'titre' : "Liste des %s" % table
+                                               })
+        
     if url=="cartouche":
         t = loader.get_template('cartouche.html')
         c = Context({
