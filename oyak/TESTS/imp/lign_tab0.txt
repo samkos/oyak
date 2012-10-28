@@ -1,0 +1,16 @@
+Z0,1!PR0!1!GEN!PORTRAIT
+TAB!0!1!4!__GRAS__Jawd Exotique Cedrus__gras__!Batiment C1!256 allée des anémones!94539 Rungis Cédex
+TAB!12!2!4!__GRAS__CLIENT__gras__!55 rue des Accacias!75005 PARIS
+TXT!12!1!__GRAS__RELEVE DE COMPTE__gras__
+TXT!12!4.5!Rungis Le 15 janvier 2007
+TXT!-!-!
+TXT!-!-!
+TXT!-!-!Messieurs,
+TXT!-!-!!Nous vous prions de bien vouloir trouver ci-dessous le relevé de votre compte pour la période du 01/01/08 au 31/01/08
+TXT!-!-!
+TAB!0!13!2=2.5=2.5=2=2=3!;T!Date ;cg= N/Référence ;cg= ;.g= Débit ;cgG = Crédit ;cg = ;..c !;T! 02/11/07 ;cg =071102086 ;cg= ;..c = 2276.82 ;gdG= ;..c= ;..c !03/11/07 ;cg =071103096 ;cg= 390.72 ;gdG= ;..c= ;..c !06/11/07 ;cg= 071106065 ;cg=544.98 ;gdG = ;..c= ;..c !;T
+TXT!-!-!Soit un total de : 7 270.92 Euros en votre aimable règlement.
+TXT!.!. !Veuillez agréer , Messieurs, l’expression de nos salutations distinguées.
+TXT!-!-!La Comptabilité
+TXT!-!-!esssssssssssssssai
+EJECT
