@@ -35,7 +35,7 @@ var previous_time= new Array();
 
 var isAutomaticReload = false;
 
-var update_max = 20;
+var update_max = 300;
 var update_frequency = 5;
 var currently_loading=0;
 
@@ -82,7 +82,7 @@ function secondsToTime(secs)
 function update_clock() {
     delta=getCurrentTime() - last_time_called;
     temps_passe=parseInt(delta);    
-    s= 'il y a '+ secondsToTime(temps_passe) +'.' ;
+    s= 'il y a '+ secondsToTime(temps_passe)  ;
     passe=$('div#temps_qui_passe');
     passe.replaceWith("<div id='temps_qui_passe' style='float: left; text-align: left;' >" + s + "<div>");
     if (delta>update_max) {
