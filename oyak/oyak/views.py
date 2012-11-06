@@ -71,6 +71,9 @@ def index(request , url):
     if url[:5] == "edit/":
         out =edit(url[5:])
         return HttpResponse(out)
+    if url[:8] == "process/":
+        out =process(url[10:],url[8])
+        return HttpResponse(out)
     if url=="commandes/test":
         out=list_tests()
         return HttpResponse(out)
@@ -124,8 +127,8 @@ def list_tests():
     for fic in testing_facs+testing_etiq+testing_imp:
         valeurs[i] = \
                    ( "<a href='#' onclick=\"load2Id('corps','/edit/%s')\" >%s</a>" % (fic,fic) + "</td><td>"\
-                     "&nbsp; <a href='/process/screen/%s'>ecran</a> " % fic+ \
-                     "&nbsp; <a href='/process/print/%s'>imprimante</a> " % fic)
+                     "&nbsp; <a href='#' onclick=\"load2Id('corps','/process/s/%s')\">ecran</a> " % fic+ \
+                     "&nbsp; <a href='#' onclick=\"load2Id('corps','/process/p/%s')\">imprimante</a> " % fic)
         i = i+1
 
     dt = datetime.now() 
@@ -150,6 +153,12 @@ def edit(fic):
                                          'valeurs' : valeurs
                                         })
     return c
+
+def process(fic,mode):
+
+    print "processing ",fic,"mode :",mode
+
+
 
 def browse(table):
  
