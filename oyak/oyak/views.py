@@ -117,12 +117,13 @@ def list_tests():
     colonnes = {}
     colonnes[0] = {"name"  : "fichiers"}
     i = 0
-    print "testing_facs",testing_facs
-    for fic in testing_facs.append(testing_etiq).append(testing_imp) :
+    print "testing_facs",testing_facs+testing_etiq+testing_imp
+    for fic in testing_facs+testing_etiq+testing_imp:
         valeurs[i] = \
                    ( "<a href='/edit/%s'>'%s</a>" % (fic,fic) + "</td><td>"\
                      "&nbsp; <a href='/process/screen/%s'>ecran</a> " % fic+ \
                      "&nbsp; <a href='/process/print/%s'>imprimante</a> " % fic)
+        i = i+1
 
     dt = datetime.now() 
     c = render_to_string('tests.html' , {'date' : dt.strftime("%A, %d. %B %Y %I:%M%p"),
