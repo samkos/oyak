@@ -11,7 +11,6 @@
   {% for nb,valeur in valeurs.items %}
   <tr>
     <td> {{ valeur|safe|escape }} </td>
-    <td><a href="#null" onclick="javascript:if(confirm('Etes-vous sUr de vouloir supprimer ce fournisseur ?')) document.location.replace('index.php?action=delete&id_fournisseur=$id');">Supprimer</a> &nbsp; <a href="modifier_fournisseur.php?id_fournisseur=$id">Modifier</a></td>
   </tr>
   {% endfor %}
   </tbody>

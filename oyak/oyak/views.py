@@ -1,5 +1,5 @@
 # Create your views here.
-import os, sys, time, string
+import os, sys, time, string, glob
 from datetime import datetime, date, time
 
 from django import forms
@@ -69,7 +69,8 @@ def index(request , url):
     if url[-1]=="/":
         url=url[:-1]
     if url=="commandes/test":
-        list_tests()
+        out=list_tests()
+        return HttpResponse(out)
     if url=="cartouche":
         t = loader.get_template('cartouche.html')
         c = Context({
@@ -93,7 +94,7 @@ def index(request , url):
         else:        
             l=page_message("to come not!")
     else:
-         filename = "%s" % url
+        filename = "%s" % url
         if config.PORTAL_DEBUG:
             print "[VIEW]  fichier : ---> ",filename
         if os.path.isfile(filename):
@@ -105,84 +106,31 @@ def index(request , url):
 
 
 def list_tests():
+    testing_facs = glob.glob("TESTS/fac/*")
+    testing_etiq = glob.glob("TESTS/etiq/*")
+    testing_imp =  glob.glob("TESTS/imp/*")
+
+    waiting_factures = glob.glob("%s/facprint/*" % config.OYAK_DIR)
+    waiting_printings = glob.glob("%s/impprint/*" % config.OYAK_DIR)
+
+    valeurs = {}
+    colonnes = {}
+    colonnes[0] = {"name"  : "fichiers"}
+    i = 0
+    print "testing_facs",testing_facs
+    for fic in testing_facs.append(testing_etiq).append(testing_imp) :
+        valeurs[i] = \
+                   ( "<a href='/edit/%s'>'%s</a>" % (fic,fic) + "</td><td>"\
+                     "&nbsp; <a href='/process/screen/%s'>ecran</a> " % fic+ \
+                     "&nbsp; <a href='/process/print/%s'>imprimante</a> " % fic)
+
+    dt = datetime.now() 
     c = render_to_string('tests.html' , {'date' : dt.strftime("%A, %d. %B %Y %I:%M%p"),
-                                         'colonnes' : colonnes,
+                                        'colonnes' : colonnes,
                                          'valeurs' : valeurs,
-                                         'titre' : "Liste des %s" % table
-                                         })
-        
-    files2test=array()
-
-# fichier en test
-$testing_files=array_merge(glob("./*/*")) 
-if ($testing_files) {
-  $waiting_files=array()
-  while ($file=array_pop($testing_files)) {
-    array_push($waiting_files,"../tests/"."$file")
-  }
-  $files2test=array_merge($files2test,$waiting_files)
- }
-//print_r($files2test)
-
-# factures en attente
-$waiting_factures=glob("/facprint/*")
-if ($waiting_factures) {
-  $files2test=array_merge($files2test,$waiting_factures)
- }
-# impression generale en attente
-$waiting_factures=glob("/impprint/*")
-if ($waiting_factures) {
-  $files2test=array_merge($files2test,$waiting_factures)
- }
-//print_r($files2test) 
-
-$new_line=1
-$nb=0
-$nb_per_line=1
-while ($file=array_pop($files2test)) {
-  if (p1
-    if ($nb>$reg_match("/~$/",$file)==0 and preg_match("/.svn/",$file)==0) {
-    if (strpos($file,"fac/")>-1) { $chunk="fac"}
-    if (strpos($file,"facprint/")>-1) { $chunk="fac"}
-    if 1
-    if ($nb>$1
-    if ($nb>$(strpos($file,"imp/")>-1) { $chunk="imp"}
-    if1
-    if ($nb>$ (1
-    if ($nb>$strpos($file,"impprint/")>-1) { $chunk="imp"}
-    $file_to_print = "--".$chunk."=$file"
-    $file=str_replace("../","",$file)
-    $file=str_replace("./","",$file)
-    if ($new_line) { print "<tr bgcolor=\"#ffffff\">" $new_line=0 }
-    pri1
-    if ($nb>$nt "<td bgcolor=\"#ffffff\"><a href='../$file'>$file</a></td>"
-    print "<td> <a href='../traite.php?dest=screen&file=$file_to_print&no_print=1'>ecran</a> 
-                <a href='../traite.php?dest=screen&file=$file_to_print&no_print=1&debug=1'>+c</a> 
-            1
-    if ($nb>$1
-    if ($nb>$    <a href='../traite.php?dest=print&file=$file_to_print'>imprimante</a> 
-                <a href='../traite.php?dest=print&file=$file_to_print'>+c</a> 
-            </td>"
-    $nb=$nb+1
-    if ($nb>$nb_per_line) {
-        print "</tr>"
-	$new_line=1
-	$nb=0
-	}}
-    else {
-        print "      <td> &nbsp &nbsp</td>"
-    }
-  }
-}
-if (
-    else {
-        print "      <td> &nbsp &nbsp</td>"
-    }
-  }
-}
-if ($nb) {print"</tr>"}
-print "</table>"  
-    
+                                        'titre' : "Liste des tests"
+                                               })
+    return c
 
 def browse(table):
  
@@ -267,7 +215,7 @@ def fichier_o(request , url):
 def fichier(request,url):
     filename = "../%s" % url
     basename = os.path.basename(filename)
-     print "download ",filename,os.stat(filename).st_size,basename
+    print "download ",filename,os.stat(filename).st_size,basename
     response = HttpResponse(FileWrapper(open(filename)),
                            content_type=mimetypes.guess_type(filename)[0])
     filename = "../%s" % url

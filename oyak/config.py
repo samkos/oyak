@@ -223,3 +223,5 @@ ROOT_PATH = os.path.dirname(__file__)
 import sqlite3
 conn = sqlite3.connect('%s/db.sqlite' % ROOT_PATH)
 conn.row_factory = sqlite3.Row                # acces facile aux colonnes
+
+OYAK_DIR = "/tmp"

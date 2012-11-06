@@ -145,7 +145,7 @@ function affiche_popup(titre,content) {
 
 
 function reload(id) {
-    if (last_url_called) {
+    if (last_url_called && last_url_called.indexOf("cartouche")<0) {
 	//console.log("reload avec last_url_called="+last_url_called);
 	load2Id('corps',last_url_called,1);
     }
