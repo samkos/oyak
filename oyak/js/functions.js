@@ -80,15 +80,11 @@ function secondsToTime(secs)
 }
 
 function update_clock() {
-    passe=$('div#temps_qui_passe');
     delta=getCurrentTime() - last_time_called;
     temps_passe=parseInt(delta);    
     s= 'il y a '+ secondsToTime(temps_passe) +'.' ;
-
-    passe.replaceWith("<div id='temps_qui_passe' style='float: left; text-align: left;' >" + s +
-		      "<a href='#' onClick='reload()' id='reload' >" +
-		      "<img  src='IMAGES/reload.jpg' title='mise a jour \n maintenant' height='16' width='16' /></a>"+
-		      "</div>");
+    passe=$('div#temps_qui_passe');
+    passe.replaceWith("<div id='temps_qui_passe' style='float: left; text-align: left;' >" + s + "<div>");
     if (delta>update_max) {
 	reload();
 	return;
@@ -263,7 +259,8 @@ function load2Id(id,url_add,force,message) { // (2)
     
     loading[url_add]=1;
     currently_loading=1;
-    $('#loading').replaceWith("<div  id='loading'> <img src='IMAGES/ajax-loader.gif'></div>");
+    $('#chrono').hide();
+    $('#loading').show();
     $.ajax({
 	    type: "GET",
 		url: url_add,
@@ -315,11 +312,8 @@ function load2Id(id,url_add,force,message) { // (2)
 		if (!affiche_nok) {
 		    complete_view();
 		}
-		$('div#loading').replaceWith(
-					     "<div id='loading' style='float: right; text-align: left;'>"+
-					     "<div style='float: left; text-align: left;' id='temps_qui_passe'> </div>"+
-					     "<div style='float: left; text-align: left;' id='switch'> </div></div>"
-				 );
+		$('div#loading').hide();
+		$('#chrono').show();
 		delete     loading[url_add];
 		currently_loading=0;
 		update_clock();
@@ -462,11 +456,12 @@ function fnFilterGlobal(tablename,data,column){
 
 function start() {//111
     load2Id("cartouche","cartouche");
-    update_view();
     url_visited = new Array();
     $('#jsddm > li').bind('mouseover', jsddm_open);
     $('#jsddm > li').bind('mouseout',  jsddm_timer);
     document.onclick = jsddm_close;
+    update_view();
+
 }
 
 
