@@ -123,7 +123,7 @@ def list_tests():
     print "testing_facs",testing_facs+testing_etiq+testing_imp
     for fic in testing_facs+testing_etiq+testing_imp:
         valeurs[i] = \
-                   ( "<a href='/edit/%s'>%s</a>" % (fic,fic) + "</td><td>"\
+                   ( "<a href='#' onclick=\"load2Id('corps','/edit/%s')\" >%s</a>" % (fic,fic) + "</td><td>"\
                      "&nbsp; <a href='/process/screen/%s'>ecran</a> " % fic+ \
                      "&nbsp; <a href='/process/print/%s'>imprimante</a> " % fic)
         i = i+1
