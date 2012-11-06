@@ -68,6 +68,9 @@ def index(request , url):
     print "url=/%s/"%url
     if url[-1]=="/":
         url=url[:-1]
+    if url[:5] == "edit/":
+        out =edit(url[5:])
+        return HttpResponse(out)
     if url=="commandes/test":
         out=list_tests()
         return HttpResponse(out)
@@ -120,7 +123,7 @@ def list_tests():
     print "testing_facs",testing_facs+testing_etiq+testing_imp
     for fic in testing_facs+testing_etiq+testing_imp:
         valeurs[i] = \
-                   ( "<a href='/edit/%s'>'%s</a>" % (fic,fic) + "</td><td>"\
+                   ( "<a href='/edit/%s'>%s</a>" % (fic,fic) + "</td><td>"\
                      "&nbsp; <a href='/process/screen/%s'>ecran</a> " % fic+ \
                      "&nbsp; <a href='/process/print/%s'>imprimante</a> " % fic)
         i = i+1
@@ -131,6 +134,21 @@ def list_tests():
                                          'valeurs' : valeurs,
                                         'titre' : "Liste des tests"
                                                })
+    return c
+
+
+def edit(fic):
+
+    print "editing ",fic
+    fic_contents = open(fic).readlines()
+    i = 0
+    valeurs = {}
+    for f in fic_contents:
+        valeurs[i] = f
+        i=i+1
+    c = render_to_string('edit.html' , {'title' : fic,
+                                         'valeurs' : valeurs
+                                        })
     return c
 
 def browse(table):
