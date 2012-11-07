@@ -28,7 +28,7 @@ from django.http import QueryDict
 
 import config, sys, traceback
 
-# from fpdf import *
+from fpdf import *
 
 show_colonnes = { "fournisseurs" : [ "id,clef,societe,ville", "clef","societe"],
                   "clients"      : [ "id,clef,societe,ville", "clef","societe"],
@@ -142,24 +142,102 @@ def list_tests():
 
 
 
-#Better table
-def improved_table(pdf,header,data):
-	#Column widths
-	w=[40,35,40,45]
-	#Header
-	for i in range(0,len(header)):
-		pdf.cell(w[i],7,header[i],1,0,'C')
-	pdf.ln()
-	#Data
-	for row in data:
-		pdf.cell(w[0],6,row[0],'LR')
-		pdf.cell(w[1],6,row[1],'LR')
-		pdf.cell(w[2],6,row[2],'LR',0,'R')
-		pdf.cell(w[3],6,row[3],'LR',0,'R')
-		pdf.ln()
-	#Closure line
-	pdf.cell(sum(w),0,'','T')
+class PDF(FPDF):
+	#Load data
+	def load_data(self, name):
+		#Read file lines
+		data=[]
+		for line in file(name):
+			data += [line[:-1].split(';')]
+		return data
 
+	#Simple table
+	def basic_table(self,header,data):
+		#Header
+		for col in header:
+			self.cell(40,7,col,1)
+		self.ln()
+		#Data
+		for row in data:
+			for col in row:
+				self.cell(40,6,col,1)
+			self.ln()
+
+	#Better table
+	def oyak_table(self,x,y,w,header,data,height):
+		#Column widths
+                self.set_xy(x,y)
+                x=self.get_x()
+		#Header
+                for i in range(0,len(w)):
+                    if len(header):
+                        self.cell(w[i],7,header[i],1,0,'C')
+                    else:
+                        self.cell(w[i],2,"",'T',0,'C')
+                if len(header):
+                    self.ln()
+		#Data
+		for row in data:
+                        self.set_x(x)
+                        for i in range(0,len(w)):
+                            self.cell(w[i],height,row[i],'LR')
+			self.ln()
+		#Closure line
+                self.set_x(x)
+		self.cell(sum(w),0,'','T')
+
+	#Better table
+	def improved_table(self,header,data):
+		#Column widths
+		w=[40,35,40,45]
+                x=self.get_x()
+		#Header
+		for i in range(0,len(header)):
+			self.cell(w[i],7,header[i],1,0,'C')
+		self.ln()
+		#Data
+		for row in data:
+                        self.set_x(x)
+			self.cell(w[0],6,row[0],'LR')
+			self.cell(w[1],6,row[1],'LR')
+			self.cell(w[2],6,row[2],'LR',0,'R')
+			self.cell(w[3],6,row[3],'LR',0,'R')
+			self.ln()
+		#Closure line
+                self.set_x(x)
+		self.cell(sum(w),0,'','T')
+
+	#Colored table
+	def fancy_table(self,header,data):
+		#Colors, line width and bold font
+		self.set_fill_color(255,0,0)
+		self.set_text_color(255)
+		self.set_draw_color(128,0,0)
+		self.set_line_width(.3)
+		self.set_font('','B')
+                x=self.get_x()
+		#Header
+		w=[40,35,40,45]
+		for i in range(0,len(header)):
+			self.cell(w[i],7,header[i],1,0,'C',1)
+		self.ln()
+		#Color and font restoration
+		self.set_fill_color(224,235,255)
+		self.set_text_color(0)
+		self.set_font('')
+		#Data
+		fill=0
+		for row in data:
+                    self.set_x(x)
+                    self.cell(w[0],6,row[0],'LR',0,'L',fill)
+                    self.cell(w[1],6,row[1],'LR',0,'L',fill)
+                    self.cell(w[2],6,row[2],'LR',0,'R',fill)
+                    self.cell(w[3],6,row[3],'LR',0,'R',fill)
+                    self.ln()
+                    fill=not fill
+                self.set_x(x)
+                self.cell(sum(w),0,'','T')
+ 
 def edit(fic):
 
     print "editing ",fic
@@ -193,8 +271,44 @@ def process(fic,mode):
     print valeurs
 
 
-    pdf = FPDF()
+    data_entete = [ ["Date Facture" , valeurs['Z1,2']], 
+                    ["Echeance   "  , valeurs['Z1,3']], 
+                    ["Livraison N"  , valeurs['Z1,1']], 
+                    ["Client N   "  ,  valeurs['Z1,5']], 
+                    ["           "  , valeurs['Z1,6']], 
+                    ["N  TVA Client", valeurs['Z1,7']], 
+                    ["Total        ", valeurs['Z1,8']] ] 
      
+    data_adresse = [ [valeurs['Z3,1']], 
+                     [valeurs['Z3,2']], 
+                     [valeurs['Z3,3']], 
+                     [valeurs['Z3,4']], 
+                     [valeurs['Z3,5']], 
+                     [valeurs['Z3,6']], 
+                     [valeurs['Z3,7']] ] 
+     
+    pdf = PDF()
+
+    data=pdf.load_data('fpdf/tutorial/countries.txt')
+    header=['Country','Capital','Area (sq km)','Pop. (thousands)']
+    print data
+    #Data loading
+    pdf.set_font('Arial','',8)
+    pdf.add_page()
+    pdf.oyak_table(10,10,[20,20],[],data_entete,3)
+    pdf.oyak_table(80,40,[60],[],data_adresse,3)
+    pdf.set_font('Arial','',14)
+    pdf.add_page()
+    pdf.set_xy(0,0)
+    pdf.improved_table(header,data)
+    pdf.set_xy(25.0, 100.5)
+    pdf.fancy_table(header,data)
+    pdf.output('tuto5.pdf','F')
+     
+
+
+
+
 def browse(table):
  
    c = conn.cursor()  
