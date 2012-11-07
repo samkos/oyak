@@ -28,6 +28,7 @@ from django.http import QueryDict
 
 import config, sys, traceback
 
+# from fpdf import *
 
 show_colonnes = { "fournisseurs" : [ "id,clef,societe,ville", "clef","societe"],
                   "clients"      : [ "id,clef,societe,ville", "clef","societe"],
@@ -140,6 +141,25 @@ def list_tests():
     return c
 
 
+
+#Better table
+def improved_table(pdf,header,data):
+	#Column widths
+	w=[40,35,40,45]
+	#Header
+	for i in range(0,len(header)):
+		pdf.cell(w[i],7,header[i],1,0,'C')
+	pdf.ln()
+	#Data
+	for row in data:
+		pdf.cell(w[0],6,row[0],'LR')
+		pdf.cell(w[1],6,row[1],'LR')
+		pdf.cell(w[2],6,row[2],'LR',0,'R')
+		pdf.cell(w[3],6,row[3],'LR',0,'R')
+		pdf.ln()
+	#Closure line
+	pdf.cell(sum(w),0,'','T')
+
 def edit(fic):
 
     print "editing ",fic
@@ -158,8 +178,23 @@ def process(fic,mode):
 
     print "processing ",fic,"mode :",mode
 
+    fic_contents = open(fic).readlines()
+    valeurs = {}
+    for f in fic_contents:
+        if f[-2:]=='\r\n':
+            f = f[:-2]
+        fields = f.split("!")
+        id  = fields[0]
+        if len(fields[1:])==1:
+            valeurs[id] = fields[1]
+        else:
+            valeurs[id] = fields[1:]
+
+    print valeurs
 
 
+    pdf = FPDF()
+     
 def browse(table):
  
    c = conn.cursor()  
