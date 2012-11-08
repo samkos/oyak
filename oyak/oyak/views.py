@@ -164,24 +164,33 @@ class PDF(FPDF):
 			self.ln()
 
 	#Better table
-	def oyak_table(self,x,y,w,header,data,height):
+	def oyak_table(self,x,y,w,header,data,height,countour=1):
 		#Column widths
                 self.set_xy(x,y)
                 x=self.get_x()
 		#Header
                 for i in range(0,len(w)):
-                    if len(header):
-                        self.cell(w[i],7,header[i],1,0,'C')
-                    else:
-                        self.cell(w[i],2,"",'T',0,'C')
+                    self.cell(w[i],2,"",'T',0,'C')
+                i=0
                 if len(header):
+                    for h in header:
+                        if i:
+                            self.set_xy(x,self.get_y()+3)
+                        self.set_x(x)
+                        for i in range(0,len(w)):
+                            self.cell(w[i],7,h[i],'LR',align='C')
+                        self.set_x(x)
                     self.ln()
+                    for i in range(0,len(w)):
+                        self.cell(w[i],2,"",'T',0,'C')
 		#Data
 		for row in data:
-                        self.set_x(x)
-                        for i in range(0,len(row)):
-                            self.cell(w[i],height,row[i],'LR')
-			self.ln()
+                    while len(row)<len(w):
+                        row = row + ['']
+                    self.set_x(x)
+                    for i in range(0,len(row)):
+                        self.cell(w[i],height,row[i],'LR')
+                    self.ln()
 		#Closure line
                 self.set_x(x)
 		self.cell(sum(w),0,'','T')
@@ -236,30 +245,32 @@ def process(fic,mode):
                      [valeurs['Z3,6']], 
                      [valeurs['Z3,7']] ] 
      
-    data_facture = [ valeurs['Z5,1'], 
+    data_facture = [ valeurs['Z5,1'], valeurs['Z5,1'], valeurs['Z5,1'], valeurs['Z5,1'], valeurs['Z5,1'], 
                      ] 
      
     pdf = PDF()
 
     data=pdf.load_data('fpdf/tutorial/countries.txt')
-    header=['Country','Capital','Area (sq km)','Pop. (thousands)']
+    header=[['Country','Capital','Area (sq km)','Pop. (thousands)']]
     print data
     #Data loading
     pdf.set_font('Arial','',8)
     pdf.add_page()
     pdf.oyak_table(10,10,[20,20],[],data_entete,3)
-    pdf.oyak_table(80,40,[60],[],data_adresse,3)
-    header = ["Article","Designation","Zone\nPeche","Vd","Colis",
-              "Poids\nUnit.","Poids\nQuant.","Prix\nUnit.","Total\n H.T.","TVA"]
+    pdf.oyak_table(80,40,[60],[],data_adresse,3,countour=0)
+    header = [ ["Article","Designation","Zone","Vd","Colis",
+                "Poids","Poids","Prix","Total","TVA"],
+               ["","","Peche","","",
+                "Unit.","Quant.","Unit.","H.T.",""]]
     #header = ["Article","Designation","Zone\nPeche","Vd","Colis",
     #          "Poids\nUnit.","Poids\nQuant.","Prix\nUnit.","Total\n H.T.","TVA"]
     w = [10,65,10,20,20,10,10,10,15,7]
     print "w, h, d_fact ",len(w),len(header),len(data_facture[0])
-    pdf.oyak_table(10,60,w,header,data_facture,3)
+    pdf.oyak_table(10,80,w,header,data_facture,5)
     pdf.set_font('Arial','',14)
     pdf.output('tuto5.pdf','F')
      
-
+    os.system("evince tuto5.pdf")
 
 
 
