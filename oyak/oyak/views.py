@@ -179,64 +179,13 @@ class PDF(FPDF):
 		#Data
 		for row in data:
                         self.set_x(x)
-                        for i in range(0,len(w)):
+                        for i in range(0,len(row)):
                             self.cell(w[i],height,row[i],'LR')
 			self.ln()
 		#Closure line
                 self.set_x(x)
 		self.cell(sum(w),0,'','T')
 
-	#Better table
-	def improved_table(self,header,data):
-		#Column widths
-		w=[40,35,40,45]
-                x=self.get_x()
-		#Header
-		for i in range(0,len(header)):
-			self.cell(w[i],7,header[i],1,0,'C')
-		self.ln()
-		#Data
-		for row in data:
-                        self.set_x(x)
-			self.cell(w[0],6,row[0],'LR')
-			self.cell(w[1],6,row[1],'LR')
-			self.cell(w[2],6,row[2],'LR',0,'R')
-			self.cell(w[3],6,row[3],'LR',0,'R')
-			self.ln()
-		#Closure line
-                self.set_x(x)
-		self.cell(sum(w),0,'','T')
-
-	#Colored table
-	def fancy_table(self,header,data):
-		#Colors, line width and bold font
-		self.set_fill_color(255,0,0)
-		self.set_text_color(255)
-		self.set_draw_color(128,0,0)
-		self.set_line_width(.3)
-		self.set_font('','B')
-                x=self.get_x()
-		#Header
-		w=[40,35,40,45]
-		for i in range(0,len(header)):
-			self.cell(w[i],7,header[i],1,0,'C',1)
-		self.ln()
-		#Color and font restoration
-		self.set_fill_color(224,235,255)
-		self.set_text_color(0)
-		self.set_font('')
-		#Data
-		fill=0
-		for row in data:
-                    self.set_x(x)
-                    self.cell(w[0],6,row[0],'LR',0,'L',fill)
-                    self.cell(w[1],6,row[1],'LR',0,'L',fill)
-                    self.cell(w[2],6,row[2],'LR',0,'R',fill)
-                    self.cell(w[3],6,row[3],'LR',0,'R',fill)
-                    self.ln()
-                    fill=not fill
-                self.set_x(x)
-                self.cell(sum(w),0,'','T')
  
 def edit(fic):
 
@@ -287,6 +236,9 @@ def process(fic,mode):
                      [valeurs['Z3,6']], 
                      [valeurs['Z3,7']] ] 
      
+    data_facture = [ valeurs['Z5,1'], 
+                     ] 
+     
     pdf = PDF()
 
     data=pdf.load_data('fpdf/tutorial/countries.txt')
@@ -297,12 +249,14 @@ def process(fic,mode):
     pdf.add_page()
     pdf.oyak_table(10,10,[20,20],[],data_entete,3)
     pdf.oyak_table(80,40,[60],[],data_adresse,3)
+    header = ["Article","Designation","Zone\nPeche","Vd","Colis",
+              "Poids\nUnit.","Poids\nQuant.","Prix\nUnit.","Total\n H.T.","TVA"]
+    #header = ["Article","Designation","Zone\nPeche","Vd","Colis",
+    #          "Poids\nUnit.","Poids\nQuant.","Prix\nUnit.","Total\n H.T.","TVA"]
+    w = [10,65,10,20,20,10,10,10,15,7]
+    print "w, h, d_fact ",len(w),len(header),len(data_facture[0])
+    pdf.oyak_table(10,60,w,header,data_facture,3)
     pdf.set_font('Arial','',14)
-    pdf.add_page()
-    pdf.set_xy(0,0)
-    pdf.improved_table(header,data)
-    pdf.set_xy(25.0, 100.5)
-    pdf.fancy_table(header,data)
     pdf.output('tuto5.pdf','F')
      
 
