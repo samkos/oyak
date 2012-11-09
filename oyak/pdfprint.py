@@ -2,14 +2,6 @@ from fpdf import *
 import os
 
 class PDF(FPDF):
-	#Load data
-	def load_data(self, name):
-		#Read file lines
-		data=[]
-		for line in file(name):
-			data += [line[:-1].split(';')]
-		return data
-
 	#Simple table
 	def basic_table(self,header,data):
 		#Header
@@ -31,8 +23,10 @@ class PDF(FPDF):
                 for i in range(0,len(w)):
                     self.cell(w[i],2,"",'T',0,'C')
                 i=0
+                justification= [""]*15
                 if len(header):
-                    for h in header:
+                    justification = header[0]
+                    for h in header[1:]:
                         if i:
                             self.set_xy(x,self.get_y()+3)
                         self.set_x(x)
@@ -49,7 +43,7 @@ class PDF(FPDF):
                     #print row
                     self.set_x(x)
                     for i in range(0,len(w)):
-                        self.cell(w[i],height,row[i],'LR')
+                        self.cell(w[i],height,row[i],'LR',0,justification[i])
                     self.ln()
 		#Closure line
                 self.set_x(x)
@@ -101,21 +95,18 @@ def print_facture(fic,mode):
 
     pdf = PDF()
 
-    data=pdf.load_data('fpdf/tutorial/countries.txt')
-    header=[['Country','Capital','Area (sq km)','Pop. (thousands)']]
-    print data
     #Data loading
     pdf.set_font('Arial','',8)
     pdf.add_page()
-    pdf.oyak_table(10,10,[20,30],[],data_entete,3)
-    pdf.oyak_table(120,40,[60],[],data_adresse,3,countour=0)
-    header = [ ["Article","Designation","Zone","Vd","Colis",
+    pdf.oyak_table(10,10,[20,30],[],data_entete,4)
+    pdf.oyak_table(120,40,[60],[],data_adresse,4,countour=0)
+    header = [ ["C","L","C","C","R",
+                "C","R","R","R","R"],
+               ["Article","Designation","Zone","Vd","Colis",
                 "Poids","Poids","Prix","Total","TVA"],
                ["","","Peche","","",
                 "Unit.","Quant.","Unit.","H.T.",""]]
-    #header = ["Article","Designation","Zone\nPeche","Vd","Colis",
-    #          "Poids\nUnit.","Poids\nQuant.","Prix\nUnit.","Total\n H.T.","TVA"]
-    w = [10,85,15,20,20,10,10,10,15,7]
+    w = [10,85,25,10,20,10,10,10,15,7]
     print "w, h, d_fact ",len(w),len(header),len(data_facture[0])
     pdf.oyak_table(5,80,w,header,data_facture,5)
     pdf.set_font('Arial','',14)
