@@ -216,10 +216,15 @@ def probeFacture():
             files.append(fichier_fac)
         for fic in files:
             print "traitement facture ",fic
+            pr = print_facture(fic,"all.pdf")
             if noprint:
-                print_facture(fic,"%s/Oyak/screen.pdf" % TMPDIR)
-            else:
-                print_facture(fic,"%s/facture.pdf" % dir_factureTODO)
+                shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
+            else: 
+                dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
+                if not os.path.exists(dir_printer):
+                    os.makedirs(dir_printer)
+                shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
+            shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
 
     else:
         if msg:

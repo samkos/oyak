@@ -250,8 +250,8 @@ def print_facture(fic,output_file):
 
     pdf.set_font('Arial','',14)
     pdf.output(output_file,'F')
-     
-
+    
+    return printer
 
 
 if __name__ == "__main__":
