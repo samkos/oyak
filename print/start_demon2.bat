@@ -1,0 +1,1 @@
+c:\python24\python -u "C:\Program Files\EasyPHP1-8\www\phpmyfactures\print\demon2.py"
