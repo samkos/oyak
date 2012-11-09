@@ -225,7 +225,7 @@ def probeFacture():
                     os.makedirs(dir_printer)
                 shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
             shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
-
+            os.unlink("all.pdf")
     else:
         if msg:
             print "%s"%timestamp+":"+"Pas de facture en attente"
