@@ -157,8 +157,9 @@ def edit(fic):
     return c
 
 def process(fic,mode):
-    print_facture(fic,mode)
-
+    print_facture(fic,'/tmp/out.pdf')
+    if sys.platform.startswith("linux"):
+        os.system("evince /tmp/out.pdf")
 
 def browse(table):
  

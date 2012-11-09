@@ -133,7 +133,7 @@ def print_facture(fic,output_file):
         for j in range(10):
             clef = 'Z%d,%d' % (i,j)
             if not ( clef in clefs):
-                valeurs[clef]="xxx"
+                valeurs[clef]=" "
 
 
     (printer,n,title) = valeurs['Z0,1']

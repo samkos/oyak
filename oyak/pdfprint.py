@@ -79,7 +79,7 @@ class PDF(FPDF):
 				    for j in range(int(format[1])-1):
 				      i=i+1
 				      width = width+w[i]
-				      print "format,width",format,width
+				      #print "format,width",format,width
                             if r.find("__GRAS__")>-1:
                                 self.set_font('Arial','B',8)
                                 r = string.replace(r,"__gras__","")
@@ -111,8 +111,8 @@ class PDF(FPDF):
  
 
 
-def print_facture(fic,mode):
-    print "processing ",fic,"mode :",mode
+def print_facture(fic,output_file):
+    print "processing ",fic
 
     fic_contents = open(fic).readlines()
     valeurs = {}
@@ -133,7 +133,7 @@ def print_facture(fic,mode):
         for j in range(10):
             clef = 'Z%d,%d' % (i,j)
             if not ( clef in clefs):
-                valeurs[clef]="xxx"
+                valeurs[clef]=" "
 
 
     (printer,n,title) = valeurs['Z0,1']
@@ -249,12 +249,12 @@ def print_facture(fic,mode):
         pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
 
     pdf.set_font('Arial','',14)
-    pdf.output('tuto5.pdf','F')
-     
-
+    pdf.output(output_file,'F')
+    
+    return printer
 
 
 if __name__ == "__main__":
-    print_facture("TESTS/fac/FACT1plus",0)
+    print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
