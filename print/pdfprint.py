@@ -90,6 +90,7 @@ class PDF(FPDF):
                             if r.find("_h_")>-1:
                                 self.set_font('Arial','',14)
                                 r = string.replace(r,"_h_","")
+			    print "width,height,r,bords,0,just",width,height,r,bords,0,just
                             self.cell(width,height,r,bords,0,just)
                             self.set_font('Arial','',8)
 			    i = i+1
@@ -260,6 +261,8 @@ def print_general(fic,output_file):
 
     pdf = PDF()
     pdf.set_auto_page_break(auto=False,margin=0)
+    pdf.set_font('Arial','',14)
+
     nb_ligne = 0
     current_ligne = 0
     esp_ligne = 0.2
@@ -272,7 +275,8 @@ def print_general(fic,output_file):
         if f[-2:]=='\r\n':
             f = f[:-2]
         fields = f.split("!")
-        what  = fields.pop(0)
+	#print fields
+        what  = fields.pop(0).strip()
 
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
@@ -283,23 +287,28 @@ def print_general(fic,output_file):
 	   continue
            box_open =0
 	   current_line = 0
-	     
-	x = fields.pop(0)
-	y = fields.pop(0)
+
+	x = fields.pop(0).strip()
+	y = fields.pop(0).strip()
 	if x=="." and y==".":
 	    current_ligne = current_ligne + esp_ligne
 	    x = 1
 	    y = current_ligne
 	    
-	if what=='TXT':
+	#print fields
+	if what[:3]=='TXT':
             texte = fields.pop(0)
-	    pdf.oyak_table(x,y,[10],[],[texte],4,countour=0)
+	    x = int(x)
+	    y = int(y)
+	    print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
+	    pdf.oyak_table(x,y,[100],[],[["xxx"]],4)
 	    current_ligne = current_ligne + esp_ligne
 
     pdf.output(output_file,'F')
 	    	
 if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
-    print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
+    #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
+    print_general("../print/tests/imp/TEST0_no_accents.txt","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
