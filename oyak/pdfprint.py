@@ -23,10 +23,16 @@ class PDF(FPDF):
                 self.set_xy(x,y)
                 x=self.get_x()
 		#Header
-                for i in range(0,len(w)):
-                    self.cell(w[i],2,"",'T',0,'C')
+		if countour:
+                   for i in range(0,len(w)):
+		       self.cell(w[i],2,"",'T',0,'C')
                 i=0
                 justification= [""]*15
+		if countour:
+		   bords = 'LR'
+		else:
+                   bords = ' '
+		# header of table
                 if len(header):
                     justification = header[0]
                     for h in header[1:]:
@@ -36,14 +42,23 @@ class PDF(FPDF):
                         for i in range(0,len(w)):
 			    hx=h[i]	
                             self.set_font('Arial','B',8)
-                            if h[i].find("_s_")>-1:
+                            if hx.find("_s_")>-1:
                                 self.set_font('Arial','B',6)
-                                hx = string.replace(h[i],"_s_","")
-                            self.cell(w[i],7,hx,'LR',align='C')
-                    self.ln()
+                                hx = string.replace(hx,"_s_","")
+                            if hx.find("_b_")>-1:
+                                self.set_font('Arial','B',12)
+                                hx = string.replace(hx,"_b_","")
+                            if hx.find("_h_")>-1:
+                                self.set_font('Arial','B',20)
+                                hx = string.replace(hx,"_h_","")
+                            self.cell(w[i],7,hx,bords,align='C')
+		    self.ln()
                     self.set_x(x)
-                    for i in range(0,len(w)):
-                        self.cell(w[i],2,"",'T',0,'C')
+		    if countour:
+                       for i in range(0,len(w)):
+                           self.cell(w[i],2,"",'T',0,'C')
+
+
 		#Data
                 self.set_font('Arial','',8)
 		for row in data:
@@ -52,14 +67,32 @@ class PDF(FPDF):
                     #print row
                     self.set_x(x)
                     try:
-                        for i in range(0,len(w)):
-                            if row[i].find("__GRAS__")>-1:
+                        i = 0
+			while i<len(w): 
+                            width = w[i]
+			    r = row[i]
+			    just = justification[i]
+			    # traitement d'un format particulier d'une colonne
+                            if r.find("__ff__")>-1: 
+				    (format,r) = r.split("__ff__")
+				    just=format[0]
+				    for j in range(int(format[1])-1):
+				      i=i+1
+				      width = width+w[i]
+                            if r.find("__GRAS__")>-1:
                                 self.set_font('Arial','B',8)
-                                row[i] = string.replace(row[i],"__gras__","")
-                                row[i] = string.replace(row[i],"__GRAS__","")
-                            self.cell(w[i],height,row[i],'LR',0,justification[i])
+                                r = string.replace(r,"__gras__","")
+                                r = string.replace(r,"__GRAS__","")
+                            if r.find("_b_")>-1:
+                                self.set_font('Arial','',12)
+                                r = string.replace(r,"_b_","")
+                            if r.find("_h_")>-1:
+                                self.set_font('Arial','',14)
+                                r = string.replace(r,"_h_","")
+                            self.cell(w[i],height,r,bords,0,just)
                             self.set_font('Arial','',8)
-                        self.ln()
+			    i = i+1
+			self.ln() 
                     except:
                         exc_type, exc_value, exc_traceback = sys.exc_info()
                         print "!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -70,8 +103,9 @@ class PDF(FPDF):
                             print w[i],height,row[i],justification[i]
                         
 		#Closure line
-                self.set_x(x)
-		self.cell(sum(w),0,'','T')
+	        if countour:
+                   self.set_x(x)
+		   self.cell(sum(w),0,'','T')
 
  
 
@@ -100,11 +134,15 @@ def print_facture(fic,mode):
             if not ( clef in clefs):
                 valeurs[clef]="xxx"
 
+    (printer,n,title) = valeurs['Z0,1']
+
     header_entete=[]
     w_entete = [20,30]
     x_entete = 10
     y_entete = 10
-    data_entete = [ ["Date Facture" , valeurs['Z1,2']], 
+
+    data_entete = [ ["C2__ff__%s N %s" % (title,valeurs['Z1,1']) ],
+	            ["Date Facture" , valeurs['Z1,2']], 
                     ["Echeance   "  , valeurs['Z1,3']], 
                     ["Livraison N"  , valeurs['Z1,1']], 
                     ["Client N   "  ,  valeurs['Z1,5']], 
@@ -125,6 +163,13 @@ def print_facture(fic,mode):
                      [valeurs['Z3,6']], 
                      [valeurs['Z3,7']] ] 
 
+
+    data_title =  [ [" "],["_b_%s"%valeurs["Z4,1"]]]
+    header_title =  [ ["C"],["_h_"+title]]
+    w_title  =  [160]
+    x_title = 40
+    y_title = 75
+
     header_fac = [ ["C","L","C","C","R",
                     "C","R","R","R","R"],
                    ["Article","Designation","Zone","Vd","Colis",
@@ -133,7 +178,7 @@ def print_facture(fic,mode):
                     "Unit.","Quant.","Unit.","H.T.",""]]
     w_fac = [10,85,25,10,20,10,10,10,15,7]
     x_fac = 5
-    y_fac = 80
+    y_fac = 95
     data_facture = []
     i=1
     while 'Z5,%d'%i in clefs:
@@ -154,8 +199,8 @@ def print_facture(fic,mode):
 
     header_footer2 = [["L"               ,"R"            ,"R"          ,"R"           ,"R" ,"R"        ],
                       ["Règlement Client","Date","_s_N de Facture","_s_Ancien Solde","_s_au","_s_Nouveau Solde"]]
-    w_footer2      =  [40                ,15            ,15            ,15            ,15  ,15        ]
-    x_footer2 = 90
+    w_footer2      =  [50                ,15            ,15            ,15            ,15  ,15        ]
+    x_footer2 = 80
     y_footer2 = 230
     data_footer2 =  [ valeurs['Z8,1']] 
 
@@ -171,6 +216,9 @@ def print_facture(fic,mode):
     w_vignette      =  [20,30]
     x_vignette = 158
     y_vignette = 275
+
+ 
+
 
     pdf = PDF()
     pdf.set_auto_page_break(auto=False,margin=0)
@@ -195,6 +243,7 @@ def print_facture(fic,mode):
         pdf.oyak_table(x_footer1,y_footer1,w_footer1,header_footer1,data_footer1,4)
         pdf.oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
         pdf.oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
+        pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
 
     pdf.set_font('Arial','',14)
     pdf.output('tuto5.pdf','F')
@@ -204,4 +253,4 @@ def print_facture(fic,mode):
 
 
 if __name__ == "__main__":
-    print_facture("TESTS/fac/BL",0)
+    print_facture("TESTS/fac/FACT1plus",0)
