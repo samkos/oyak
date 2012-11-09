@@ -112,7 +112,7 @@ class PDF(FPDF):
 
 
 def print_facture(fic,output_file):
-    print "processing ",fic
+    print "processing facture ",fic
 
     fic_contents = open(fic).readlines()
     valeurs = {}
@@ -254,7 +254,52 @@ def print_facture(fic,output_file):
     return printer
 
 
+
+def print_general(fic,output_file):
+    print "processing general file ",fic
+
+    pdf = PDF()
+    pdf.set_auto_page_break(auto=False,margin=0)
+    nb_ligne = 0
+    current_ligne = 0
+    esp_ligne = 0.2
+    esp_tab_ligne = 0.43 
+
+    fic_contents = open(fic).readlines()
+
+    while len(fic_contents):
+        f = fic_contents.pop(0)	     
+        if f[-2:]=='\r\n':
+            f = f[:-2]
+        fields = f.split("!")
+        what  = fields.pop(0)
+
+	if what=="Z0,1":
+	    (printer,copies,document,orientation) = fields	
+	    continue
+
+        if what=="EJECT":
+           pdf.add_page()
+	   continue
+           box_open =0
+	   current_line = 0
+	     
+	x = fields.pop(0)
+	y = fields.pop(0)
+	if x=="." and y==".":
+	    current_ligne = current_ligne + esp_ligne
+	    x = 1
+	    y = current_ligne
+	    
+	if what=='TXT':
+            texte = fields.pop(0)
+	    pdf.oyak_table(x,y,[10],[],[texte],4,countour=0)
+	    current_ligne = current_ligne + esp_ligne
+
+    pdf.output(output_file,'F')
+	    	
 if __name__ == "__main__":
-    print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
+    #print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
+    print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
