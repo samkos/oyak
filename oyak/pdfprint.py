@@ -97,18 +97,29 @@ def print_facture(fic,mode):
 
     #Data loading
     pdf.set_font('Arial','',8)
-    pdf.add_page()
-    pdf.oyak_table(10,10,[20,30],[],data_entete,4)
-    pdf.oyak_table(120,40,[60],[],data_adresse,4,countour=0)
-    header = [ ["C","L","C","C","R",
+
+    header_fac = [ ["C","L","C","C","R",
                 "C","R","R","R","R"],
                ["Article","Designation","Zone","Vd","Colis",
                 "Poids","Poids","Prix","Total","TVA"],
                ["","","Peche","","",
                 "Unit.","Quant.","Unit.","H.T.",""]]
-    w = [10,85,25,10,20,10,10,10,15,7]
-    print "w, h, d_fact ",len(w),len(header),len(data_facture[0])
-    pdf.oyak_table(5,80,w,header,data_facture,5)
+    w_fac = [10,85,25,10,20,10,10,10,15,7]
+
+
+    while len(data_facture):
+        data_page = []
+        i=0
+        while len(data_facture) and i<10:
+            x = data_facture.pop(0)
+            data_page.append(x)
+            i=i+1
+        print data_page,len(data_facture)
+        pdf.add_page()
+        pdf.oyak_table(10,10,[20,30],[],data_entete,4)
+        pdf.oyak_table(120,40,[60],[],data_adresse,4,countour=0)
+        pdf.oyak_table(5,80,w_fac,header_fac,data_page,4)
+
     pdf.set_font('Arial','',14)
     pdf.output('tuto5.pdf','F')
      
