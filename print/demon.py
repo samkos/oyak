@@ -123,8 +123,8 @@ def init_env_bis():
     drives = ["c","e"]
 
     gs_env=search_soft("gs",drives,["Ghostgum/gsview/"],"gsprint.exe")
-    gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/phpmyfactures/index.php")
-    latex_env=search_soft("latex",drives,["MiKTeX 2.5","MiKTeX 2.6"],"/miktex/bin/pdflatex.exe")
+    #gs_env=search_soft("easyphp",drives,["EasyPHP 2.0b1","EasyPHP1-8"],"/www/phpmyfactures/index.php")
+    #latex_env=search_soft("latex",drives,["MiKTeX 2.5","MiKTeX 2.6"],"/miktex/bin/pdflatex.exe")
     
 
 def init_env():
