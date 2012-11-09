@@ -170,9 +170,10 @@ def print_facture(fic,mode):
     header_vignette =  []
     w_vignette      =  [20,30]
     x_vignette = 158
-    y_vignette = 256
+    y_vignette = 275
 
     pdf = PDF()
+    pdf.set_auto_page_break(auto=False,margin=0)
 
     #Data loading
 
