@@ -79,6 +79,7 @@ class PDF(FPDF):
 				    for j in range(int(format[1])-1):
 				      i=i+1
 				      width = width+w[i]
+				      print "format,width",format,width
                             if r.find("__GRAS__")>-1:
                                 self.set_font('Arial','B',8)
                                 r = string.replace(r,"__gras__","")
@@ -89,7 +90,7 @@ class PDF(FPDF):
                             if r.find("_h_")>-1:
                                 self.set_font('Arial','',14)
                                 r = string.replace(r,"_h_","")
-                            self.cell(w[i],height,r,bords,0,just)
+                            self.cell(width,height,r,bords,0,just)
                             self.set_font('Arial','',8)
 			    i = i+1
 			self.ln() 
@@ -134,7 +135,15 @@ def print_facture(fic,mode):
             if not ( clef in clefs):
                 valeurs[clef]="xxx"
 
+
     (printer,n,title) = valeurs['Z0,1']
+    facture = valeurs["Z1,1"]
+    data_title =  [ [" "],["_b_%s" % valeurs["Z4,1"]]]
+    header_title =  [ ["C"],["_h_"+title]]
+    w_title  =  [160]
+    x_title = 40
+    y_title = 75
+
 
     header_entete=[]
     w_entete = [20,30]
@@ -163,12 +172,6 @@ def print_facture(fic,mode):
                      [valeurs['Z3,6']], 
                      [valeurs['Z3,7']] ] 
 
-
-    data_title =  [ [" "],["_b_%s"%valeurs["Z4,1"]]]
-    header_title =  [ ["C"],["_h_"+title]]
-    w_title  =  [160]
-    x_title = 40
-    y_title = 75
 
     header_fac = [ ["C","L","C","C","R",
                     "C","R","R","R","R"],
@@ -205,7 +208,7 @@ def print_facture(fic,mode):
     data_footer2 =  [ valeurs['Z8,1']] 
 
 
-    data_vignette = [ ["Facture ",valeurs['Z8,1'][0]], 
+    data_vignette = [ ["Facture ",facture], 
                       ["Montant ",valeurs['Z8,1'][1]], 
                       ["Ancien solde ",valeurs['Z8,1'][2]], 
                       ["Au ",valeurs['Z8,1'][3]],
@@ -213,8 +216,8 @@ def print_facture(fic,mode):
                       ] 
 
     header_vignette =  []
-    w_vignette      =  [20,30]
-    x_vignette = 158
+    w_vignette      =  [20,20]
+    x_vignette = 168
     y_vignette = 275
 
  
