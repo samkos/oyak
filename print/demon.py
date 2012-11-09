@@ -3,16 +3,22 @@ import string
 import re
 import time,datetime
 from stat import *
+from pdfprint import *
 
-timeTouchFile="c:/Oyak/ToPrint/PrintDemon.txt"
+if sys.platform.startswith("linux"):
+    TMPDIR="/tmp"
+else:
+    TMPDIR="c:"
+
+timeTouchFile=TMPDIR+"/Oyak/ToPrint/PrintDemon.txt"
 timeOK=30
 
 
-dir_printTODO='c:\Oyak\ToPrint'
-dir_workTODO="c:/Oyak/Work"
-dir_factureTODO="c:/facprint"
-dir_etiqTODO="c:/etiqprint"
-dir_impTODO="c:/impprint"
+dir_printTODO=TMPDIR+'/Oyak/ToPrint'
+dir_workTODO=TMPDIR+"/Oyak/Work"
+dir_factureTODO=TMPDIR+"/facprint"
+dir_etiqTODO=TMPDIR+"/etiqprint"
+dir_impTODO=TMPDIR+"/impprint"
 exe_view=exe_print=exe_printTo=exe_facture=exe_etiq = "???exe_xxx"
 
 debug=0
@@ -27,19 +33,19 @@ fichier_etiq=0
 now=datetime.datetime.now()
 timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
 
-#sys.stdout = open("c:/Oyak/print.log","a")
+#sys.stdout = open(TMPDIR+"/Oyak/print.log","a")
 
-if not(os.path.exists("c:\\facprint")):
-    os.mkdir("c:\\facprint")
+if not(os.path.exists(TMPDIR+"/facprint")):
+    os.mkdir(TMPDIR+"/facprint")
 
-if not(os.path.exists("c:\\etiqprint")):
-    os.mkdir("c:\\etiqprint")
+if not(os.path.exists(TMPDIR+"/etiqprint")):
+    os.mkdir(TMPDIR+"/etiqprint")
 
-if not(os.path.exists("c:\\Oyak")):
-    os.mkdir("c:\\Oyak")
+if not(os.path.exists(TMPDIR+"/Oyak")):
+    os.mkdir(TMPDIR+"/Oyak")
 
-if not(os.path.exists("c:\\Oyak\\ToPrint")):
-    os.mkdir("c:\\Oyak\\ToPrint")
+if not(os.path.exists(TMPDIR+"/Oyak/ToPrint")):
+    os.mkdir(TMPDIR+"/Oyak/ToPrint")
     
 def usage(message = None):
     """ helping message"""
@@ -120,6 +126,9 @@ def search_soft(soft,drives,versions,specific_file="",root="/Program Files/"):
         
 def init_env_bis():
 
+    if sys.platform.startswith("linux"):
+        return
+
     drives = ["c","e"]
 
     gs_env=search_soft("gs",drives,["Ghostgum/gsview/"],"gsprint.exe")
@@ -130,47 +139,52 @@ def init_env_bis():
 def init_env():
     global exe_view, exe_print, exe_printTo,exe_facture,exe_etiq,exe_imp
 
-    drive="c:"
-    drive_found=False
-    # checking the installed drive
-    for drive in ["c","d"]:
-        if not(drive_found):
-            if os.path.isfile(drive+":\Program Files\Ghostgum\gsview\gsprint.exe"):
-                drive_found=drive
 
-    if not drive_found:
-        print "erreur : drive not found"
-        sys.exit(1)
+    if sys.platform.startswith("linux"):
+        easyphp = ''
+        exe_view="evince "
+    else:
+       drive="c:"
+       drive_found=False
+       # checking the installed drive
+       for drive in ["c","d"]:
+           if not(drive_found):
+               if os.path.isfile(drive+":\Program Files\Ghostgum\gsview\gsprint.exe"):
+                   drive_found=drive
 
-    drive=drive_found
-    
-    if debug:
-        print "drive d'installation : ",drive
+       if not drive_found:
+           print "erreur : drive not found"
+           sys.exit(1)
 
-    # recherche easyphp
-    easyphp_found=False
-    # checking the installed drive
-    for drive in ["c","e"]:
-        for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
-#        for easyphp in ["EasyPHP1-8"]:
-            if not(easyphp_found):
-                if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/phpmyfactures/index.php"):
-                    easyphp_found=drive+":/Program Files/"+easyphp
-                
-    if not easyphp_found:
-        print "erreur : easyphp not found"
-        sys.exit(1)
+       drive=drive_found
+       
+       if debug:
+           print "drive d'installation : ",drive
 
-    easyphp=easyphp_found
-    if debug:
-        print "easyphp d'installation : ",easyphp
+       # recherche easyphp
+       easyphp_found=False
+       # checking the installed drive
+       for drive in ["c","e"]:
+           for easyphp in ["EasyPHP-5.3.2i","EasyPHP 2.0b1","EasyPHP1-8"]:
+   #        for easyphp in ["EasyPHP1-8"]:
+               if not(easyphp_found):
+                   if os.path.isfile(drive+":/Program Files/"+easyphp+"/www/phpmyfactures/index.php"):
+                       easyphp_found=drive+":/Program Files/"+easyphp
+                   
+       if not easyphp_found:
+           print "erreur : easyphp not found"
+           sys.exit(1)
 
-    exe_view="\""+easyphp+"/www/phpmyfactures/print/view.bat \""    
-    exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
-    exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
-    exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
-    exe_etiq="\""+easyphp+"/www/phpmyfactures/barcode/traite.bat\" ";
-    exe_imp="\""+easyphp+"/www/phpmyfactures/print/impression/traite.bat\" ";
+       easyphp=easyphp_found
+       if debug:
+           print "easyphp d'installation : ",easyphp
+
+       exe_view="\""+easyphp+"/www/phpmyfactures/print/view.bat \""    
+       exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
+       exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
+       exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
+       exe_etiq="\""+easyphp+"/www/phpmyfactures/barcode/traite.bat\" ";
+       exe_imp="\""+easyphp+"/www/phpmyfactures/print/impression/traite.bat\" ";
 
 
     if not(os.path.exists(dir_printTODO)):
@@ -191,24 +205,22 @@ def init_env():
 
 
 def probeFacture():
-    global timestamp,noprint,fichier_fac,debug
+    global timestamp,noprint,fichier_fac,debug,TMPDIR
     
     files=os.listdir(dir_factureTODO)
 
     if files or fichier_fac:
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
-        commande=exe_facture
-        if (noprint):
-            commande = commande+" --noprint=1"
-        if (debug):
-            commande = commande+" --debug=1"
-        if (fichier_fac):
-            commande = commande+" --file="+fichier_fac
-        if debug:
-            print "%s"%timestamp+":execution de ",commande
-        
-        os.system(commande)
+        if fichier_fac:
+            files.append(fichier_fac)
+        for fic in files:
+            print "traitement facture ",fic
+            if noprint:
+                print_facture(fic,"%s/Oyak/screen.pdf" % TMPDIR)
+            else:
+                print_facture(fic,"%s/facture.pdf" % dir_factureTODO)
+
     else:
         if msg:
             print "%s"%timestamp+":"+"Pas de facture en attente"
@@ -260,7 +272,7 @@ def probePrint(dir_print,printer="default"):
     global timestamp, noprint
 
     if noprint:
-        commande = exe_view +" c:\oyak\screen.pdf"
+        commande = exe_view + TMPDIR+"/Oyak/screen.pdf"
         print commande 
         os.system(commande)
         return
@@ -279,7 +291,7 @@ def probePrint(dir_print,printer="default"):
     for file in files:
 
         if not(file=="PrintDemon.txt"):
-            filename=dir_print+"\\"+file
+            filename=dir_print+"/"+file
 
             # est-ce un repertoire, si oui on recurse
             mode = os.stat(filename)[ST_MODE]
@@ -346,6 +358,8 @@ def checkRunning():
 parse()
 if debug:
     print "once=%s,debug=%s,noprint=%s,timeOK=%s,msg=%s"%(once,debug,noprint,timeOK,msg)
+
+
 init_env_bis()
 init_env()
 

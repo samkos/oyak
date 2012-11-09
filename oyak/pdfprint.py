@@ -251,9 +251,10 @@ def print_facture(fic,mode):
     pdf.set_font('Arial','',14)
     pdf.output('tuto5.pdf','F')
      
-    os.system("evince tuto5.pdf")
 
 
 
 if __name__ == "__main__":
     print_facture("TESTS/fac/FACT1plus",0)
+    if sys.platform.startswith("linux"):
+	    os.system("evince tuto5.pdf")
