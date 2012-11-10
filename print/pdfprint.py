@@ -90,7 +90,7 @@ class PDF(FPDF):
                             if r.find("_h_")>-1:
                                 self.set_font('Arial','',14)
                                 r = string.replace(r,"_h_","")
-			    print "width,height,r,bords,0,just",width,height,r,bords,0,just
+			    #print "width,height,r,bords,0,just",width,height,r,bords,0,just
                             self.cell(width,height,r,bords,0,just)
                             self.set_font('Arial','',8)
 			    i = i+1
@@ -262,7 +262,8 @@ def print_general(fic,output_file):
     pdf = PDF()
     pdf.set_auto_page_break(auto=False,margin=0)
     pdf.set_font('Arial','',14)
-
+    pdf.add_page()
+    
     nb_ligne = 0
     current_ligne = 0
     esp_ligne = 0.2
@@ -277,7 +278,8 @@ def print_general(fic,output_file):
         fields = f.split("!")
 	#print fields
         what  = fields.pop(0).strip()
-
+	#print what
+	
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
 	    continue
@@ -288,8 +290,8 @@ def print_general(fic,output_file):
            box_open =0
 	   current_line = 0
 
-	x = fields.pop(0).strip()
 	y = fields.pop(0).strip()
+	x = fields.pop(0).strip()
 	if x=="." and y==".":
 	    current_ligne = current_ligne + esp_ligne
 	    x = 1
@@ -298,17 +300,50 @@ def print_general(fic,output_file):
 	#print fields
 	if what[:3]=='TXT':
             texte = fields.pop(0)
-	    x = int(x)
-	    y = int(y)
-	    print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
-	    pdf.oyak_table(x,y,[100],[],[["xxx"]],4)
+	    x = int(x)*3+5
+	    y = int(y)*4
+	    #print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
+	    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	    current_ligne = current_ligne + esp_ligne
+	    continue
 
+	if what=="TAB":
+	    print fields
+	    tailles = fields.pop(0).strip().split("=")
+	    print "tailles",tailles
+	    if len(fields):
+	        tailles = fields.pop(0).strip().split("=")
+	        print "tailles",tailles
+	    current_ligne = current_ligne + esp_ligne
+	    data = []
+	    while len(fields):
+	        line = fields.pop(0)
+		cells = line.split("=")
+		#print cells
+		for cell in cells:
+		    champs = cell.split(";")
+		    texte = champs.pop()
+		    cadrage,bords,couleur,font = "xx","xx","xx","xx"
+		    if len(champs):
+		      format = champs.pop(0)
+		      if len(format):
+		         cadrage=format[0]
+			 format=format[1:]
+		      if len(format):
+		         bords=format[0]
+			 format=format[1:]
+		      if len(format):
+		         couleur=format[0]
+			 format=format[1:]
+		      if len(format):
+		         font=format[0]
+			 format=format[1:]
+		    print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
     pdf.output(output_file,'F')
 	    	
 if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
-    print_general("../print/tests/imp/TEST0_no_accents.txt","tuto5.pdf")
+    print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")

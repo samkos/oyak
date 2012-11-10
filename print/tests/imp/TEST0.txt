@@ -1,12 +1,12 @@
 Z0 ,1 !TEST !1 !GEN !PORTRAIT
-TXT !0 !0 !GRAS__Jawd Exotique Cedrus_gras
+TXT !0 !0 !__GRAS__Jawd Exotique Cedrus__gras__
 TXT !1 !5 !Batiment C1
-TXT !1 !40 !GRAS_RELEVE DE COMPTE_gras
+TXT !1 !40 !__GRAS__RELEVE DE COMPTE__gras__
 TXT !2 !0 !256 allée des anémones
 TXT !3 !0 !94539 Rungis Cédex
-TXT !3 !40 !GRAS_Annie Fleurs Décoration_gras
+TXT !3 !40 !__GRAS__Annie Fleurs Décoration__gras__
 TXT !4 !40 !Complément Adresse 
-TXT !5 !0 !Code Client : GRAS_C1425_gras
+TXT !5 !0 !Code Client : __GRAS__C1425__gras__
 TXT !5 !40 !55, rue des acacias
 TXT !6 !40 !75015 PARIS
 TXT !7 !40 !Rungis Le 15 janvier 2007
