@@ -232,6 +232,8 @@ def probeFacture():
                 shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
             shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
             os.unlink("all.pdf")
+            if not(fic==fichier_fac):
+                os.unlink(fic)
     else:
         if msg:
             print "%s"%timestamp+":"+"Pas de facture en attente"
@@ -329,6 +331,8 @@ def probePrint(dir_print,printer="default"):
                           (printer,server)=printer.split("@")
                           printer = '\\\\%s\\%s'%(server,printer)
                       commande = exe_printTo+" "+filename+" "+printer
+                      if not sys.platform.startswith("linux"):
+                          commande = commande.replace('/','\\')
                   if True or debug:
                       print "%s"%timestamp+":execution de "+commande
                   if msg:
