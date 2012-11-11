@@ -207,8 +207,14 @@ def init_env():
 def probeFacture():
     global timestamp,noprint,fichier_fac,debug,TMPDIR
     
-    files=os.listdir(dir_factureTODO)
-
+    files_pending=os.listdir(dir_factureTODO)
+    #print dir_factureTODO,files_pending
+    
+    files=[]
+    for f in files_pending:
+        f = "%s/%s" % (dir_factureTODO,f)
+        files.append(f)
+        
     if files or fichier_fac:
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
@@ -255,6 +261,8 @@ def probeImp():
         print files
         
     if files or fichier_imp:
+        if not sys.platform.startswith("linux"):
+            pass
         if msg:
             print "%s"%timestamp+":"+"traitement des impressions generales en attente"
             print exe_imp
