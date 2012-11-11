@@ -277,7 +277,10 @@ def probePrint(dir_print,printer="default"):
     global timestamp, noprint
 
     if noprint:
-        commande = exe_view + TMPDIR+"/Oyak/screen.pdf"
+        if sys.platform.startswith("linux"):
+            commande = exe_view + TMPDIR+"/Oyak/screen.pdf"
+        else:
+            commande = exe_view +" c:\oyak\screen.pdf"
         print commande 
         os.system(commande)
         return
