@@ -12,8 +12,8 @@ $dir_facture="c:\facprint\*";
 $filenames=glob($dir_facture);
 
 $header=1;
-$nb_lignes_facture1=24;
-$nb_lignes_facture2=24;
+$nb_lignes_facture1=22;
+$nb_lignes_facture2=22;
 
 if (!isset($debug)) {
   $debug=0;
