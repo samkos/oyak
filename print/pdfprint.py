@@ -1,7 +1,7 @@
 # -*- coding: latin-1 -*-
        
 from fpdf import *
-import os,sys,string
+import os,sys,string,copy
 import exceptions, traceback
 
 class PDF(FPDF):
@@ -195,10 +195,29 @@ def print_one_facture(pdf,fic):
     x_fac = 5
     y_fac = 95
     data_facture = []
+    taille_designation = int(w_fac[1]/1.7)
     i=1
     while 'Z5,%d'%i in clefs:
-        data_facture = data_facture + [ valeurs['Z5,%d'%i]]
+        v = valeurs['Z5,%d'%i]
+	designation = v[1]
+	designation_suite = False
+	if len(designation)>taille_designation:
+		designation_suite = designation[taille_designation:]
+		designation = designation[:taille_designation]
+	v[1] = designation
+        data_facture = data_facture + [ v ]
+	print v
         i=i+1
+	if designation_suite:
+		while designation_suite:
+		   w = copy.deepcopy(v)
+		   for j in range(len(w)):
+	              w[j] = ' '
+		   w[1] = designation_suite[:taille_designation]
+		   data_facture = data_facture + [ w ]
+		   print w
+		   designation_suite = designation_suite[taille_designation:]
+
     #print data_facture
     nb_ligne_fac_page =  20
 
@@ -349,8 +368,8 @@ def print_general(fic,output_file):
     pdf.output(output_file,'F')
 	    	
 if __name__ == "__main__":
-    #print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
+    print_facture([os.path.abspath("tests/fac/FACT1plus")],"tuto5.pdf")
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
-    print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
+    #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
