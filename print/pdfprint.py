@@ -114,6 +114,9 @@ def print_facture(fics,output_file):
     pdf = PDF()
     pdf.set_auto_page_break(auto=False,margin=0)
 
+    fics.sort()
+    print fics
+
     for fic in fics:
       printer=print_one_facture(pdf,fic)
 
