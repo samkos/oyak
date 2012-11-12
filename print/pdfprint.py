@@ -206,7 +206,7 @@ def print_one_facture(pdf,fic):
 		designation = designation[:taille_designation]
 	v[1] = designation
         data_facture = data_facture + [ v ]
-	print v
+	#print v
         i=i+1
 	if designation_suite:
 		while designation_suite:
@@ -215,7 +215,7 @@ def print_one_facture(pdf,fic):
 	              w[j] = ' '
 		   w[1] = designation_suite[:taille_designation]
 		   data_facture = data_facture + [ w ]
-		   print w
+		   #print w
 		   designation_suite = designation_suite[taille_designation:]
 
     #print data_facture
