@@ -220,18 +220,19 @@ def probeFacture():
             print "%s"%timestamp+":"+"traitement des factures en attente"
         if fichier_fac:
             files.append(fichier_fac)
+
+        pr = print_facture(files,"all.pdf")
+        
+        if noprint:
+            shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
+        else: 
+            dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
+            if not os.path.exists(dir_printer):
+                os.makedirs(dir_printer)
+            shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
+        shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
+        os.unlink("all.pdf")
         for fic in files:
-            print "traitement facture ",fic
-            pr = print_facture(fic,"all.pdf")
-            if noprint:
-                shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
-            else: 
-                dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
-                if not os.path.exists(dir_printer):
-                    os.makedirs(dir_printer)
-                shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
-            shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
-            os.unlink("all.pdf")
             if not(fic==fichier_fac):
                 os.unlink(fic)
     else:

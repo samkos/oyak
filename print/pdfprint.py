@@ -109,10 +109,18 @@ class PDF(FPDF):
                    self.set_x(x)
 		   self.cell(sum(w),0,'','T')
 
- 
+def print_facture(fics,output_file):
 
+    pdf = PDF()
+    pdf.set_auto_page_break(auto=False,margin=0)
 
-def print_facture(fic,output_file):
+    for fic in fics:
+      printer=print_one_facture(pdf,fic)
+
+    pdf.output(output_file,'F')
+    return printer
+
+def print_one_facture(pdf,fic):
     print "processing facture ",fic
 
     fic_contents = open(fic).readlines()
@@ -224,9 +232,6 @@ def print_facture(fic,output_file):
  
 
 
-    pdf = PDF()
-    pdf.set_auto_page_break(auto=False,margin=0)
-
     #Data loading
 
 
@@ -250,7 +255,6 @@ def print_facture(fic,output_file):
         pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
 
     pdf.set_font('Arial','',14)
-    pdf.output(output_file,'F')
     
     return printer
 
