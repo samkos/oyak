@@ -233,17 +233,17 @@ def print_one_facture(pdf,fic):
 
     header_footer2 = [["L"               ,"R"            ,"R"          ,"R"           ,"R" ,"R"        ],
                       ["Règlement Client","Date","_s_N de Facture","_s_Ancien Solde","_s_au","_s_Nouveau Solde"]]
-    w_footer2      =  [50                ,15            ,15            ,15            ,15  ,15        ]
+    w_footer2      =  [50                ,15   ,15                ,15               ,15      ,15        ]
     x_footer2 = 80
     y_footer2 = 230
     data_footer2 =  [ valeurs['Z8,1']] 
 
 
     data_vignette = [ ["Facture ",facture], 
-                      ["Montant ",valeurs['Z8,1'][1]], 
-                      ["Ancien solde ",valeurs['Z8,1'][2]], 
-                      ["Au ",valeurs['Z8,1'][3]],
-                      ["Nouveau solde ",valeurs['Z8,1'][4]], 
+		      ["Montant ",valeurs['Z6,1'][-1]], 
+                      ["Ancien solde ",valeurs['Z8,1'][3]], 
+                      ["Au ",valeurs['Z8,1'][4]],
+                      ["Nouveau solde ",valeurs['Z8,1'][5]], 
                       ] 
 
     header_vignette =  []
