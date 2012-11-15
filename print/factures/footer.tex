@@ -41,16 +41,39 @@
        \end{tabular}
        \end{flushright}    
 
-       \vspace{5mm}        
-       \hspace{4cm} \begin{flushright}     
-       \begin{tabular}{rp{2.5cm}}
-       \multicolumn{2}{l}{#Z8,1#}  \\
-       Facture :& #Z8,3# \\
-       Montant:& #Z6,8#  \\
-       Ancien solde:& #Z8,4# \\
-       au: & #Z8,5#  	  \\  
-       Nouveau Solde:& #Z8,6# \\ 	   
-  	% \hline     
-       \end{tabular}   
-       \end{flushright}     
+       \vspace{30mm}        
+
+        \begin{flushright}     
+       \begin{tabular}{|p{3.5cm}|p{1.3cm}|p{1.3cm}|p{1.3cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+        \hline
+       \multicolumn{1}{|c|}{\textbf{\small{Raison sociale Client}}} & 
+       \multicolumn{1}{c|}{\textbf{\small{Date Facture}}} &
+       \multicolumn{1}{c|}{\textbf{\small{N de Facture}}} & 
+       \multicolumn{1}{c|}{\textbf{\small{Montant}}} & 
+       \multicolumn{1}{c|}{\textbf{\small{Ancien Solde}}}& 
+       \multicolumn{1}{c|}{\textbf{\small{au}}} & 
+       \multicolumn{1}{c|}{\textbf{\small{Nouveau Solde}}}  \\       \hline
+       \multicolumn{1}{|l|}{#Z8,1#}             & 
+       \multicolumn{1}{r|}{#Z8,2#}             & 
+       \multicolumn{1}{r|}{#Z8,3#}             & 
+       \multicolumn{1}{r|}{#Z6,8#}              & 
+       \multicolumn{1}{r|}{#Z8,4#}              & 
+       \multicolumn{1}{r|}{#Z8,5#}  	   & 
+       \multicolumn{1}{r|}{#Z8,6#} \\ 	   
+       \hline
+       \end{tabular}
+       \hspace{1cm} \null
+       \end{flushright}  
+
+       %% \hspace{4cm} \begin{flushright}     
+       %% \begin{tabular}{rp{2.5cm}}
+       %% \multicolumn{2}{l}{#Z8,1#}  \\
+       %% Facture :& #Z8,3# \\
+       %% Montant:& #Z6,8#  \\
+       %% Ancien solde:& #Z8,4# \\
+       %% au: & #Z8,5#  	  \\  
+       %% Nouveau Solde:& #Z8,6# \\ 	   
+       %%  % \hline     
+       %% \end{tabular}   
+       %% \end{flushright}     
 

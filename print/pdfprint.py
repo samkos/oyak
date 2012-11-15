@@ -239,17 +239,32 @@ def print_one_facture(pdf,fic):
     data_footer2 =  [ valeurs['Z8,1']] 
 
 
-    data_vignette = [ ["Facture ",facture], 
-		      ["Montant ",valeurs['Z6,1'][-1]], 
-                      ["Ancien solde ",valeurs['Z8,1'][3]], 
-                      ["Au ",valeurs['Z8,1'][4]],
-                      ["Nouveau solde ",valeurs['Z8,1'][5]], 
+    # data_vignette = [ ["Facture ",facture], 
+    # 		      ["Montant ",valeurs['Z6,1'][-1]], 
+    #                   ["Ancien solde ",valeurs['Z8,1'][3]], 
+    #                   ["Au ",valeurs['Z8,1'][4]],
+    #                   ["Nouveau solde ",valeurs['Z8,1'][5]], 
+    #                   ] 
+
+    # header_vignette =  []
+    # w_vignette      =  [20,20]
+    # x_vignette = 168
+    # y_vignette = 275
+
+
+    header_vignette = [["L"                   ,"R"               ,"R"               ,"R"      ,
+			"R"                   ,"C"               ,"R"  ],
+		       ["Raison social Client", "_s_Date Facture","_s_N de Facture","_s_Montant",
+		       "_s_Ancien Solde"      ,"_s_au","_s_Nouveau Solde"]]
+    w_vignette      =  [40                    ,25                ,20               ,17         ,
+			17                    ,17                ,17         ]
+    x_vignette = 25
+    y_vignette = 284
+    print len(valeurs['Z8,1']),valeurs['Z8,1']
+    data_vignette =  [ [ valeurs['Z8,1'][0], valeurs['Z8,1'][1], valeurs['Z8,1'][2], valeurs['Z6,1'][7], 
+		       valeurs['Z8,1'][3], valeurs['Z8,1'][4], valeurs['Z8,1'][5]]
                       ] 
 
-    header_vignette =  []
-    w_vignette      =  [20,20]
-    x_vignette = 168
-    y_vignette = 275
 
  
 
