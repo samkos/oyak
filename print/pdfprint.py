@@ -109,19 +109,28 @@ class PDF(FPDF):
                    self.set_x(x)
 		   self.cell(sum(w),0,'','T')
 
-def print_facture(fics,output_file):
+def print_facture(fics,saving_file,dir_printing_format=0):
 
-    pdf = PDF()
-    pdf.set_auto_page_break(auto=False,margin=0)
+    pdf = {}
 
     fics.sort()
     print fics
 
     for fic in fics:
-      printer=print_one_facture(pdf,fic)
+      print_one_facture(pdf,fic)
 
-    pdf.output(output_file,'F')
-    return printer
+    for pr in pdf.keys():
+	    if dir_printing_format:
+		    dir_printer = dir_printing_format % pr
+		    if not os.path.exists(dir_printer):
+			    os.makedirs(dir_printer)
+		    pdf[pr].output(dir_printer+"/facture.pdf",'F')
+	    if saving_file.find("%s")>-1:
+		    pdf[pr].output(saving_file % pr,'F')
+	    else:
+		    pdf[pr].output(saving_file,'F')
+
+    return pdf.keys()
 
 def print_one_facture(pdf,fic):
     print "processing facture ",fic
@@ -270,8 +279,10 @@ def print_one_facture(pdf,fic):
 
 
     #Data loading
-
-
+    
+    if not (printer in pdf.keys()):
+	    pdf[printer] = PDF()
+	    pdf[printer].set_auto_page_break(auto=False,margin=0)
 
 
     while len(data_facture):
@@ -282,18 +293,18 @@ def print_one_facture(pdf,fic):
             data_page.append(x)
             i=i+1
         #print data_page,len(data_facture)
-        pdf.add_page()
-        pdf.oyak_table(x_entete,y_entete,w_entete,header_entete,data_entete,4)
-        pdf.oyak_table(x_adresse,y_adresse,w_adresse,header_adresse,data_adresse,4,countour=0)
-        pdf.oyak_table(x_fac,y_fac,w_fac,header_fac,data_page,4)
-        pdf.oyak_table(x_footer1,y_footer1,w_footer1,header_footer1,data_footer1,4)
-        pdf.oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
-        pdf.oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
-        pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
+        pdf[printer].add_page()
+        pdf[printer].oyak_table(x_entete,y_entete,w_entete,header_entete,data_entete,4)
+        pdf[printer].oyak_table(x_adresse,y_adresse,w_adresse,header_adresse,data_adresse,4,countour=0)
+        pdf[printer].oyak_table(x_fac,y_fac,w_fac,header_fac,data_page,4)
+        pdf[printer].oyak_table(x_footer1,y_footer1,w_footer1,header_footer1,data_footer1,4)
+        pdf[printer].oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
+        pdf[printer].oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
+        pdf[printer].oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
 
-    pdf.set_font('Arial','',14)
+    pdf[printer].set_font('Arial','',14)
     
-    return printer
+    return 
 
 
 
@@ -383,8 +394,8 @@ def print_general(fic,output_file):
     pdf.output(output_file,'F')
 	    	
 if __name__ == "__main__":
-    print_facture([os.path.abspath("tests/fac/FACT1plus")],"tuto5.pdf")
+    pr = print_facture([os.path.abspath("tests/fac/FACT1plus")],"res.pdf")
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     if sys.platform.startswith("linux"):
-	    os.system("evince tuto5.pdf")
+	    os.system("evince res.pdf")
