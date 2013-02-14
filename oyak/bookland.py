@@ -229,11 +229,11 @@ import re       # we should get rid of regsub and regex in favor of re
                 # hope there's no conflict.
 import string
 import sys
-import regsub
-from regex_syntax import *
-import regex
-regex.set_syntax(RE_SYNTAX_AWK)
-from types import *
+#import resub
+#from regex_syntax import *
+#import regex
+#regex.set_syntax(RE_SYNTAX_AWK)
+#from types import *
 
 BooklandError = "Something wrong"
 
@@ -418,8 +418,9 @@ class UPC:
     def verifyChars(self,s):                     # UPC (all)
         # Trailing hyphen allowed.
         nevergood = "--|^-|[^0-9-]"
-        ierr=regex.search(nevergood,s)
+        ierr=re.search(nevergood,s)
         if ierr != -1:
+            print s,nevergood
             raise BooklandError, \
                   "UPCA: in %s: illegal characters beginning with: %s" % (s,s[ierr])
 
