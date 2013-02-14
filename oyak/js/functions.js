@@ -3,16 +3,6 @@
 // fonctions javascript
 // -------------------------------------------------------------------------------
 
-(function(){
-    if (!console ) {
-	var names = ["log", "debug", "info", "warn", "error", "assert", "dir", "dirxml", "group", "groupEnd", "time", "timeEnd", "count", "trace", "profile", "profileEnd"];
-	
-	window.console = {};
-	for (var i = 0; i < names.length; i++) {
-	    window.console[names[i]] = function(){};
-	}
-    }
-})();
 
 
 // gestion des chronos et compte a rebourg
@@ -109,7 +99,7 @@ function affiche_message(message) {
 	setTimeout('delete_message()',5*1000);
     }
     else {
-	console.log("should affiche_message but length of message is zero!!!!");
+	//console.log("should affiche_message but length of message is zero!!!!");
     }
 }
 
@@ -219,7 +209,7 @@ function affiche(reponse) {
 
 function load2Id(id,url_add,force,message) { // (2)
   
-    console.log("load2Id avec id="+id+" et url_add="+url_add);
+    //console.log("load2Id avec id="+id+" et url_add="+url_add);
     
 
     force= force || 0;

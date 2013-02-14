@@ -271,7 +271,10 @@ def print_general(fic,output_file):
 
     fic_contents = open(fic).readlines()
 
-    while len(fic_contents):
+    OUT = False
+
+
+    while len(fic_contents) and not(OUT):
         f = fic_contents.pop(0)	     
         if f[-2:]=='\r\n':
             f = f[:-2]
@@ -321,8 +324,9 @@ def print_general(fic,output_file):
 		cells = line.split("=")
 		#print cells
 		for cell in cells:
+		    print "cell=/%s/" % cell
 		    champs = cell.split(";")
-		    texte = champs.pop()
+		    texte = champs.pop(0)
 		    cadrage,bords,couleur,font = "xx","xx","xx","xx"
 		    if len(champs):
 		      format = champs.pop(0)
@@ -339,11 +343,13 @@ def print_general(fic,output_file):
 		         font=format[0]
 			 format=format[1:]
 		    print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
+		OUT = True
     pdf.output(output_file,'F')
 	    	
 if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
-    print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
+    #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
+    print_general("../print/tests/imp/PRIX.txt","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")

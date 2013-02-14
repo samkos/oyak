@@ -1,0 +1,19 @@
+voilà le fichier stock sur lequel ils travaillent
+
+le premier segment au début de chaque ligne comprend 
+ code article :3n
+date arrivage: aammjj
+code fournisseur :3n
+code repaire en cas de multiples arrivages dans le même article chez le même fournisseur
+je prévoie une extension de ce code par 2n pour la zone de pèche
+
+soit on rentre par ce code barres et on zappe le contrôle de l'existence de l'article, du fournisseur
+soit on saisit code article (réf au fichier articles) et fournisseur (réf au fichier fournisseur)
+
+
+oui,
+ ce que je note dans l'article :le segment d'identification avec code article, date d'arrivage et fournisseur et origine pêche
+un segment par article arrivage dans le produit le contenu d'arrivage, le contenu de la vente au fil de l'eau cumulée, le stock arrêté à la fin de la journée.
+ en somme ce qui m’intéresse c'est la référence, segment d’identification, qui sera injectée dans l'article vendu.
+ce  qui fait que le code barre n'a d'autre but que de m'indiquer la traçabilité de l'article vendu et par la même de faire le stock et déterminer la marge brute
+au niveau du fichier que je récupère  par la saisie directe c'est ce code complet avec le nombre de colis, le poids et le prix.
