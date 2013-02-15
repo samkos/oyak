@@ -15,13 +15,14 @@ codebarlist = list()
 f = open("../print/tests/stock/example","r")
 for l in f.readlines():
     code,lots = l[:-1].split("]")
+    codebarlist.append((code,0.0,"xxxxxxx"))
     if debug:
         print code,lots
     #arrivage,vente_cumulee,stock_fin_de_journee,es,s = lots.split("\\")
     #if debug:
     #    print code,arrivage,vente_cumulee,stock_fin_de_journee
 
-codebarlist = [(code,0.0,"xxxxxxx")]
+#codebarlist = [(code,0.0,"xxxxxxx")]
 
 print codebarlist
 

@@ -422,8 +422,8 @@ class UPC:
         nevergood = "--|^-|[^0-9-]"
         p  = re.compile(nevergood)
         ierr=p.search(s)
-        if ierr != -1:
-            print s,nevergood
+        if ierr :
+            print "-->%s<--"%s,nevergood
             raise BooklandError, \
                   "UPCA: in %s: illegal characters beginning with: %s" % (s,s[ierr])
 
