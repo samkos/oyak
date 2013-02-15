@@ -328,8 +328,9 @@ class psfile:
                 return
 
     def header(self,title,comments,ean13font,isbnfont,upc5font):
+        p  = re.compile("^")
         for i in range(len(comments)):
-            comments[i] = regsub.gsub("^","%  ",comments[i])
+            comments[i] = p.sub("%  ",comments[i])
         # There's a more elegant way to do the bounding box line:
         return [ "%!PS-Adobe-2.0 EPSF-1.2",
                  "%%Creator: " + MYNAME + "  " + MYVERSION + "  " + DATE,
@@ -395,7 +396,8 @@ class UPC:
 
         self.s=arg
         self.verifyChars(self.s)
-        self.n = regsub.gsub("-","",self.s)    # create "integer" representation
+        p = re.compile("-")
+        self.n = p.sub("",self.s)    # create "integer" representation
         self.x = self.checkDigit(self.n)       # always calculate check digit
         if len(self.n) == self.ndigits:
             self.verifyCheckDigit()                # if check digit given, verify it
@@ -418,7 +420,8 @@ class UPC:
     def verifyChars(self,s):                     # UPC (all)
         # Trailing hyphen allowed.
         nevergood = "--|^-|[^0-9-]"
-        ierr=re.search(nevergood,s)
+        p  = re.compile(nevergood)
+        ierr=p.search(s)
         if ierr != -1:
             print s,nevergood
             raise BooklandError, \
