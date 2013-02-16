@@ -24,17 +24,17 @@ for l in f.readlines():
 
 #codebarlist = [(code,0.0,"xxxxxxx")]
 
-print codebarlist
+#print codebarlist
 
 # All the basic versions:
 
 n=1
 for isbn,price,comment in codebarlist:
-    outfile="%s.eps" % isbn
+    outfile="codes/%s.eps" % isbn
     if not(os.path.exists(outfile)):
         n=n+1
         #print "depart : "+str(isbn)
-        #print "generating : ",isbn
+        print "generating : ",isbn
         b = bookland.ean13print(isbn,price)
         #b = bookland.upc5print(isbn,price)
         b.ps.out(outfile)
