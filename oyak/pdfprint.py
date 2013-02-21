@@ -4,6 +4,9 @@ from fpdf import *
 import os,sys,string
 import exceptions, traceback
 
+import bookland
+
+
 class PDF(FPDF):
 	#Simple table
 	def basic_table(self,header,data):
@@ -256,6 +259,94 @@ def print_facture(fic,output_file):
 
 
 
+
+def print_catalog(fic,output_file):
+    print "processing facture ",fic
+
+    fic_contents = open(fic).readlines()
+    codebarlist = list()
+    version = "%s %s" % (bookland.MYVERSION, bookland.DATE)
+    debug = False
+
+    for l in fic_contents:
+	    code,lots = l[:-1].split("]")
+	    codebarlist.append((code,0.0,"xxxxxxx"))
+	    if debug:
+		    print code,lots
+    #arrivage,vente_cumulee,stock_fin_de_journee,es,s = lots.split("\\")
+    #if debug:
+    #    print code,arrivage,vente_cumulee,stock_fin_de_journee
+
+    # generating all needed codebar
+
+    n=1
+    for isbn,price,comment in codebarlist:
+        outfile="codes/%s.eps" % isbn
+	if not(os.path.exists(outfile)):
+           n=n+1
+        #print "depart : "+str(isbn)
+	   print "generating : ",isbn
+	   b = bookland.ean13print(isbn,price)
+        #b = bookland.upc5print(isbn,price)
+	   b.ps.out(outfile)
+        #print "\\foo{%s}{%s \\\\bookland.py %s}" % (outfile,comment,version)
+
+
+
+    header_catalog = [ ["C","L","C"], 
+		       ["Article","Designation","Zone"]]
+
+    w_catalog = [30,45,25]
+    x_catalog = 5
+    y_catalog = 5
+    data_facture = []
+    i=1
+    for isbn,price,comment in codebarlist:
+	data_facture = data_facture + [("%s" % isbn,"%s" % comment,"%s" % price)]
+        i=i+1
+    #print data_facture
+    nb_ligne_fac_page =  20
+
+
+    # (printer,n,title) = valeurs['Z0,1']
+    # facture = valeurs["Z1,1"]
+    # data_title =  [ [" "],["_b_%s" % valeurs["Z4,1"]]]
+    # header_title =  [ ["C"],["_h_"+title]]
+    # w_title  =  [160]
+    # x_title = 40
+    # y_title = 75
+
+
+
+    pdf = PDF()
+    pdf.set_auto_page_break(auto=False,margin=0)
+
+    #Data loading
+
+
+
+
+    while len(data_facture):
+        data_page = []
+        i=0
+        while len(data_facture) and i<nb_ligne_fac_page:
+            x = data_facture.pop(0)
+            data_page.append(x)
+            i=i+1
+        #print data_page,len(data_facture)
+        pdf.add_page()
+        pdf.oyak_table(x_catalog,y_catalog,w_catalog,header_catalog,data_page,4)
+        #pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
+
+    pdf.set_font('Arial','',14)
+    pdf.output(output_file,'F')
+    
+    return 
+
+
+
+
+
 def print_general(fic,output_file):
     print "processing general file ",fic
 
@@ -350,6 +441,7 @@ if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/PRIX.txt","tuto5.pdf")
+    #print_general("../print/tests/imp/PRIX.txt","tuto5.pdf")
+    print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
