@@ -93,9 +93,15 @@ class PDF(FPDF):
                             if r.find("_h_")>-1:
                                 self.set_font('Arial','',14)
                                 r = string.replace(r,"_h_","")
+                            if r.find("_z_")>-1:
+                                r = string.replace(r,"_z_","")
+				print "includes images ",r
+                                self.image(r,self.get_x(),self.get_y(),width,4*height,type='',link='')
+				self.set_xy(self.get_x(),self.get_y()+20)
+			    else:
 			    #print "width,height,r,bords,0,just",width,height,r,bords,0,just
-                            self.cell(width,height,r,bords,0,just)
-                            self.set_font('Arial','',8)
+				self.cell(width,height,r,bords,0,just)
+				self.set_font('Arial','',8)
 			    i = i+1
 			self.ln() 
                     except:
@@ -115,7 +121,7 @@ class PDF(FPDF):
  
 
 
-def print_facture(fic,output_file):
+def print_facture(fic,output_file,marge=0):
     print "processing facture ",fic
 
     fic_contents = open(fic).readlines()
@@ -145,13 +151,13 @@ def print_facture(fic,output_file):
     data_title =  [ [" "],["_b_%s" % valeurs["Z4,1"]]]
     header_title =  [ ["C"],["_h_"+title]]
     w_title  =  [160]
-    x_title = 40
+    x_title = 40 + marge
     y_title = 75
 
 
     header_entete=[]
     w_entete = [20,30]
-    x_entete = 10
+    x_entete = 10 + marge
     y_entete = 10
 
     data_entete = [ ["C2__ff__%s N %s" % (title,valeurs['Z1,1']) ],
@@ -166,7 +172,7 @@ def print_facture(fic,output_file):
 
     header_adresse=[]
     w_adresse = [60]
-    x_adresse = 120
+    x_adresse = 120 + marge
     y_adresse = 40
     data_adresse = [ [valeurs['Z3,1']], 
                      [valeurs['Z3,2']], 
@@ -184,7 +190,7 @@ def print_facture(fic,output_file):
                    ["","","Peche","","",
                     "Unit.","Quant.","Unit.","H.T.",""]]
     w_fac = [10,85,25,10,20,10,10,10,15,7]
-    x_fac = 5
+    x_fac = 5 + marge
     y_fac = 95
     data_facture = []
     i=1
@@ -197,7 +203,7 @@ def print_facture(fic,output_file):
     header_footer1 = [["C"    ,"R"    ,"R"     ,"R"      ,"R"     ,"R"       ,"R"        ,"R"        ],
                       ["Colis","Poids","H.T. 1","TVA 5.5","H.T. 2","TVA 19.6","Total TVA","Total TTC"]]
     w_footer1      = [10     ,15     ,15      ,15       ,15      ,15        ,15         ,15         ]
-    x_footer1 = 90
+    x_footer1 = 90 + marge
     y_footer1 = 210
 
     data_footer1 =  [ valeurs['Z6,1'], 
@@ -207,7 +213,7 @@ def print_facture(fic,output_file):
     header_footer2 = [["L"               ,"R"            ,"R"          ,"R"           ,"R" ,"R"        ],
                       ["Règlement Client","Date","_s_N de Facture","_s_Ancien Solde","_s_au","_s_Nouveau Solde"]]
     w_footer2      =  [50                ,15            ,15            ,15            ,15  ,15        ]
-    x_footer2 = 80
+    x_footer2 = 80 + marge
     y_footer2 = 230
     data_footer2 =  [ valeurs['Z8,1']] 
 
@@ -221,7 +227,7 @@ def print_facture(fic,output_file):
 
     header_vignette =  []
     w_vignette      =  [20,20]
-    x_vignette = 168
+    x_vignette = 168 + marge
     y_vignette = 275
 
  
@@ -263,6 +269,7 @@ def print_facture(fic,output_file):
 def print_catalog(fic,output_file):
     print "processing facture ",fic
 
+    nb = 0
     fic_contents = open(fic).readlines()
     codebarlist = list()
     version = "%s %s" % (bookland.MYVERSION, bookland.DATE)
@@ -281,14 +288,16 @@ def print_catalog(fic,output_file):
 
     n=1
     for isbn,price,comment in codebarlist:
-        outfile="codes/%s.eps" % isbn
+        outfile="codes/%s.jpg" % isbn
+        outfile_eps="codes/%s.eps" % isbn
 	if not(os.path.exists(outfile)):
            n=n+1
         #print "depart : "+str(isbn)
 	   print "generating : ",isbn
 	   b = bookland.ean13print(isbn,price)
         #b = bookland.upc5print(isbn,price)
-	   b.ps.out(outfile)
+	   b.ps.out(outfile_eps)
+	   os.system("convert %s %s" % (outfile_eps,outfile))
         #print "\\foo{%s}{%s \\\\bookland.py %s}" % (outfile,comment,version)
 
 
@@ -302,7 +311,8 @@ def print_catalog(fic,output_file):
     data_facture = []
     i=1
     for isbn,price,comment in codebarlist:
-	data_facture = data_facture + [("%s" % isbn,"%s" % comment,"%s" % price)]
+       if i<5:
+	data_facture = data_facture + [("_z_codes/%s.jpg_z_" % isbn,"%s" % comment,"%s" % price)]
         i=i+1
     #print data_facture
     nb_ligne_fac_page =  20
@@ -438,7 +448,7 @@ def print_general(fic,output_file):
     pdf.output(output_file,'F')
 	    	
 if __name__ == "__main__":
-    #print_facture("TESTS/fac/FACT1plus","tuto5.pdf")
+    #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #print_general("../print/tests/imp/PRIX.txt","tuto5.pdf")
