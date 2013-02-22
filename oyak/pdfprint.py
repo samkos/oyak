@@ -4,7 +4,12 @@ from fpdf import *
 import os,sys,string
 import exceptions, traceback
 
-import bookland
+#import bookland
+
+import barcode
+from barcode.writer import ImageWriter
+#print barcode.PROVIDED_BARCODES
+EAN = barcode.get_barcode_class('ean13')
 
 
 class PDF(FPDF):
@@ -96,7 +101,7 @@ class PDF(FPDF):
                             if r.find("_z_")>-1:
                                 r = string.replace(r,"_z_","")
 				print "includes images ",r
-                                self.image(r,self.get_x(),self.get_y(),width,4*height,type='',link='')
+                                self.image(r,self.get_x(),self.get_y(),width,10*height,type='',link='')
 				self.set_xy(self.get_x(),self.get_y()+20)
 			    else:
 			    #print "width,height,r,bords,0,just",width,height,r,bords,0,just
@@ -272,7 +277,7 @@ def print_catalog(fic,output_file):
     nb = 0
     fic_contents = open(fic).readlines()
     codebarlist = list()
-    version = "%s %s" % (bookland.MYVERSION, bookland.DATE)
+    
     debug = False
 
     for l in fic_contents:
@@ -288,16 +293,17 @@ def print_catalog(fic,output_file):
 
     n=1
     for isbn,price,comment in codebarlist:
-        outfile="codes/%s.jpg" % isbn
+        outfile="codes/%s.png" % isbn
         outfile_eps="codes/%s.eps" % isbn
 	if not(os.path.exists(outfile)):
            n=n+1
         #print "depart : "+str(isbn)
 	   print "generating : ",isbn
-	   b = bookland.ean13print(isbn,price)
-        #b = bookland.upc5print(isbn,price)
-	   b.ps.out(outfile_eps)
-	   os.system("convert %s %s" % (outfile_eps,outfile))
+	   ean = EAN(isbn, writer=ImageWriter())
+	   fullname = ean.save('ean13_barcode')
+	   f = open(outfile, 'wb')
+	   ean.write(f) # PIL (ImageWriter) produces RAW format here
+	   f.close()
         #print "\\foo{%s}{%s \\\\bookland.py %s}" % (outfile,comment,version)
 
 
@@ -312,7 +318,7 @@ def print_catalog(fic,output_file):
     i=1
     for isbn,price,comment in codebarlist:
        if i<5:
-	data_facture = data_facture + [("_z_codes/%s.jpg_z_" % isbn,"%s" % comment,"%s" % price)]
+	data_facture = data_facture + [("_z_codes/%s.png_z_" % isbn,"%s" % comment,"%s" % price)]
         i=i+1
     #print data_facture
     nb_ligne_fac_page =  20
