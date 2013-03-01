@@ -65,7 +65,7 @@ texte = """
 n=1
 l=1
 for isbn,price,comment in codebarlist:
-    outfile="codes/%s.eps" % isbn
+    outfile="codes/%s.png" % isbn
     if not(os.path.exists(outfile)):
         n=n+1
         #print "depart : "+str(isbn)
