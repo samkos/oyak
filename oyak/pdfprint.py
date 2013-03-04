@@ -81,6 +81,11 @@ class PDF(FPDF):
 			    r = row[i]
 			    just = justification[i]
 			    # traitement d'un format particulier d'une colonne
+                            if r.find("__cc__")>-1: 
+				    (cadrage,r) = r.split("__cc__")
+			    else:
+				    cadrage = bords
+			    # traitement d'un format particulier d'une colonne
                             if r.find("__ff__")>-1: 
 				    (format,r) = r.split("__ff__")
 				    just=format[0]
@@ -105,7 +110,7 @@ class PDF(FPDF):
 				self.set_xy(self.get_x(),self.get_y()+20)
 			    else:
 			    #print "width,height,r,bords,0,just",width,height,r,bords,0,just
-				self.cell(width,height,r,bords,0,just)
+				self.cell(width,height,r,cadrage,0,just)
 				self.set_font('Arial','',8)
 			    i = i+1
 			self.ln() 
@@ -418,20 +423,40 @@ def print_general(fic,output_file):
 	    continue
 
 	if what=="TAB":
-	    print fields
+	    print fields[0]
 	    tailles = fields.pop(0).strip().split("=")
-	    print "tailles",tailles
+	    w_tab = tailles
+	    for i in range(len(tailles)):
+              w_tab[i] = int( float(w_tab[i])*24)
+	    print "tailles",w_tab
+	    x_tab = 5
+	    y_tab = 10
+	    header_tab = ""
+	    print "nb colonnes :",len(tailles)
+	    print tailles
+	    nb_test = 0
 	    if len(fields):
 	        tailles = fields.pop(0).strip().split("=")
 	        print "tailles",tailles
 	    current_ligne = current_ligne + esp_ligne
-	    data = []
+	    data_tab = []
 	    while len(fields):
+                nb_test = nb_test + 1
+	        if nb_test < 10:
+                   debug = True
+		else:
+                   debug = False                   
 	        line = fields.pop(0)
 		cells = line.split("=")
-		#print cells
+		if debug:
+		  print "---- Ligne %d --------" % nb_test
+		  print cells
+		nb_cell = 0
+		data_ligne=[]
 		for cell in cells:
-		    print "cell=/%s/" % cell
+                    if debug:
+		      print "cell(%d)=/%s/" % (nb_cell,cell)
+		    nb_cell = nb_cell + 1
 		    champs = cell.split(";")
 		    texte = champs.pop(0)
 		    cadrage,bords,couleur,font = "xx","xx","xx","xx"
@@ -442,22 +467,47 @@ def print_general(fic,output_file):
 			 format=format[1:]
 		      if len(format):
 		         bords=format[0]
+			 if bords=="g":
+                           bords = "L"
+			 elif bords=="d":
+                           bords = "R"
+			 elif bords=="c":
+                           bords = "LR"
+			 if not bords==".":
+                           texte = "%s__cc__%s" % (bords,texte)
 			 format=format[1:]
 		      if len(format):
 		         couleur=format[0]
+			 if couleur=="g":
+                            texte = "__GRAS__%s__gras__" % texte_
+			 if couleur=="i":
+                            texte = "__SLANTED__%s__slanted__" % texte_
+			 if couleur=="G":
+                            texte = "__GRAY__%s__GRAY__" % texte_
+			 if couleur=="r":
+                            texte = "__RED__%s__red__" % texte_
 			 format=format[1:]
 		      if len(format):
 		         font=format[0]
+			 if not font==".":
+  			   texte = "__%s__%s" % (font,texte)
 			 format=format[1:]
-		    print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
+		    data_ligne.append(texte)
+		    if debug:
+		      print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
+		if debug:
+                  print data_ligne
+                  data_tab.append(data_ligne)
 		OUT = True
+	    pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+
     pdf.output(output_file,'F')
 	    	
 if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    #print_general("../print/tests/imp/PRIX.txt","tuto5.pdf")
-    print_catalog("../print/tests/stock/example","tuto5.pdf")
+    print_general("../print/tests/imp/PRIX.txt","tuto5.pdf")
+    #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")

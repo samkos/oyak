@@ -31,6 +31,8 @@ R = rouge
 
 4e caractere : font
 . = font par defaut
+b = 12 pts
+h = 14 pts dans le texte 20 pts dans titre de colone
 
 5e caractere : nb de colone sur lequel on imprime  (optionnel)
 01
