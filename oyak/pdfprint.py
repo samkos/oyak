@@ -402,6 +402,7 @@ def print_general(fic,output_file):
 	
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
+	    print "orientation:",orientation
 	    continue
 
         if what=="EJECT":
@@ -432,7 +433,7 @@ def print_general(fic,output_file):
 	    tailles = fields.pop(0).strip().split("=")
 	    w_tab = tailles
 	    for i in range(len(tailles)):
-              w_tab[i] = int( float(w_tab[i])*24)
+              w_tab[i] = int( float(w_tab[i])*35)
 	    print "tailles",w_tab
 	    x_tab = 5
 	    y_tab = 10
@@ -447,7 +448,7 @@ def print_general(fic,output_file):
 	    data_tab = []
 	    while len(fields):
                 nb_test = nb_test + 1
-	        if nb_test < 10:
+	        if nb_test < 20:
                    debug = True
 		else:
                    debug = False                   
