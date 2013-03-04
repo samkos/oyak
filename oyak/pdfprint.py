@@ -1,3 +1,4 @@
+
 # -*- coding: latin-1 -*-
        
 from fpdf import *
@@ -79,12 +80,16 @@ class PDF(FPDF):
 			while i<len(w): 
                             width = w[i]
 			    r = row[i]
-			    just = justification[i]
 			    # traitement d'un format particulier d'une colonne
-                            if r.find("__cc__")>-1: 
-				    (cadrage,r) = r.split("__cc__")
+                            if r.find("__bb__")>-1: 
+				    (cadre,r) = r.split("__bb__")
 			    else:
-				    cadrage = bords
+				    cadre = bords
+			    # traitement d'une justification particuliere d'une colonne
+                            if r.find("__jj__")>-1: 
+				   (just,r) = r.split("__jj__")
+			    else:
+				   just = justification[i]
 			    # traitement d'un format particulier d'une colonne
                             if r.find("__ff__")>-1: 
 				    (format,r) = r.split("__ff__")
@@ -110,7 +115,7 @@ class PDF(FPDF):
 				self.set_xy(self.get_x(),self.get_y()+20)
 			    else:
 			    #print "width,height,r,bords,0,just",width,height,r,bords,0,just
-				self.cell(width,height,r,cadrage,0,just)
+				self.cell(width,height,r,cadre,0,just)
 				self.set_font('Arial','',8)
 			    i = i+1
 			self.ln() 
@@ -464,6 +469,7 @@ def print_general(fic,output_file):
 		      format = champs.pop(0)
 		      if len(format):
 		         cadrage=format[0]
+			 texte = "%s__jj__%s" % (cadrage,texte)
 			 format=format[1:]
 		      if len(format):
 		         bords=format[0]
@@ -474,7 +480,7 @@ def print_general(fic,output_file):
 			 elif bords=="c":
                            bords = "LR"
 			 if not bords==".":
-                           texte = "%s__cc__%s" % (bords,texte)
+                           texte = "%s__bb__%s" % (bords,texte)
 			 format=format[1:]
 		      if len(format):
 		         couleur=format[0]
