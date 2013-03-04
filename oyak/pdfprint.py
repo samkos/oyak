@@ -80,6 +80,10 @@ class PDF(FPDF):
 			while i<len(w): 
                             width = w[i]
 			    r = row[i]
+			    # ligne seule
+			    if r=="T__jj__":
+			       self.cell(sum(w),0,'','T')
+			       break
 			    # traitement d'un format particulier d'une colonne
                             if r.find("__bb__")>-1: 
 				    (cadre,r) = r.split("__bb__")
