@@ -513,7 +513,7 @@ if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/PRIX.txt","tuto5.pdf")
+    print_general("../print/tests/imp/VEND.txt","tuto5.pdf")
     #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
