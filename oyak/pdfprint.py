@@ -380,15 +380,6 @@ def print_catalog(fic,output_file):
 def print_general(fic,output_file):
     print "processing general file ",fic
 
-    pdf = PDF()
-    pdf.set_auto_page_break(auto=False,margin=0)
-    pdf.set_font('Arial','',14)
-    pdf.add_page()
-    
-    nb_ligne = 0
-    current_ligne = 0
-    esp_ligne = 0.2
-    esp_tab_ligne = 0.43 
 
     fic_contents = open(fic).readlines()
 
@@ -407,13 +398,27 @@ def print_general(fic,output_file):
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
 	    print "orientation:",orientation
+	    pdf = PDF(orientation)
+	    pdf.set_auto_page_break(auto=False,margin=0)
+	    pdf.set_font('Arial','',14)
+	    pdf.add_page()
+    
+	    nb_ligne = 0
+	    current_ligne = 0
+	    esp_ligne = 0.2
+	    esp_tab_ligne = 0.43 
+	    data_tab = []
 	    continue
 
-        if what=="EJECT":
+	if what=="EJECT" or current_ligne>15:
+	   nb_ligne = 0
+	   current_ligne = 0
+	   if len(data_tab):
+              pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+           print "EJECT§!!!!!!!!!!!"
            pdf.add_page()
+	   data_tab = []
 	   continue
-           box_open =0
-	   current_line = 0
 
 	y = fields.pop(0).strip()
 	x = fields.pop(0).strip()
@@ -432,12 +437,13 @@ def print_general(fic,output_file):
 	    current_ligne = current_ligne + esp_ligne
 	    continue
 
+
 	if what=="TAB":
 	    print fields[0]
 	    tailles = fields.pop(0).strip().split("=")
 	    w_tab = tailles
 	    for i in range(len(tailles)):
-              w_tab[i] = int( float(w_tab[i])*35)
+              w_tab[i] = int( float(w_tab[i])*40)
 	    print "tailles",w_tab
 	    x_tab = 5
 	    y_tab = 10
@@ -452,7 +458,7 @@ def print_general(fic,output_file):
 	    data_tab = []
 	    while len(fields):
                 nb_test = nb_test + 1
-	        if nb_test < 20:
+	        if nb_test < 4:
                    debug = True
 		else:
                    debug = False                   
@@ -508,9 +514,19 @@ def print_general(fic,output_file):
 		      print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
 		if debug:
                   print data_ligne
-                  data_tab.append(data_ligne)
+		data_tab.append(data_ligne)
+		current_ligne = current_ligne +1
+		if current_ligne>35:
+                  nb_ligne = 0
+		  current_ligne = 0
+		  if len(data_tab):
+                    pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+		  print "EJECT§!!!!!!!!!!!"
+		  pdf.add_page()
+		  data_tab = []
 		OUT = True
-	    pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+	    if len(data_tab):
+              pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 
     pdf.output(output_file,'F')
 	    	
