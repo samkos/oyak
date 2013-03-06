@@ -221,10 +221,17 @@ def probeFacture():
         if fichier_fac:
             files.append(fichier_fac)
 
-        print_facture(files,
-                           "%s/Oyak/facture_%%s.pdf" % TMPDIR,
-                           "%s/Oyak/ToPrint/%%s" % (TMPDIR))
+        pr = print_facture(files,"all.pdf")
         
+        if noprint:
+            shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
+        else: 
+            dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
+            if not os.path.exists(dir_printer):
+                os.makedirs(dir_printer)
+            shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
+        shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
+        os.unlink("all.pdf")
         for fic in files:
             if not(fic==fichier_fac):
                 os.unlink(fic)
