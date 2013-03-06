@@ -366,7 +366,7 @@ def print_general(fic,output_file,debug_till=0):
 	   nb_ligne = 0
 	   current_ligne = 0
 	   if len(data_tab):
-              pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+              pdf.oyak_table(x_tab,y_tab,w_tab,first_line_tab,data_tab,4)
            print "EJECT§!!!!!!!!!!!"
            pdf.add_page()
 	   data_tab = []
@@ -401,6 +401,7 @@ def print_general(fic,output_file,debug_till=0):
 	    x_tab = 5
 	    y_tab = 10
 	    header_tab = ""
+	    first_line_tab = []
 	    if debug_till:
 	      print "nb colonnes :",len(tailles)
 	      print tailles
@@ -469,12 +470,16 @@ def print_general(fic,output_file,debug_till=0):
 		      print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
 		if debug:
                   print data_ligne
-		data_tab.append(data_ligne)
+		if len(first_line_tab)==0:
+                  first_line_tab=data_ligne
+		else:
+                  data_tab.append(data_ligne)
 		current_ligne = current_ligne +1
 		if current_ligne>35:
                   nb_ligne = 0
 		  current_ligne = 0
 		  if len(data_tab):
+		    data_tab.insert(0,first_line_tab)
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 		  if debug:
 		     print "EJECT§!!!!!!!!!!!"
@@ -482,6 +487,7 @@ def print_general(fic,output_file,debug_till=0):
 		  data_tab = []
 		OUT = True
 	    if len(data_tab):
+              data_tab.insert(0,first_line_tab)
               pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 
     pdf.output(output_file,'F')
