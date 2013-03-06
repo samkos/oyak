@@ -27,13 +27,13 @@
 <td bgcolor="#99CCCC" colspan=1> </td>
   <form action="">
 <td bgcolor="#99CCCC" colspan=1>
-	<input type=text name=filtre_fournisseur value="<?php echo $filtre_fournisseur ?>">
+	<input type=text name=filtre_fournisseur value="<? echo $filtre_fournisseur ?>">
   <input type="submit" value="Filtrer"> </td>
 	<td bgcolor="#99CCCC" colspan=1>
-	<input type=text name=filtre_titre size=40 value="<?php echo $filtre_titre ?>"> <BR> 
+	<input type=text name=filtre_titre size=40 value="<? echo $filtre_titre ?>"> <BR> 
   <input type="submit" value="Filtrer"> </td>
 	<td bgcolor="#99CCCC" colspan=1>
-	<input type=text name=filtre_barcode value="<?php echo $filtre_barcode ?>">
+	<input type=text name=filtre_barcode value="<? echo $filtre_barcode ?>">
 	<input type="hidden" name="id_cat" value="<?php print $id_cat ?>">
   <input type="submit" value="Filtrer"> 
 	</form>
@@ -46,24 +46,6 @@ $nb_produit = 1000;
 if(!$start) {$start=0;}
 
 
-// lecture des fournisseurs
-$req = mysql_query("select id,clef,societe,ville from ".
-		   $prefixe_table."fournisseurs ");
-while($ligne = mysql_fetch_array($req))
-{
-  $id = $ligne["id"];
-  $clef = $ligne["clef"];
-  $nom = $ligne["societe"];
-  $ville = $ligne["ville"]; 
-  $nom_fournisseur[$clef]="$nom/$ville";
-}
-
-
-
-
-
-
-// lecture des produits
 $sql_query = "select id,titre,stock,barcode,fournisseur from ".$prefixe_table."produits ";
 
 $sql_filtre=" where id_cat=\"$id_cat\"  ";
@@ -136,7 +118,6 @@ echo("<tr>
 	  <input name='quantite$nb' type=integer value='$nb_print'   /> </td>
 	  <input name='produit$nb' type=hidden value='$titre'   /> </td>
 		<input name='id$nb' type=hidden value='$id'   /> </td>
-		<input name='fournisseur$nb' type=hidden value='$nom_fournisseur[$fournisseur]'   /> </td>
    <td bgcolor=\"#ffffff\" align=\"left\" width=\"60%\">$fournisseur</td>
    <td bgcolor=\"#ffffff\" align=\"left\" width=\"60%\">$titre</td>
    <td bgcolor=\"#ffffff\" align=\"center\" width=\"20%\">$barcode</td>
@@ -159,21 +140,21 @@ echo("<tr>
 
 <!-- Begin
 function checkAll() {
-for (var j = 1; j <= <?php print $nb ?> ; j++) {
+for (var j = 1; j <= <? print $nb ?> ; j++) {
 box = eval("document.checkboxform.choisis" + j); 
 if (box.checked == false) box.checked = true;
    }
 }
 
 function uncheckAll() {
-for (var j = 1; j <= <?php print $nb ?> ; j++) {
+for (var j = 1; j <= <? print $nb ?> ; j++) {
 box = eval("document.checkboxform.choisis" + j); 
 if (box.checked == true) box.checked = false;
    }
 }
 
 function switchAll() {
-for (var j = 1; j <= <?php print $nb ?> ; j++) {
+for (var j = 1; j <= <? print $nb ?> ; j++) {
 box = eval("document.checkboxform.choisis" + j); 
 box.checked = !box.checked;
    }
@@ -182,7 +163,7 @@ box.checked = !box.checked;
 function setAll() {
 box = eval("document.checkboxform.filtre_quantite");
 nb=box.value;
-for (var j = 1; j <= <?php print $nb ?> ; j++) {
+for (var j = 1; j <= <? print $nb ?> ; j++) {
 box = eval("document.checkboxform.quantite" + j); 
 box.value=nb; 
    }

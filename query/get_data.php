@@ -30,7 +30,7 @@ if ($header) {
     <td /> <a href="../admin/">Retour Admin</a></td>
 </tr>
 </table> </center>
-<?php 
+<? 
 }
 
 function date2string($s) {

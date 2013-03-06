@@ -26,19 +26,19 @@ $req = mysql_query("delete from ".$prefixe_table."produits where id=\"$id_produi
       <form action="">
      
     <td bgcolor="#99CCCC" colspan=1> 
-    	<input type=text name=filtre_ref size=15 value="<?php echo $filtre_ref ?>"> 
+    	<input type=text name=filtre_ref size=15 value="<? echo $filtre_ref ?>"> 
     </td>
     <td bgcolor="#99CCCC" colspan=1>       
-    	<input type=text name=filtre_produit size=4 value="<?php echo $filtre_produit ?>"> 
+    	<input type=text name=filtre_produit size=4 value="<? echo $filtre_produit ?>"> 
    	</td>
     <td bgcolor="#99CCCC" colspan=1>
-    	<input type=text name=filtre_fournisseur size=5 value="<?php echo $filtre_fournisseur ?>">
+    	<input type=text name=filtre_fournisseur size=5 value="<? echo $filtre_fournisseur ?>">
 		</td>  
     <td bgcolor="#99CCCC" > </td>
     <td bgcolor="#99CCCC" > </td>
     <td bgcolor="#99CCCC" > </td>
     <td bgcolor="#99CCCC" >
-		    <input type=text name=filtre_titre size=25 value="<?php echo $filtre_titre ?>"> 
+		    <input type=text name=filtre_titre size=25 value="<? echo $filtre_titre ?>"> 
 		 </td>
     <td bgcolor="#99CCCC" ></td>
     <td bgcolor="#99CCCC" colspan=2>  <input type="submit" value="Filtrer"> </td>

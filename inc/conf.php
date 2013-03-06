@@ -2,9 +2,6 @@
 
 // Configuration mySQL
 
-//error_reporting((E_ALL ^ E_NOTICE) & ~E_DEPRECATED & E_USER_DEPRECATED);
-error_reporting((E_ALL ^ E_NOTICE));
-
 extract($_POST, EXTR_SKIP);
 extract($_GET, EXTR_SKIP);
 
@@ -30,7 +27,7 @@ $release_dir="../dist/releases";
 $commande_dir="c:\\ventesjour\\";
 
 //require "debug.php";
-$version="0.4";
+$version="0.3";
 
 
 

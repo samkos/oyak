@@ -126,7 +126,7 @@ echo("<center><font color=\"#ff0000\"><b>$msg</b></font></center><br>");
 
 <form action="modifier_produit.php?id_produit=<?php echo("$id_produit"); ?>" method="post">
 <input type="hidden" name="action" value="send">
-<input type="hidden" name="start" value="<?php print $start ?>">
+<input type="hidden" name="start" value="<? print $start ?>">
 <table border="0" align="center">
    <tr>
       <td><b>Catégorie</b> :</td>
@@ -216,7 +216,7 @@ echo("<center><font color=\"#ff0000\"><b>$msg</b></font></center><br>");
 <br>
 
 <center>
-<a href="index.php?start=<?php echo $start?>">Retour</a>
+<a href="index.php?start=<? echo $start?>">Retour</a>
 </center>
 
 <?php include("../inc/footer.php"); ?>

@@ -1,7 +1,13 @@
 <?php 
+
 include("../inc/conf.php"); 
 include("../inc/fonctions.php"); 
+
+
+
 print "</HEAD>";
+
+
 include("../inc/header.php"); 
 
 	$compteur=0;
@@ -16,71 +22,114 @@ include("../inc/header.php");
 if (!$message) { $message="&nbsp;";}
 	
 ?>
+   
+
   <center>
-  <table> <tr> 
-    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> modifier la base </b> </td> </tr> <tr>
-    <td rowspan=3>    
-        <a href="./perform_sql.php?order=base_init">Initialiser la base</a><br>
-       	<a href="./perform_sql.php?order=base_exemple">Créer une base d'exemple</a><br>
-    	<a href="../produits/check.php">Afficher les anomalies </a><br>
-	<a target=mysqladmin href="../../phpmyadmin/index.php">Console SQL</a></td>
-   <td align=right>
-   <form  enctype="multipart/form-data"  action="update_table.php3" method="post">
+  <table border="0" cellpadding="2" cellspacing="0">
+<?  
+  print "<tr>  <td colspan=10 align=center> <P style='color: #ff0000;'> $message </P> <BR> <BR></td>  </tr> \n";
+?>
+  <form  enctype="multipart/form-data"  action="update_table.php3" method="post">
+  		<td>
   			  fichier clients  : &nbsp;
-        <input type="file" name="file_client[]"  /> </td> </tr> <tr> <tr> <td align=right>
+  		</td>
+      <td align="right">
+        <input type="file" name="file_client[]"  />
+    	</td>
+  		<td>
+      </td>
+  </tr>
+  		<td>
   			  fichier produit  : &nbsp;
-        <input type="file" name="file_produit[]"  /> </td> <td>
-  			<input type="submit" name="SQL" value="Mettre a jour" /> 
-    </td> </form>
-   </tr>
-    <tr></tr> 
-    <tr></tr> 
-    <tr></tr> 
-    <tr></tr> 
-    <tr></tr> 
-    <tr></tr> 
-    <tr>
-    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> voir la base depuis la device </b> </td> </tr> <tr>
-    <td /> <a href="../query/get_data.php?clients=1&header=1">Liste Brute Client</a></td> 
-    <td /> <a href="../query/get_data2.php?clients=1&header=1">Liste Brute Client/Time</a></td> 
+  		</td>
+      <td align="right">
+        <input type="file" name="file_produit[]"  />
+    	</td>
+  		<td>
+  				<input type="submit" name="SQL" value="Mettre a jour" />
+  		</form>
+      </td>
+  </tr>
+  <tr> <td> <br />
+  <br />
+  <br />
+  </td> </tr>
+  <tr> <td> <br />
+  <br />
+  <br />
+  </td> </tr>
+  <tr >
+      <td /> <a href="../query/releases.php?liste=1&header=1">Télécharger logiciel vendeur</a></td>
+      <td> <a href="../factures/traite.php?noprint=1">Creer les factures  </a> </br>
+           <a href="../factures/traite.php">Creer & Imprimer les factures </a></td>
+      <td> <a href="../barcode/latex_barcode.php?action=file">Creer les etiquettes  </a> </br>
+      <td> <a href="../impression/traite.php">imprimer les documents generaux  </a> </br></td>
+      <td> <a target=blank href="lancer.php?prog=batch&which=vendeur.bat">Device </a></td>
+  </tr>
+  <tr> <td> <br />
+  <br />
+  <br />
+  </td> </tr>
+<tr >
+    <td /> <a href="../query/get_data.php?clients=1&header=1">Liste Brute Client</a></td> <br>
+    <td /> <a href="../query/get_data2.php?clients=1&header=1">Liste Brute Client/Time</a></td> <br>
     <td /> <a href="../query/get_data.php?clients=1&header=1&date=1">Date Brute Client</a></td>
 </tr>
 <tr >
-    <td /> <a href="../query/get_data.php?fournisseurs=1&header=1">Liste Brute Fournisseur</a></td>
-    <td /> <a href="../query/get_data2.php?fournisseurs=1&header=1">Liste Brute Fournisseur/Time</a></td>
+    <td /> <a href="../query/get_data.php?fournisseurs=1&header=1">Liste Brute Fournisseur</a></td><br>
+    <td /> <a href="../query/get_data2.php?fournisseurs=1&header=1">Liste Brute Fournisseur/Time</a></td><br>
     <td /> <a href="../query/get_data.php?fournisseurs=1&header=1&date=1">Date Brute Fournisseur</a></td>
 </tr>
 <tr >
-    <td /> <a href="../query/get_data.php?produits=1&header=1">Liste Brute Produit</a></td>
-    <td /> <a href="../query/get_data2.php?produits=1&header=1">Liste Brute Produit/Time</a></td>
+    <td /> <a href="../query/get_data.php?produits=1&header=1">Liste Brute Produit</a></td><br>
+    <td /> <a href="../query/get_data2.php?produits=1&header=1">Liste Brute Produit/Time</a></td><br>
     <td /> <a href="../query/get_data.php?produits=1&header=1&date=1">Date Brute Produit</a></td>
 </tr>
 <tr >
-    <td /> <a href="../query/get_data.php?vendeurs=1&header=1">Liste Brute Vendeur</a></td>
-    <td /> <a href="../query/get_data2.php?vendeurs=1&header=1">Liste Brute Vendeur/Time</a></td>
+    <td /> <a href="../query/get_data.php?vendeurs=1&header=1">Liste Brute Vendeur</a></td><br>
+    <td /> <a href="../query/get_data2.php?vendeurs=1&header=1">Liste Brute Vendeur/Time</a></td><br>
     <td /> <a href="../query/get_data.php?vendeurs=1&header=1&date=1">Date Brute Vendeur</a></td>
 </tr>
 <tr >
     <td /> <a href="../query/get_data.php?releases=1&header=1">Liste Brute releases</a></td>
-    <tr>
-    <td bgcolor="#99CCCC" colspan=6 align=center>  <b> gérer les commandes</b> </td> </tr> <tr>
-    <tr >
-    <td rowspan=4> le compteur commandes <br> est a <?php echo $compteur ?> </td> 
-    <td> <a href="reinit_compteur.php"> Mettre a zero </a></td>
+</tr>
+
+<tr> <td> <br />
+<br />
+<br />
+</td> </tr>
+<tr >
+    <td /> le compteur commandes est a <? echo $compteur ?> <a href="reinit_compteur.php"> <BR> Mettre a zero </a></td>
 </tr>
 <tr >
-      <td> <a href="../query/unit_test.php">Créer des commandes de tests</a></td>
-</tr><tr>
-      <td> <a href="../query/index.php?header=1">Tester envoi de commande a la base</a></td>
+      <td /> <a href="../query/unit_test.php">Créer des commandes de tests</a></td>
+      <td /> <a href="../query/index.php?header=1">Tester envoi de commande a la base</a></td>
        </tr>
 <tr >
-      <td > <a href="../query/interroge.php?header=1">Tester envoi de requete d'interrogation a la base</a></td>
+      
+      <td /> <a href="../query/interroge.php?header=1">Tester envoi de requete d'interrogation a la base</a></td>
   </tr>
-<?php 
-include("git_command.php"); 
-?>
+<tr> <td> <br />
+<br />
+<br />
+<br />
+<br />
+</td> </tr>
+<tr >
+    <td /> <a href="./perform_sql.php?order=base_init">Initialiser la base</a></td>
+</tr>
+<tr >
+    <td /> <a href="./perform_sql.php?order=base_exemple">Créer une base d'exemple</a></td>
+</tr>
+<tr >
+    <td /> <a href="../produits/check.php">Verifier la base</a></td>
+</tr>
+<tr >
+    <td /> <a target=mysqladmin href="../../phpmyadmin/index.php">Console SQL</a></td>
+</tr>
 </table>
 </center>
+</form>
 
 
 <script type="text/javascript">

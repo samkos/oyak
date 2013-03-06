@@ -2,6 +2,7 @@
 
 include("../inc/conf.php");
 include("../inc/fonctions.php");
+include("../verif.php"); 
 
 
 if ($header) {

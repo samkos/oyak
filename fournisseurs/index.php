@@ -22,13 +22,13 @@ $req = mysql_query("delete from ".$prefixe_table."fournisseurs where id=\"$id_fo
       <form action="">
      
     <td bgcolor="#99CCCC" colspan=1> 
-    	<input type=text name=filtre_clef size=15 value="<?php echo $filtre_clef ?>"> 
+    	<input type=text name=filtre_clef size=15 value="<? echo $filtre_clef ?>"> 
     </td>
     <td bgcolor="#99CCCC" colspan=1>       
-    	<input type=text name=filtre_nom size=15 value="<?php echo $filtre_nom ?>"> 
+    	<input type=text name=filtre_nom size=15 value="<? echo $filtre_nom ?>"> 
    	</td>
     <td bgcolor="#99CCCC" colspan=1>
-    	<input type=text name=filtre_ville size=15 value="<?php echo $filtre_ville ?>">
+    	<input type=text name=filtre_ville size=15 value="<? echo $filtre_ville ?>">
 		</td>  
     <td bgcolor="#99CCCC" colspan=2>  <input type="submit" value="Filtrer"> </td>
     </td>
@@ -104,7 +104,7 @@ for($index=1;($index*$nb_fournisseur)<$row[0];$index++)
 
 <center>
 <a href="ajouter_fournisseur.php">Ajouter un fournisseur</a> - 
-<a href="/<?php echo("$prefixe_dossier"); ?>index.php">Retour</a>
+<a href="/<?php echo("$prefixe_dossier"); ?>welcome/index.php">Retour</a>
 </center>
 
 <?php include("../inc/footer.php"); ?>

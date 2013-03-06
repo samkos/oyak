@@ -28,4 +28,4 @@ if($dwn) {
 
    <A href="download.php?dwn=download.php">Test</A>
 
-<?php } ?>
+<? } ?>
