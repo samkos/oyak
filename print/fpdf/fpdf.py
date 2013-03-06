@@ -169,12 +169,12 @@ class FPDF:
             self.def_orientation='P'
             self.w_pt=self.fw_pt
             self.h_pt=self.fh_pt
-        elif(orientation=='l' or orientation=='landscape'):
+        elif(orientation=='l' or orientation[0:9]=='landscape'):
             self.def_orientation='L'
             self.w_pt=self.fh_pt
             self.h_pt=self.fw_pt
         else:
-            self.error('Incorrect orientation: '+orientation)
+            self.error('Incorrect orientation: /%s/'%orientation[0:9])
         self.cur_orientation=self.def_orientation
         self.w=self.w_pt/self.k
         self.h=self.h_pt/self.k
