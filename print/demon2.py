@@ -203,41 +203,42 @@ def init_env():
         os.mkdir(dir_workTODO)
 
 
-
 def probeFacture():
     global timestamp,noprint,fichier_fac,debug,TMPDIR
     
-    files_waiting=os.listdir(dir_factureTODO)
-    files = []
-    for fic in files_waiting:
-        files.append("%s/%s" %(dir_factureTODO,fic))
+    files_pending=os.listdir(dir_factureTODO)
+    #print dir_factureTODO,files_pending
+    
+    files=[]
+    for f in files_pending:
+        f = "%s/%s" % (dir_factureTODO,f)
+        files.append(f)
         
-    if debug:
-        print "en attente dans %s : " % dir_impTODO,files
-
     if files or fichier_fac:
         if msg:
             print "%s"%timestamp+":"+"traitement des factures en attente"
         if fichier_fac:
             files.append(fichier_fac)
+
+        pr = print_facture(files,"all.pdf")
+        
+        if noprint:
+            shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
+        else: 
+            dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
+            if not os.path.exists(dir_printer):
+                os.makedirs(dir_printer)
+            shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
+        shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
+        os.unlink("all.pdf")
         for fic in files:
-            print "traitement facture ",fic
-            pr = print_facture(fic,"all.pdf")
-            if noprint:
-                shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
-            else: 
-                dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
-                if not os.path.exists(dir_printer):
-                    os.makedirs(dir_printer)
-                shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
-            shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
-            os.unlink("all.pdf")
-            if not(fichier_fac) or not(fic==fichier_fac):
+            if not(fic==fichier_fac):
                 os.unlink(fic)
-            
     else:
         if msg:
             print "%s"%timestamp+":"+"Pas de facture en attente"
+        
+
         
 
 def probeEtiq():
