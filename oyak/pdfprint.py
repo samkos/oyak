@@ -377,8 +377,8 @@ def print_catalog(fic,output_file):
 
 
 
-def print_general(fic,output_file):
-    print "processing general file ",fic
+def print_general(fic,output_file,debug_till=0):
+    print "processing general file ",fic,debug_till
 
 
     fic_contents = open(fic).readlines()
@@ -444,21 +444,24 @@ def print_general(fic,output_file):
 	    w_tab = tailles
 	    for i in range(len(tailles)):
               w_tab[i] = int( float(w_tab[i])*40)
-	    print "tailles",w_tab
+	    if debug_till:
+	      print "tailles",w_tab
 	    x_tab = 5
 	    y_tab = 10
 	    header_tab = ""
-	    print "nb colonnes :",len(tailles)
-	    print tailles
+	    if debug_till:
+	      print "nb colonnes :",len(tailles)
+	      print tailles
 	    nb_test = 0
 	    if len(fields):
 	        tailles = fields.pop(0).strip().split("=")
-	        print "tailles",tailles
+	        if debug_till:
+		   print "tailles",tailles
 	    current_ligne = current_ligne + esp_ligne
 	    data_tab = []
 	    while len(fields):
                 nb_test = nb_test + 1
-	        if nb_test < 4:
+	        if nb_test < debug_till:
                    debug = True
 		else:
                    debug = False                   
@@ -521,7 +524,8 @@ def print_general(fic,output_file):
 		  current_ligne = 0
 		  if len(data_tab):
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
-		  print "EJECT§!!!!!!!!!!!"
+		  if debug:
+		     print "EJECT§!!!!!!!!!!!"
 		  pdf.add_page()
 		  data_tab = []
 		OUT = True
@@ -529,12 +533,13 @@ def print_general(fic,output_file):
               pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 
     pdf.output(output_file,'F')
+    return printer
 	    	
 if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/VEND.txt","tuto5.pdf")
+    print_general("../print/tests/imp/VEND.txt","tuto5.pdf",4)
     #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")

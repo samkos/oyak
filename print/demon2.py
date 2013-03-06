@@ -207,7 +207,13 @@ def init_env():
 def probeFacture():
     global timestamp,noprint,fichier_fac,debug,TMPDIR
     
-    files=os.listdir(dir_factureTODO)
+    files_waiting=os.listdir(dir_factureTODO)
+    files = []
+    for fic in files_waiting:
+        files.append("%s/%s" %(dir_factureTODO,fic))
+        
+    if debug:
+        print "en attente dans %s : " % dir_impTODO,files
 
     if files or fichier_fac:
         if msg:
@@ -226,6 +232,9 @@ def probeFacture():
                 shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
             shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
             os.unlink("all.pdf")
+            if not(fichier_fac) or not(fic==fichier_fac):
+                os.unlink(fic)
+            
     else:
         if msg:
             print "%s"%timestamp+":"+"Pas de facture en attente"
@@ -250,24 +259,33 @@ def probeEtiq():
 def probeImp():
     global timestamp,debug,noprint,exe_imp,fichier_imp
     
-    files=os.listdir(dir_impTODO)
+    files_waiting=os.listdir(dir_impTODO)
+    files = []
+    for fic in files_waiting:
+        files.append("%s/%s" %(dir_impTODO,fic))
+        
     if debug:
-        print files
+        print "en attente dans %s : " % dir_impTODO,files
         
     if files or fichier_imp:
         if msg:
             print "%s"%timestamp+":"+"traitement des impressions generales en attente"
-            print exe_imp
-        commande=exe_imp
-        if (noprint):
-            commande = commande+" --noprint=1"
-        if (debug):
-            commande = commande+" --debug=1"
-        if (fichier_imp):
-            commande = commande+" --file="+fichier_imp
-        if debug:
-            print "%s"%timestamp+":execution de ",commande
-        os.system(commande)
+        if fichier_imp:
+            files.append(fichier_imp)
+        for fic in files:
+            print "traitement impression generale ",fic
+            pr = print_general(fic,"all.pdf")
+            if noprint:
+                shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
+            else: 
+                dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
+                if not os.path.exists(dir_printer):
+                    os.makedirs(dir_printer)
+                shutil.copy("all.pdf","%s/imp.pdf" % dir_printer) 
+            shutil.copy("all.pdf","%s/Oyak/imp.pdf" % TMPDIR)
+            os.unlink("all.pdf")
+            if not(fichier_imp) or not(fic==fichier_imp):
+                os.unlink(fic)
     else:
         if msg:
             print "%s"%timestamp+":"+"Pas d'impression generale en attente"
