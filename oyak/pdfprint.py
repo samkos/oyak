@@ -358,6 +358,10 @@ def print_general(fic,output_file,debug_till=0):
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
 	    print "orientation:",orientation
+	    if (orientation in ["PAYSAGE","landscape","LANDSCAPE"]):
+	      orientation="landscape"	    
+	    else:
+	      orientation="portrait"	    
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
 	    pdf.set_font('Arial','',14)
@@ -536,7 +540,8 @@ if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    #print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
