@@ -340,7 +340,7 @@ def print_general(fic,output_file,debug_till=0):
 
 
     fic_contents = open(fic).readlines()
-
+    printed_at_each_page = []
     OUT = False
 
 
@@ -352,6 +352,8 @@ def print_general(fic,output_file,debug_till=0):
 	#print fields
         what  = fields.pop(0).strip()
 	#print what
+	page_number = 1
+
 	
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
@@ -368,13 +370,19 @@ def print_general(fic,output_file,debug_till=0):
 	    data_tab = []
 	    continue
 
-	if what=="EJECT" or current_ligne>15:
+	if what=="EJECT" or (orientation=="landscape" and current_ligne>15) or (current_ligne>60):
 	   nb_ligne = 0
 	   current_ligne = 0
 	   if len(data_tab):
               pdf.oyak_table(x_tab,y_tab,w_tab,first_line_tab,data_tab,4)
            print "EJECT§!!!!!!!!!!!"
            pdf.add_page()
+	   page_number = page_number+1
+	   for l in printed_at_each_page:
+		   [x,y,texte] = l
+		   if texte.find("__numero_page__")>-1:
+		     texte = string.replace(texte,"__numero_page__","%d" % page_number)
+		   pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	   data_tab = []
 	   continue
 
@@ -389,10 +397,16 @@ def print_general(fic,output_file,debug_till=0):
 	if what[:3]=='TXT':
             texte = fields.pop(0)
 	    x = int(x)*3+5
-	    y = int(y)*4
+	    y = int(y)*4   
 	    #print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
+	    if texte.find("__on_all_pages__")>-1:
+	      texte = string.replace(texte,"__on_all_pages__","")
+	      printed_at_each_page.append([x,y,texte])
+	    if texte.find("__numero_page__")>-1:
+	      texte = string.replace(texte,"__numero_page__","%d" % page_number)
 	    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	    current_ligne = current_ligne + esp_ligne
+	    
 	    continue
 
 
@@ -404,8 +418,8 @@ def print_general(fic,output_file,debug_till=0):
               w_tab[i] = int( float(w_tab[i])*40)
 	    if debug_till:
 	      print "tailles",w_tab
-	    x_tab = 5
-	    y_tab = 10
+	    x_tab = pdf.get_x()
+	    y_tab = pdf.get_y()
 	    header_tab = ""
 	    first_line_tab = []
 	    if debug_till:
@@ -504,7 +518,13 @@ def print_general(fic,output_file,debug_till=0):
 		  if debug:
 		     print "EJECT§!!!!!!!!!!!"
 		  pdf.add_page()
+		  page_number = page_number+1
 		  data_tab = []
+		  for l in printed_at_each_page:
+		    [x,y,texte] = l
+		    if texte.find("__numero_page__")>-1:
+		      texte = string.replace(texte,"__numero_page__","%d" % page_number)
+		    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 		OUT = True
 	    if len(data_tab):
               pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
@@ -516,7 +536,7 @@ if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/VEND.txt","tuto5.pdf",4)
+    print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
     #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
