@@ -5,12 +5,12 @@ from fpdf import *
 import os,sys,string
 import exceptions, traceback
 
-# #import bookland
+#import bookland
 
-# import barcode
-# from barcode.writer import ImageWriter
-# #print barcode.PROVIDED_BARCODES
-# EAN = barcode.get_barcode_class('ean13')
+import barcode
+from barcode.writer import ImageWriter
+#print barcode.PROVIDED_BARCODES
+EAN = barcode.get_barcode_class('ean13')
 
 
 class PDF(FPDF):
@@ -92,6 +92,12 @@ class PDF(FPDF):
 			    # traitement d'une justification particuliere d'une colonne
                             if r.find("__jj__")>-1: 
 				   (just,r) = r.split("__jj__")
+				   if just=="g":
+				     just="L"
+				   elif just=="d":
+				     just="R"
+				   elif just=="c":
+				     just="C"
 			    else:
 				   just = justification[i]
 			    # traitement d'un format particulier d'une colonne
@@ -366,7 +372,7 @@ def print_general(fic,output_file,debug_till=0):
 	   nb_ligne = 0
 	   current_ligne = 0
 	   if len(data_tab):
-              pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+              pdf.oyak_table(x_tab,y_tab,w_tab,first_line_tab,data_tab,4)
            print "EJECT§!!!!!!!!!!!"
            pdf.add_page()
 	   data_tab = []
@@ -401,6 +407,7 @@ def print_general(fic,output_file,debug_till=0):
 	    x_tab = 5
 	    y_tab = 10
 	    header_tab = ""
+	    first_line_tab = []
 	    if debug_till:
 	      print "nb colonnes :",len(tailles)
 	      print tailles
@@ -469,7 +476,25 @@ def print_general(fic,output_file,debug_till=0):
 		      print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
 		if debug:
                   print data_ligne
-		data_tab.append(data_ligne)
+		if len(first_line_tab)==0:
+                  first_line_tab=data_ligne
+		  centering = []
+		  title = []
+		  for c in range(len(first_line_tab)):
+		    r = first_line_tab[c]	  
+		    if r.find("__bb__")>-1: 
+		      (cadre,r) = r.split("__bb__")
+		    # traitement d'une justification particuliere d'une colonne
+		    if r.find("__jj__")>-1: 
+		      (just,r) = r.split("__jj__")
+		    else:
+		      just = "C"
+		    centering.append(just)
+		    title.append(r) #"%s/%s"%(r,just))
+		  header_tab = [ centering, title]
+		  print "header:", header_tab
+		else:
+                  data_tab.append(data_ligne)
 		current_ligne = current_ligne +1
 		if current_ligne>35:
                   nb_ligne = 0
