@@ -472,6 +472,21 @@ def print_general(fic,output_file,debug_till=0):
                   print data_ligne
 		if len(first_line_tab)==0:
                   first_line_tab=data_ligne
+		  centering = []
+		  title = []
+		  for c in range(len(first_line_tab)):
+		    r = first_line_tab[c]	  
+		    if r.find("__bb__")>-1: 
+		      (cadre,r) = r.split("__bb__")
+		    # traitement d'une justification particuliere d'une colonne
+		    if r.find("__jj__")>-1: 
+		      (just,r) = r.split("__jj__")
+		    else:
+		      just = "C"
+		    centering.append(just)
+		    title.append("%s/%s"%(r,just))
+		  header_tab = [ centering, title]
+		  print "header:", header_tab
 		else:
                   data_tab.append(data_ligne)
 		current_ligne = current_ligne +1
@@ -479,7 +494,6 @@ def print_general(fic,output_file,debug_till=0):
                   nb_ligne = 0
 		  current_ligne = 0
 		  if len(data_tab):
-		    data_tab.insert(0,first_line_tab)
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 		  if debug:
 		     print "EJECT§!!!!!!!!!!!"
@@ -487,7 +501,6 @@ def print_general(fic,output_file,debug_till=0):
 		  data_tab = []
 		OUT = True
 	    if len(data_tab):
-              data_tab.insert(0,first_line_tab)
               pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 
     pdf.output(output_file,'F')
