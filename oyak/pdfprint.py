@@ -399,8 +399,8 @@ def print_general(fic,output_file,debug_till=0):
 	    x = int(x)*3+5
 	    y = int(y)*4   
 	    #print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
-	    if texte.find("__on_all_pages__")>-1:
-	      texte = string.replace(texte,"__on_all_pages__","")
+	    if texte.find("__sur_toute_page__")>-1:
+	      texte = string.replace(texte,"__sur_toute_page__","")
 	      printed_at_each_page.append([x,y,texte])
 	    if texte.find("__numero_page__")>-1:
 	      texte = string.replace(texte,"__numero_page__","%d" % page_number)
