@@ -4,8 +4,14 @@ TXT!10!16!Essai 10 16
 TXT!1!2!Essai 1 2;..R
 TXT!10!5!Essai 10 5
 TXT!5!20!Essai 5 20
+TXT!0!0!__GRAS__ SOCIETE MAS S.A.     SOUCHE :  VENTE __gras__      Journée  de vente du  :090213  edition du15:45:19  04 Mar 2013 PAGE:   __numero_page__ __on_all_pages__
 TAB!5!15!2=3=3=2!;T!__GRAS__quantite__gras__ (kg ou l);c=__GRAS__Designation__gras__;c=col3=col4!cont1=cont2=cont3=cont4!xxxx1 yyyy eeee fff cxxccv vcccccc=xxxx2=xxxx3=xxxx4!
 EJECT
+
+si on veut reproduire une chaine sur toutes les pages mettre __on_all_pages__ dans le texte
+
+une balise __numero_page__ est remplacée par le numero de page courrant 
+
 
 Format :
 1er caractere : cadrage
@@ -31,6 +37,8 @@ R = rouge
 
 4e caractere : font
 . = font par defaut
+b = 12 pts
+h = 14 pts dans le texte 20 pts dans titre de colone
 
 5e caractere : nb de colone sur lequel on imprime  (optionnel)
 01
