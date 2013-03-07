@@ -92,6 +92,12 @@ class PDF(FPDF):
 			    # traitement d'une justification particuliere d'une colonne
                             if r.find("__jj__")>-1: 
 				   (just,r) = r.split("__jj__")
+				   if just=="g":
+				     just="L"
+				   elif just=="d":
+				     just="R"
+				   elif just=="c":
+				     just="C"
 			    else:
 				   just = justification[i]
 			    # traitement d'un format particulier d'une colonne
@@ -484,7 +490,7 @@ def print_general(fic,output_file,debug_till=0):
 		    else:
 		      just = "C"
 		    centering.append(just)
-		    title.append("%s/%s"%(r,just))
+		    title.append(r) #"%s/%s"%(r,just))
 		  header_tab = [ centering, title]
 		  print "header:", header_tab
 		else:
