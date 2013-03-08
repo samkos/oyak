@@ -361,10 +361,10 @@ def print_general(fic,output_file,debug_till=0):
 	    print "orientation:",orientation
 	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
 	      orientation="landscape"
-	      nb_max_ligne = 30
+	      nb_max_ligne = 19.8
 	    else:
 	      orientation="portrait"
-	      nb_max_ligne = 60
+	      nb_max_ligne = 23.8
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
 	    pdf.set_font('Arial','',14)
@@ -424,7 +424,7 @@ def print_general(fic,output_file,debug_till=0):
 	       tailles = dim.split("=")
 	    else:
 	      nb_max_ligne = int(dim)
-	      print "nb_max_ligne : ",nb_max_ligne
+	      print "nb_max_ligne : ",nb_max_ligne 
 	      dim = fields.pop(0).strip()
 	      tailles = dim.split("=")
 	    w_tab = tailles
@@ -434,6 +434,8 @@ def print_general(fic,output_file,debug_till=0):
 	      print "tailles",w_tab
 	    x_tab = int(x)
 	    y_tab = int(y)
+	    
+	    current_ligne = y_tab
 	    header_tab = ""
 	    first_line_tab = []
 	    if debug_till:
@@ -523,10 +525,10 @@ def print_general(fic,output_file,debug_till=0):
 		  print "header:", header_tab
 		else:
                   data_tab.append(data_ligne)
-		current_ligne = current_ligne +1
+		current_ligne = current_ligne + esp_ligne
 		if current_ligne>nb_max_ligne:
                   nb_ligne = 0
-		  current_ligne = 0
+		  current_ligne = y_tab
 		  if len(data_tab):
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 		  if debug:
