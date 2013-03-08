@@ -343,7 +343,8 @@ def print_general(fic,output_file,debug_till=0):
     printed_at_each_page = []
     OUT = False
 
-
+    print len(fic_contents)
+    
     while len(fic_contents) and not(OUT):
         f = fic_contents.pop(0)	     
         if f[-2:]=='\r\n':
@@ -529,7 +530,6 @@ def print_general(fic,output_file,debug_till=0):
 		    if texte.find("__numero_page__")>-1:
 		      texte = string.replace(texte,"__numero_page__","%d" % page_number)
 		    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
-		OUT = True
 	    if len(data_tab):
               pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 
