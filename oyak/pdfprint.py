@@ -351,7 +351,7 @@ def print_general(fic,output_file,debug_till=0):
         fields = f.split("!")
 	#print fields
         what  = fields.pop(0).strip()
-	#print what
+	print what
 	page_number = 1
 
 	
@@ -422,8 +422,8 @@ def print_general(fic,output_file,debug_till=0):
               w_tab[i] = int( float(w_tab[i])*40)
 	    if debug_till:
 	      print "tailles",w_tab
-	    x_tab = pdf.get_x()
-	    y_tab = pdf.get_y()
+	    x_tab = int(x)
+	    y_tab = int(y)
 	    header_tab = ""
 	    first_line_tab = []
 	    if debug_till:
@@ -540,7 +540,8 @@ if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    #print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",4)
     #print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
