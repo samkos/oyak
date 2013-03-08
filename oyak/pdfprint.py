@@ -7,10 +7,10 @@ import exceptions, traceback
 
 #import bookland
 
-import barcode
-from barcode.writer import ImageWriter
-#print barcode.PROVIDED_BARCODES
-EAN = barcode.get_barcode_class('ean13')
+# import barcode
+# from barcode.writer import ImageWriter
+# #print barcode.PROVIDED_BARCODES
+# EAN = barcode.get_barcode_class('ean13')
 
 
 class PDF(FPDF):
@@ -358,6 +358,10 @@ def print_general(fic,output_file,debug_till=0):
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
 	    print "orientation:",orientation
+	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
+	      orientation="landscape"	    
+	    else:
+	      orientation="portrait"	    
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
 	    pdf.set_font('Arial','',14)
@@ -537,6 +541,7 @@ if __name__ == "__main__":
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    #print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
