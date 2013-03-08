@@ -360,9 +360,11 @@ def print_general(fic,output_file,debug_till=0):
 	    (printer,copies,document,orientation) = fields	
 	    print "orientation:",orientation
 	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
-	      orientation="landscape"	    
+	      orientation="landscape"
+	      nb_max_ligne = 30
 	    else:
-	      orientation="portrait"	    
+	      orientation="portrait"
+	      nb_max_ligne = 60
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
 	    pdf.set_font('Arial','',14)
@@ -375,7 +377,7 @@ def print_general(fic,output_file,debug_till=0):
 	    data_tab = []
 	    continue
 
-	if what=="EJECT" or (orientation=="landscape" and current_ligne>15) or (current_ligne>60):
+        if what=="EJECT" or (current_ligne>nb_max_ligne):
 	   nb_ligne = 0
 	   current_ligne = 0
 	   if len(data_tab):
@@ -417,7 +419,14 @@ def print_general(fic,output_file,debug_till=0):
 
 	if what=="TAB":
 	    print fields[0]
-	    tailles = fields.pop(0).strip().split("=")
+	    dim = fields.pop(0).strip()
+	    if dim.find("=")>-1: 
+	       tailles = dim.split("=")
+	    else:
+	      nb_max_ligne = int(dim)
+	      print "nb_max_ligne : ",nb_max_ligne
+	      dim = fields.pop(0).strip()
+	      tailles = dim.split("=")
 	    w_tab = tailles
 	    for i in range(len(tailles)):
               w_tab[i] = int( float(w_tab[i])*40)
@@ -515,7 +524,7 @@ def print_general(fic,output_file,debug_till=0):
 		else:
                   data_tab.append(data_ligne)
 		current_ligne = current_ligne +1
-		if current_ligne>35:
+		if current_ligne>nb_max_ligne:
                   nb_ligne = 0
 		  current_ligne = 0
 		  if len(data_tab):
@@ -540,8 +549,8 @@ if __name__ == "__main__":
     #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
     #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    #print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
-    print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",4)
+    print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    #print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",4)
     #print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #print_catalog("../print/tests/stock/example","tuto5.pdf")
     if sys.platform.startswith("linux"):
