@@ -7,10 +7,10 @@ import exceptions, traceback
 
 #import bookland
 
-import barcode
-from barcode.writer import ImageWriter
-#print barcode.PROVIDED_BARCODES
-EAN = barcode.get_barcode_class('ean13')
+# import barcode
+# from barcode.writer import ImageWriter
+# #print barcode.PROVIDED_BARCODES
+# EAN = barcode.get_barcode_class('ean13')
 
 
 class PDF(FPDF):
