@@ -363,11 +363,10 @@ def print_general(fic,output_file,debug_till=0):
 	    print "orientation:",orientation
 	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
 	      orientation="landscape"
-	      nb_max_ligne = 199.8
+	      nb_max_ligne = 149.8
 	    else:
 	      orientation="portrait"
 	      nb_max_ligne = 288.8
-	    tab_max_ligne = 100
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
 	    pdf.set_font('Arial','',14)
@@ -405,8 +404,8 @@ def print_general(fic,output_file,debug_till=0):
 	    x = 1
 	    y = current_ligne
 	else:
-	    y = float(y)*10
-	    x = float(x)*4   
+	    y = float(y)
+	    x = float(x)   
 
 	#print fields
 	if what[:3]=='TXT':
@@ -430,6 +429,7 @@ def print_general(fic,output_file,debug_till=0):
 	    dim = fields.pop(0).strip()
 	    if dim.find("=")>-1: 
 	       tailles = dim.split("=")
+	       tab_max_ligne = 100
 	    else:
 	      tab_max_ligne = int(dim)
 	      print "tab_max_ligne : ",tab_max_ligne 
@@ -443,7 +443,7 @@ def print_general(fic,output_file,debug_till=0):
 	    x_tab = int(x)
 	    y_tab = int(y)
 	    print "x,y_tab",x_tab,y_tab
-	    current_ligne = y_tab/10.
+	    current_ligne = y_tab
 	    
 	    header_tab = ""
 	    first_line_tab = []
@@ -540,7 +540,7 @@ def print_general(fic,output_file,debug_till=0):
 		  print "esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
 			(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
                   nb_ligne = 0
-		  current_ligne = y_tab/10.
+		  current_ligne = y_tab
 		  if len(data_tab):
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 		  if debug:
@@ -553,6 +553,7 @@ def print_general(fic,output_file,debug_till=0):
 		    if texte.find("__numero_page__")>-1:
 		      texte = string.replace(texte,"__numero_page__","%d" % page_number)
 		    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
+		  pdf.set_xy(x_tab,y_tab)
 	    if len(data_tab):
               pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 
@@ -569,8 +570,8 @@ if __name__ == "__main__":
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
-    ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
-    #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
+    ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
     #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
