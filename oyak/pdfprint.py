@@ -336,6 +336,8 @@ def print_one_facture(pdf,fic):
 
 
 def print_general(fic,output_file,debug_till=0):
+  try:
+
     print "processing general file ",fic,debug_till
 
 
@@ -361,10 +363,11 @@ def print_general(fic,output_file,debug_till=0):
 	    print "orientation:",orientation
 	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
 	      orientation="landscape"
-	      nb_max_ligne = 19.8
+	      nb_max_ligne = 169.8
 	    else:
 	      orientation="portrait"
 	      nb_max_ligne = 23.8
+	    tab_max_ligne = 100
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
 	    pdf.set_font('Arial','',14)
@@ -372,7 +375,7 @@ def print_general(fic,output_file,debug_till=0):
     
 	    nb_ligne = 0
 	    current_ligne = 0
-	    esp_ligne = 0.2
+	    esp_ligne = 2
 	    esp_tab_ligne = 0.43 
 	    data_tab = []
 	    continue
@@ -393,18 +396,22 @@ def print_general(fic,output_file,debug_till=0):
 	   data_tab = []
 	   continue
 
-	y = fields.pop(0).strip()
-	x = fields.pop(0).strip()
+	if len(fields):
+	  y = fields.pop(0).strip()
+	  x = fields.pop(0).strip()
 	if x=="." and y==".":
 	    current_ligne = current_ligne + esp_ligne
 	    x = 1
 	    y = current_ligne
-	    
+	else:
+	    y = float(y)*10
+	    x = float(x)*4   
+
 	#print fields
 	if what[:3]=='TXT':
             texte = fields.pop(0)
-	    x = int(x)*3+5
-	    y = int(y)*4   
+	    x = int(x)
+	    y = int(y)
 	    #print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
 	    if texte.find("__sur_toute_page__")>-1:
 	      texte = string.replace(texte,"__sur_toute_page__","")
@@ -423,8 +430,8 @@ def print_general(fic,output_file,debug_till=0):
 	    if dim.find("=")>-1: 
 	       tailles = dim.split("=")
 	    else:
-	      nb_max_ligne = int(dim)
-	      print "nb_max_ligne : ",nb_max_ligne 
+	      tab_max_ligne = int(dim)
+	      print "tab_max_ligne : ",tab_max_ligne 
 	      dim = fields.pop(0).strip()
 	      tailles = dim.split("=")
 	    w_tab = tailles
@@ -434,8 +441,9 @@ def print_general(fic,output_file,debug_till=0):
 	      print "tailles",w_tab
 	    x_tab = int(x)
 	    y_tab = int(y)
+	    print "x,y_tab",x_tab,y_tab
+	    current_ligne = y_tab/10.
 	    
-	    current_ligne = y_tab
 	    header_tab = ""
 	    first_line_tab = []
 	    if debug_till:
@@ -526,9 +534,12 @@ def print_general(fic,output_file,debug_till=0):
 		else:
                   data_tab.append(data_ligne)
 		current_ligne = current_ligne + esp_ligne
-		if current_ligne>nb_max_ligne:
+		nb_ligne = nb_ligne+1
+		if current_ligne>nb_max_ligne or nb_ligne>tab_max_ligne:
+		  print "esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+			(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
                   nb_ligne = 0
-		  current_ligne = y_tab
+		  current_ligne = y_tab/10.
 		  if len(data_tab):
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 		  if debug:
@@ -546,14 +557,22 @@ def print_general(fic,output_file,debug_till=0):
 
     pdf.output(output_file,'F')
     return printer
-	    	
+  except:
+    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+    traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+			      file=sys.stdout)
+    return -1
+        
 if __name__ == "__main__":
-    #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
-    #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
-    #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
-    #print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",4)
-    #print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
-    #print_catalog("../print/tests/stock/example","tuto5.pdf")
-    if sys.platform.startswith("linux"):
+    #ret=print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
+    #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
+    #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
+    #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
+    #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
+    if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
+    else:
+      print "erreur"
