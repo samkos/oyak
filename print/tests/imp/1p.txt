@@ -1,4 +1,4 @@
-Z0,1!PR0!1!GEN!landscape
+Z0,1!PR0!1!GEN!portait
 TXT!0!0!haut de page
 TXT!.!.!ligne 1
 TXT!.!.!ligne 2 
@@ -50,6 +50,36 @@ TXT!.!.!ligne 7
 TXT!.!.!ligne 8 
 TXT!.!.!ligne 9
 TXT!.!.!ligne 50
+TXT!.!.!ligne 1
+TXT!.!.!ligne 2 
+TXT!.!.!ligne 3
+TXT!.!.!ligne 4 
+TXT!.!.!ligne 5 
+TXT!.!.!ligne 6 
+TXT!.!.!ligne 7
+TXT!.!.!ligne 8 
+TXT!.!.!ligne 9
+TXT!.!.!ligne 60
+TXT!.!.!ligne 1
+TXT!.!.!ligne 2 
+TXT!.!.!ligne 3
+TXT!.!.!ligne 4 
+TXT!.!.!ligne 5 
+TXT!.!.!ligne 6 
+TXT!.!.!ligne 7
+TXT!.!.!ligne 8 
+TXT!.!.!ligne 9
+TXT!.!.!ligne 70
+TXT!.!.!ligne 1
+TXT!.!.!ligne 2 
+TXT!.!.!ligne 3
+TXT!.!.!ligne 4 
+TXT!.!.!ligne 5 
+TXT!.!.!ligne 6 
+TXT!.!.!ligne 7
+TXT!.!.!ligne 8 
+TXT!.!.!ligne 9
+TXT!.!.!ligne 80
 TXT!20.5!0!bas de page
 
 

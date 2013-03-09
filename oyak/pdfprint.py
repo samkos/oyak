@@ -363,10 +363,10 @@ def print_general(fic,output_file,debug_till=0):
 	    print "orientation:",orientation
 	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
 	      orientation="landscape"
-	      nb_max_ligne = 169.8
+	      nb_max_ligne = 199.8
 	    else:
 	      orientation="portrait"
-	      nb_max_ligne = 23.8
+	      nb_max_ligne = 288.8
 	    tab_max_ligne = 100
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
@@ -381,12 +381,14 @@ def print_general(fic,output_file,debug_till=0):
 	    continue
 
         if what=="EJECT" or (current_ligne>nb_max_ligne):
+	   print "esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+		(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
 	   nb_ligne = 0
 	   current_ligne = 0
 	   if len(data_tab):
               pdf.oyak_table(x_tab,y_tab,w_tab,first_line_tab,data_tab,4)
            print "EJECT§!!!!!!!!!!!"
-           pdf.add_page()
+	   pdf.add_page()
 	   page_number = page_number+1
 	   for l in printed_at_each_page:
 		   [x,y,texte] = l
