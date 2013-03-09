@@ -396,7 +396,6 @@ def print_general(fic,output_file,debug_till=0):
 		     texte = string.replace(texte,"__numero_page__","%d" % page_number)
 		   pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	   data_tab = []
-	   continue
 
 	if len(fields):
 	  y = fields.pop(0).strip()
