@@ -4,6 +4,11 @@
 from fpdf import *
 import os,sys,string
 import exceptions, traceback
+import time,datetime
+
+import logging
+import logging.handlers
+
 
 #import bookland
 
@@ -12,6 +17,51 @@ import exceptions, traceback
 # #print barcode.PROVIDED_BARCODES
 # EAN = barcode.get_barcode_class('ean13')
 
+
+
+if sys.platform.startswith("linux"):
+    TMPDIR="/tmp"
+else:
+    TMPDIR="c:"
+
+dir_Root=TMPDIR+'/Oyak/'
+
+for d in [dir_Root]:
+  if not(os.path.exists(d)):
+    os.mkdir(d)
+
+# set log file
+logger = logging.getLogger('oyak.log')
+logger.propagate = 0
+logger.setLevel(logging.INFO)
+log_file_name = "%s/" % dir_Root+"oyak.log"
+open(log_file_name, "a").close()
+handler = logging.handlers.RotatingFileHandler(
+     log_file_name, maxBytes = 20000000,  backupCount = 5)
+formatter = logging.Formatter("%(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+loggerror = logging.getLogger('oyak.err')
+loggerror.propagate = 0
+loggerror.setLevel(logging.DEBUG)
+log_file_name = "%s/" % dir_Root+"oyak.err"
+open(log_file_name, "a").close()
+handler = logging.handlers.RotatingFileHandler(
+     log_file_name, maxBytes = 20000000,  backupCount = 5)
+formatter = logging.Formatter("%(message)s")
+handler.setFormatter(formatter)
+loggerror.addHandler(handler)
+
+
+def dump_exception(where,fic_contents_initial):
+
+
+    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+    traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+			      file=sys.stdout)
+    logger.info('!!!! Erreur in %s check error log file!!!' % where)
+    loggerror.error('Erreur in %s' % where, exc_info=True)
 
 class PDF(FPDF):
 	#Simple table
@@ -338,10 +388,13 @@ def print_one_facture(pdf,fic):
 def print_general(fic,output_file,debug_till=0):
   try:
 
+    fic_contents_initial = "None yet"
+
     print "processing general file ",fic,debug_till
+    logger.info("processing general file "+fic)
+    
 
-
-    fic_contents = open(fic).readlines()
+    fic_contents = fic_contents_initial = open(fic).readlines()
     printed_at_each_page = []
     OUT = False
 
@@ -559,9 +612,7 @@ def print_general(fic,output_file,debug_till=0):
     pdf.output(output_file,'F')
     return printer
   except:
-    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-    traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
-			      file=sys.stdout)
+    dump_exception("processing general "+fic,fic_contents_initial)	  
     return -1
         
 if __name__ == "__main__":
@@ -570,8 +621,8 @@ if __name__ == "__main__":
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
     #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
-    ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
-    #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
+    ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
