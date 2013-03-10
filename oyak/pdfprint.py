@@ -363,7 +363,7 @@ def print_general(fic,output_file,debug_till=0):
 	    print "orientation:",orientation
 	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
 	      orientation="landscape"
-	      nb_max_ligne = 149.8
+	      nb_max_ligne = 199.8
 	    else:
 	      orientation="portrait"
 	      nb_max_ligne = 288.8
@@ -375,6 +375,7 @@ def print_general(fic,output_file,debug_till=0):
 	    nb_ligne = 0
 	    current_ligne = 0
 	    esp_ligne = 2
+	    hauteur_ligne = 2
 	    esp_tab_ligne = 0.43 
 	    data_tab = []
 	    continue
@@ -443,8 +444,8 @@ def print_general(fic,output_file,debug_till=0):
 	    x_tab = int(x)
 	    y_tab = int(y)
 	    print "x,y_tab",x_tab,y_tab
-	    current_ligne = y_tab
-	    
+	    current_ligne = y_tab - hauteur_ligne - esp_ligne
+	    	    
 	    header_tab = ""
 	    first_line_tab = []
 	    if debug_till:
@@ -455,9 +456,11 @@ def print_general(fic,output_file,debug_till=0):
 	        tailles = fields.pop(0).strip().split("=")
 	        if debug_till:
 		   print "tailles",tailles
-	    current_ligne = current_ligne + esp_ligne
 	    data_tab = []
 	    while len(fields):
+		current_ligne = current_ligne + esp_ligne + hauteur_ligne
+		nb_ligne = nb_ligne+1
+		#print "current_ligne(%s), nb_ligne(%s) " % (current_ligne,nb_ligne)
                 nb_test = nb_test + 1
 	        if nb_test < debug_till:
                    debug = True
@@ -534,13 +537,12 @@ def print_general(fic,output_file,debug_till=0):
 		  print "header:", header_tab
 		else:
                   data_tab.append(data_ligne)
-		current_ligne = current_ligne + esp_ligne
-		nb_ligne = nb_ligne+1
 		if current_ligne>nb_max_ligne or nb_ligne>tab_max_ligne:
 		  print "esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
 			(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
                   nb_ligne = 0
 		  current_ligne = y_tab
+		  current_ligne = current_ligne + (esp_ligne+hauteur_ligne)
 		  if len(data_tab):
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
 		  if debug:
