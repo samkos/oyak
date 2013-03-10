@@ -228,7 +228,9 @@ def probeFacture():
             dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
             if not os.path.exists(dir_printer):
                 os.makedirs(dir_printer)
-            shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
+            now=datetime.datetime.now()
+            timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
+            shutil.copy("all.pdf","%s/facture_%s.pdf" % (dir_printer,timestamp)) 
         shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
         os.unlink("all.pdf")
         for fic in files:
@@ -282,7 +284,9 @@ def probeImp():
                 dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
                 if not os.path.exists(dir_printer):
                     os.makedirs(dir_printer)
-                shutil.copy("all.pdf","%s/imp.pdf" % dir_printer) 
+                now=datetime.datetime.now()
+                timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
+                shutil.copy("all.pdf","%s/imp_%s.pdf" % (dir_printer,timestamp)) 
             shutil.copy("all.pdf","%s/Oyak/imp.pdf" % TMPDIR)
             os.unlink("all.pdf")
             if not(fichier_imp) or not(fic==fichier_imp):
