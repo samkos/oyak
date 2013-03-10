@@ -236,14 +236,17 @@ def print_one_facture(pdf,fic):
             f = f[:-2]
         fields = f.split("!")
         id  = fields[0]
-        if len(fields[1:])==1:
-            valeurs[id] = fields[1]
-        else:
-            valeurs[id] = fields[1:]
+        if not(id in valeurs.keys()):
+            if len(fields[1:])==1:
+                valeurs[id] = fields[1]
+            else:
+                valeurs[id] = fields[1:]
 
     #print valeurs
     clefs = valeurs.keys()
-
+    for c in clefs:
+        print c,":",valeurs[c]
+        
     for i in range(9):
         for j in range(10):
             clef = 'Z%d,%d' % (i,j)
@@ -263,7 +266,7 @@ def print_one_facture(pdf,fic):
     header_entete=[]
     w_entete = [20,30]
     x_entete = 10
-    y_entete = 10
+    y_entete = 40
 
     data_entete = [ ["C2__ff__%s N %s" % (title,valeurs['Z1,1']) ],
 	            ["Date Facture" , valeurs['Z1,2']], 
@@ -342,18 +345,7 @@ def print_one_facture(pdf,fic):
     data_footer2 =  [ valeurs['Z8,1']] 
 
 
-    # data_vignette = [ ["Facture ",facture], 
-    # 		      ["Montant ",valeurs['Z6,1'][-1]], 
-    #                   ["Ancien solde ",valeurs['Z8,1'][3]], 
-    #                   ["Au ",valeurs['Z8,1'][4]],
-    #                   ["Nouveau solde ",valeurs['Z8,1'][5]], 
-    #                   ] 
-
-    # header_vignette =  []
-    # w_vignette      =  [20,20]
-    # x_vignette = 168
-    # y_vignette = 275
-
+    
 
     header_vignette = [["L"                   ,"R"               ,"R"               ,"R"      ,
 			"R"                   ,"C"               ,"R"  ],
@@ -372,7 +364,33 @@ def print_one_facture(pdf,fic):
  
 
 
+    data_vignette_bas = [ ["Facture ",facture], 
+     		          ["Montant ",valeurs['Z6,1'][-1]], 
+                          ["Ancien solde ",valeurs['Z8,1'][3]], 
+                          ["Au ",valeurs['Z8,1'][4]],
+                          ["Nouveau solde ",valeurs['Z8,1'][5]], 
+                       ] 
+
+    header_vignette_bas =  []
+    w_vignette_bas      =  [20,20]
+    x_vignette_bas = 168
+    y_vignette_bas = 275
+
+
+    header_vignette_bas=[]
+
     #Data loading
+
+
+    data_message = [ [valeurs['Z7,1']]                       ] 
+
+    header_message =  []
+    w_message      =  [20,20]
+    x_message = 90
+    y_message = 225
+
+
+    header_message=[]
 
 
 
@@ -393,6 +411,7 @@ def print_one_facture(pdf,fic):
         pdf.oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
         pdf.oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
         pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
+        pdf.oyak_table(x_message,y_message,w_message,header_message,data_message,4,countour=0)
 
     pdf.set_font('Arial','',14)
     
