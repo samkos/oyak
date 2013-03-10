@@ -638,13 +638,13 @@ def print_general(fic,output_file,debug_till=0):
         
 if __name__ == "__main__":
     ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
-    ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
     #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
-    ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
-    ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
+    #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
