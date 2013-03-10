@@ -345,7 +345,7 @@ def print_general(fic,output_file,debug_till=0):
     printed_at_each_page = []
     OUT = False
 
-    print len(fic_contents)
+    print "nb de lignes dans le fichier :",len(fic_contents)
     
     while len(fic_contents) and not(OUT):
         f = fic_contents.pop(0)	     
@@ -354,7 +354,6 @@ def print_general(fic,output_file,debug_till=0):
         fields = f.split("!")
 	#print fields
         what  = fields.pop(0).strip()
-	print what
 	page_number = 1
 
 	
@@ -381,13 +380,12 @@ def print_general(fic,output_file,debug_till=0):
 	    continue
 
         if what=="EJECT" or (current_ligne>nb_max_ligne):
-	   print "esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+	   print "EJECT esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
 		(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
 	   nb_ligne = 0
 	   current_ligne = 0
 	   if len(data_tab):
               pdf.oyak_table(x_tab,y_tab,w_tab,first_line_tab,data_tab,4)
-           print "EJECT§!!!!!!!!!!!"
 	   pdf.add_page()
 	   page_number = page_number+1
 	   for l in printed_at_each_page:
@@ -421,12 +419,12 @@ def print_general(fic,output_file,debug_till=0):
 	      texte = string.replace(texte,"__numero_page__","%d" % page_number)
 	    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	    current_ligne = current_ligne + esp_ligne
-	    
+	    print "TXT",texte
 	    continue
 
 
 	if what=="TAB":
-	    print fields[0]
+	    print "TAB",fields[0]
 	    dim = fields.pop(0).strip()
 	    if dim.find("=")>-1: 
 	       tailles = dim.split("=")
@@ -537,27 +535,26 @@ def print_general(fic,output_file,debug_till=0):
 		  print "header:", header_tab
 		else:
                   data_tab.append(data_ligne)
-		if current_ligne>nb_max_ligne or nb_ligne>tab_max_ligne:
-		  print "esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+		if len(fields)==0 or current_ligne>nb_max_ligne or nb_ligne>tab_max_ligne:
+		  print "EJECT !!! ",len(fields),\
+			"esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
 			(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
                   nb_ligne = 0
 		  current_ligne = y_tab
 		  current_ligne = current_ligne + (esp_ligne+hauteur_ligne)
 		  if len(data_tab):
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
-		  if debug:
-		     print "EJECT§!!!!!!!!!!!"
-		  pdf.add_page()
-		  page_number = page_number+1
-		  data_tab = []
-		  for l in printed_at_each_page:
-		    [x,y,texte] = l
-		    if texte.find("__numero_page__")>-1:
-		      texte = string.replace(texte,"__numero_page__","%d" % page_number)
-		    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
-		  pdf.set_xy(x_tab,y_tab)
-	    if len(data_tab):
-              pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+		    data_tab = []
+		  if (len(fields)):
+  		    pdf.add_page()
+		    page_number = page_number+1
+		    for l in printed_at_each_page:
+		      [x,y,texte] = l
+		      if texte.find("__numero_page__")>-1:
+		        texte = string.replace(texte,"__numero_page__","%d" % page_number)
+		      pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
+		    pdf.set_xy(x_tab,y_tab)
+	      
 
     pdf.output(output_file,'F')
     return printer
