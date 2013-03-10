@@ -42,10 +42,10 @@ formatter = logging.Formatter("%(asctime)s %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-loggerror = logging.getLogger('oyak.err')
+loggerror = logging.getLogger('oyak_err.log')
 loggerror.propagate = 0
 loggerror.setLevel(logging.DEBUG)
-log_file_name = "%s/" % dir_Root+"oyak.err"
+log_file_name = "%s/" % dir_Root+"oyak_err.log"
 open(log_file_name, "a").close()
 handler = logging.handlers.RotatingFileHandler(
      log_file_name, maxBytes = 20000000,  backupCount = 5)
