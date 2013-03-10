@@ -179,9 +179,9 @@ def init_env():
        if debug:
            print "easyphp d'installation : ",easyphp
 
-       exe_view="\""+easyphp+"/www/phpmyfactures/print/view.bat \""    
-       exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
-       exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
+       exe_view="\""+easyphp+"/www/phpmyfactures/print2/view.bat \""    
+       exe_print="\""+easyphp+"/www/phpmyfactures/print2/print.bat \""
+       exe_printTo="\""+easyphp+"/www/phpmyfactures/print2/printTo.bat \""
        exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
        exe_etiq="\""+easyphp+"/www/phpmyfactures/barcode/traite.bat\" ";
        exe_imp="\""+easyphp+"/www/phpmyfactures/print/impression/traite.bat\" ";
