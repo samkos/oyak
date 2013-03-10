@@ -57,8 +57,9 @@ def dump_exception(where,fic_contents_initial):
 
 
     exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-    traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
-			      file=sys.stdout)
+    #traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+    # 			      file=sys.stdout)
+    print '!!!! Erreur in %s check error log file!!!'
     logger.info('!!!! Erreur in %s check error log file!!!' % where)
     loggerror.error('Erreur in %s' % where, exc_info=True)
     loggerror.error("\n============ content of file ===========\n"+\
@@ -637,6 +638,7 @@ def print_general(fic,output_file,debug_till=0):
         
 if __name__ == "__main__":
     ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
