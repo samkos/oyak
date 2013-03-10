@@ -387,7 +387,7 @@ def print_one_facture(pdf,fic):
     header_message =  []
     w_message      =  [20,20]
     x_message = 90
-    y_message = 225
+    y_message = 222
 
 
     header_message=[]
@@ -402,6 +402,9 @@ def print_one_facture(pdf,fic):
             x = data_facture.pop(0)
             data_page.append(x)
             i=i+1
+        while (i<nb_ligne_fac_page):
+            i = i+1
+            data_page.append([''])
         #print data_page,len(data_facture)
         pdf.add_page()
         pdf.oyak_table(x_entete,y_entete,w_entete,header_entete,data_entete,4)
