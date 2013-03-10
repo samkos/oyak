@@ -5,7 +5,7 @@ from fpdf import *
 import os,sys,string
 import exceptions, traceback
 import time,datetime
-
+import copy
 import logging
 import logging.handlers
 
@@ -38,7 +38,7 @@ log_file_name = "%s/" % dir_Root+"oyak.log"
 open(log_file_name, "a").close()
 handler = logging.handlers.RotatingFileHandler(
      log_file_name, maxBytes = 20000000,  backupCount = 5)
-formatter = logging.Formatter("%(message)s")
+formatter = logging.Formatter("%(asctime)s %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
@@ -49,7 +49,6 @@ log_file_name = "%s/" % dir_Root+"oyak.err"
 open(log_file_name, "a").close()
 handler = logging.handlers.RotatingFileHandler(
      log_file_name, maxBytes = 20000000,  backupCount = 5)
-formatter = logging.Formatter("%(message)s")
 handler.setFormatter(formatter)
 loggerror.addHandler(handler)
 
@@ -62,7 +61,11 @@ def dump_exception(where,fic_contents_initial):
 			      file=sys.stdout)
     logger.info('!!!! Erreur in %s check error log file!!!' % where)
     loggerror.error('Erreur in %s' % where, exc_info=True)
+    loggerror.error("\n============ content of file ===========\n"+\
+		    "\n".join(fic_contents_initial)+\
+		    "========== end content of file =========\n")
 
+    
 class PDF(FPDF):
 	#Simple table
 	def basic_table(self,header,data):
@@ -195,10 +198,13 @@ class PDF(FPDF):
 
  
 
-def print_facture(fics,output_file):
+def print_facture(fics,output_file, marge=0):
+  try:
+
+    fic_contents_initial = "None yet"
 
     pdf = PDF()
-    pdf.set_auto_page_break(auto=False,margin=0)
+    pdf.set_auto_page_break(auto=False,margin=marge)
 
     fics.sort()
     print fics
@@ -208,11 +214,21 @@ def print_facture(fics,output_file):
 
     pdf.output(output_file,'F')
     return printer
+  except:
+    dump_exception("print_facture in "+output_file,fics)
+    return -1
 
 def print_one_facture(pdf,fic):
-    print "processing facture ",fic
+  try:
 
-    fic_contents = open(fic).readlines()
+    fic_contents_initial = "None yet"
+
+
+    print "processing facture ",fic
+    logger.info("processing facture "+fic)
+
+    fic_contents_initial = open(fic).readlines()
+    fic_contents = list(fic_contents_initial)
     valeurs = {}
     for f in fic_contents:
         if f[-2:]=='\r\n':
@@ -346,7 +362,7 @@ def print_one_facture(pdf,fic):
 			17                    ,17                ,17         ]
     x_vignette = 25
     y_vignette = 284
-    print len(valeurs['Z8,1']),valeurs['Z8,1']
+    #print len(valeurs['Z8,1']),valeurs['Z8,1']
     data_vignette =  [ [ valeurs['Z8,1'][0], valeurs['Z8,1'][1], valeurs['Z8,1'][2], valeurs['Z6,1'][7], 
 		       valeurs['Z8,1'][3], valeurs['Z8,1'][4], valeurs['Z8,1'][5]]
                       ] 
@@ -380,6 +396,9 @@ def print_one_facture(pdf,fic):
     pdf.set_font('Arial','',14)
     
     return printer
+  except:
+    dump_exception("processing general "+fic,fic_contents_initial)	  
+    return -1
 
 
 
@@ -394,7 +413,8 @@ def print_general(fic,output_file,debug_till=0):
     logger.info("processing general file "+fic)
     
 
-    fic_contents = fic_contents_initial = open(fic).readlines()
+    fic_contents_initial = open(fic).readlines()
+    fic_contents = list(fic_contents_initial)
     printed_at_each_page = []
     OUT = False
 
@@ -616,12 +636,12 @@ def print_general(fic,output_file,debug_till=0):
     return -1
         
 if __name__ == "__main__":
-    #ret=print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
+    ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
     #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
-    #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
+    ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
     ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
