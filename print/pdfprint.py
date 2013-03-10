@@ -1,9 +1,72 @@
+
 # -*- coding: latin-1 -*-
        
 from fpdf import *
-import os,sys,string,copy
+import os,sys,string
 import exceptions, traceback
+import time,datetime
+import copy
+import logging
+import logging.handlers
 
+
+#import bookland
+
+# import barcode
+# from barcode.writer import ImageWriter
+# #print barcode.PROVIDED_BARCODES
+# EAN = barcode.get_barcode_class('ean13')
+
+
+
+if sys.platform.startswith("linux"):
+    TMPDIR="/tmp"
+else:
+    TMPDIR="c:"
+
+dir_Root=TMPDIR+'/Oyak/'
+
+for d in [dir_Root]:
+  if not(os.path.exists(d)):
+    os.mkdir(d)
+
+# set log file
+logger = logging.getLogger('oyak.log')
+logger.propagate = 0
+logger.setLevel(logging.INFO)
+log_file_name = "%s/" % dir_Root+"oyak.log"
+open(log_file_name, "a").close()
+handler = logging.handlers.RotatingFileHandler(
+     log_file_name, maxBytes = 20000000,  backupCount = 5)
+formatter = logging.Formatter("%(asctime)s %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+loggerror = logging.getLogger('oyak_err.log')
+loggerror.propagate = 0
+loggerror.setLevel(logging.DEBUG)
+log_file_name = "%s/" % dir_Root+"oyak_err.log"
+open(log_file_name, "a").close()
+handler = logging.handlers.RotatingFileHandler(
+     log_file_name, maxBytes = 20000000,  backupCount = 5)
+handler.setFormatter(formatter)
+loggerror.addHandler(handler)
+
+
+def dump_exception(where,fic_contents_initial):
+
+
+    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+    #traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+    # 			      file=sys.stdout)
+    print '!!!! Erreur in %s check error log file!!!'
+    logger.info('!!!! Erreur in %s check error log file!!!' % where)
+    loggerror.error('Erreur in %s' % where, exc_info=True)
+    loggerror.error("\n============ content of file ===========\n"+\
+		    "\n".join(fic_contents_initial)+\
+		    "========== end content of file =========\n")
+
+    
 class PDF(FPDF):
 	#Simple table
 	def basic_table(self,header,data):
@@ -71,7 +134,26 @@ class PDF(FPDF):
 			while i<len(w): 
                             width = w[i]
 			    r = row[i]
-			    just = justification[i]
+			    # ligne seule
+			    if r=="T__jj__":
+			       self.cell(sum(w),0,'','T')
+			       break
+			    # traitement d'un format particulier d'une colonne
+                            if r.find("__bb__")>-1: 
+				    (cadre,r) = r.split("__bb__")
+			    else:
+				    cadre = bords
+			    # traitement d'une justification particuliere d'une colonne
+                            if r.find("__jj__")>-1: 
+				   (just,r) = r.split("__jj__")
+				   if just=="g":
+				     just="L"
+				   elif just=="d":
+				     just="R"
+				   elif just=="c":
+				     just="C"
+			    else:
+				   just = justification[i]
 			    # traitement d'un format particulier d'une colonne
                             if r.find("__ff__")>-1: 
 				    (format,r) = r.split("__ff__")
@@ -90,9 +172,15 @@ class PDF(FPDF):
                             if r.find("_h_")>-1:
                                 self.set_font('Arial','',14)
                                 r = string.replace(r,"_h_","")
+                            if r.find("_z_")>-1:
+                                r = string.replace(r,"_z_","")
+				print "includes images ",r
+                                self.image(r,self.get_x(),self.get_y(),width,10*height,type='',link='')
+				self.set_xy(self.get_x(),self.get_y()+20)
+			    else:
 			    #print "width,height,r,bords,0,just",width,height,r,bords,0,just
-                            self.cell(width,height,r,bords,0,just)
-                            self.set_font('Arial','',8)
+				self.cell(width,height,r,cadre,0,just)
+				self.set_font('Arial','',8)
 			    i = i+1
 			self.ln() 
                     except:
@@ -109,10 +197,15 @@ class PDF(FPDF):
                    self.set_x(x)
 		   self.cell(sum(w),0,'','T')
 
-def print_facture(fics,output_file):
+ 
+
+def print_facture(fics,output_file, marge=0):
+  try:
+
+    fic_contents_initial = "None yet"
 
     pdf = PDF()
-    pdf.set_auto_page_break(auto=False,margin=0)
+    pdf.set_auto_page_break(auto=False,margin=marge)
 
     fics.sort()
     print fics
@@ -122,11 +215,21 @@ def print_facture(fics,output_file):
 
     pdf.output(output_file,'F')
     return printer
+  except:
+    dump_exception("print_facture in "+output_file,fics)
+    return -1
 
 def print_one_facture(pdf,fic):
-    print "processing facture ",fic
+  try:
 
-    fic_contents = open(fic).readlines()
+    fic_contents_initial = "None yet"
+
+
+    print "processing facture ",fic
+    logger.info("processing facture "+fic)
+
+    fic_contents_initial = open(fic).readlines()
+    fic_contents = list(fic_contents_initial)
     valeurs = {}
     for f in fic_contents:
         if f[-2:]=='\r\n':
@@ -260,7 +363,7 @@ def print_one_facture(pdf,fic):
 			17                    ,17                ,17         ]
     x_vignette = 25
     y_vignette = 284
-    print len(valeurs['Z8,1']),valeurs['Z8,1']
+    #print len(valeurs['Z8,1']),valeurs['Z8,1']
     data_vignette =  [ [ valeurs['Z8,1'][0], valeurs['Z8,1'][1], valeurs['Z8,1'][2], valeurs['Z6,1'][7], 
 		       valeurs['Z8,1'][3], valeurs['Z8,1'][4], valeurs['Z8,1'][5]]
                       ] 
@@ -294,97 +397,256 @@ def print_one_facture(pdf,fic):
     pdf.set_font('Arial','',14)
     
     return printer
+  except:
+    dump_exception("processing general "+fic,fic_contents_initial)	  
+    return -1
 
 
 
-def print_general(fic,output_file):
-    print "processing general file ",fic
 
-    pdf = PDF()
-    pdf.set_auto_page_break(auto=False,margin=0)
-    pdf.set_font('Arial','',14)
-    pdf.add_page()
+
+def print_general(fic,output_file,debug_till=0):
+  try:
+
+    fic_contents_initial = "None yet"
+
+    print "processing general file ",fic,debug_till
+    logger.info("processing general file "+fic)
     
-    nb_ligne = 0
-    current_ligne = 0
-    esp_ligne = 0.2
-    esp_tab_ligne = 0.43 
 
-    fic_contents = open(fic).readlines()
+    fic_contents_initial = open(fic).readlines()
+    fic_contents = list(fic_contents_initial)
+    printed_at_each_page = []
+    OUT = False
 
-    while len(fic_contents):
+    print "nb de lignes dans le fichier :",len(fic_contents)
+    
+    while len(fic_contents) and not(OUT):
         f = fic_contents.pop(0)	     
         if f[-2:]=='\r\n':
             f = f[:-2]
         fields = f.split("!")
 	#print fields
         what  = fields.pop(0).strip()
-	#print what
+	page_number = 1
+
 	
 	if what=="Z0,1":
 	    (printer,copies,document,orientation) = fields	
+	    print "orientation:",orientation
+	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
+	      orientation="landscape"
+	      nb_max_ligne = 199.8
+	    else:
+	      orientation="portrait"
+	      nb_max_ligne = 288.8
+	    pdf = PDF(orientation)
+	    pdf.set_auto_page_break(auto=False,margin=0)
+	    pdf.set_font('Arial','',14)
+	    pdf.add_page()
+    
+	    nb_ligne = 0
+	    current_ligne = 0
+	    esp_ligne = 2
+	    hauteur_ligne = 2
+	    esp_tab_ligne = 0.43 
+	    data_tab = []
 	    continue
 
-        if what=="EJECT":
-           pdf.add_page()
-	   continue
-           box_open =0
-	   current_line = 0
+        if what=="EJECT" or (current_ligne>nb_max_ligne):
+	   print "EJECT esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+		(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
+	   nb_ligne = 0
+	   current_ligne = 0
+	   if len(data_tab):
+              pdf.oyak_table(x_tab,y_tab,w_tab,first_line_tab,data_tab,4)
+	   pdf.add_page()
+	   page_number = page_number+1
+	   for l in printed_at_each_page:
+		   [x,y,texte] = l
+		   if texte.find("__numero_page__")>-1:
+		     texte = string.replace(texte,"__numero_page__","%d" % page_number)
+		   pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
+	   data_tab = []
 
-	y = fields.pop(0).strip()
-	x = fields.pop(0).strip()
+	if len(fields):
+	  y = fields.pop(0).strip()
+	  x = fields.pop(0).strip()
 	if x=="." and y==".":
 	    current_ligne = current_ligne + esp_ligne
 	    x = 1
 	    y = current_ligne
-	    
+	else:
+	    y = float(y)
+	    x = float(x)   
+
 	#print fields
 	if what[:3]=='TXT':
             texte = fields.pop(0)
-	    x = int(x)*3+5
-	    y = int(y)*4
+	    x = int(x)
+	    y = int(y)
 	    #print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
+	    if texte.find("__sur_toute_page__")>-1:
+	      texte = string.replace(texte,"__sur_toute_page__","")
+	      printed_at_each_page.append([x,y,texte])
+	    if texte.find("__numero_page__")>-1:
+	      texte = string.replace(texte,"__numero_page__","%d" % page_number)
 	    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	    current_ligne = current_ligne + esp_ligne
+	    print "TXT",texte
 	    continue
 
+
 	if what=="TAB":
-	    print fields
-	    tailles = fields.pop(0).strip().split("=")
-	    print "tailles",tailles
+	    print "TAB",fields[0]
+	    dim = fields.pop(0).strip()
+	    if dim.find("=")>-1: 
+	       tailles = dim.split("=")
+	       tab_max_ligne = 100
+	    else:
+	      tab_max_ligne = int(dim)
+	      print "tab_max_ligne : ",tab_max_ligne 
+	      dim = fields.pop(0).strip()
+	      tailles = dim.split("=")
+	    w_tab = tailles
+	    for i in range(len(tailles)):
+              w_tab[i] = int( float(w_tab[i])*40)
+	    if debug_till:
+	      print "tailles",w_tab
+	    x_tab = int(x)
+	    y_tab = int(y)
+	    print "x,y_tab",x_tab,y_tab
+	    current_ligne = y_tab - hauteur_ligne - esp_ligne
+	    	    
+	    header_tab = ""
+	    first_line_tab = []
+	    if debug_till:
+	      print "nb colonnes :",len(tailles)
+	      print tailles
+	    nb_test = 0
 	    if len(fields):
 	        tailles = fields.pop(0).strip().split("=")
-	        print "tailles",tailles
-	    current_ligne = current_ligne + esp_ligne
-	    data = []
+	        if debug_till:
+		   print "tailles",tailles
+	    data_tab = []
 	    while len(fields):
+		current_ligne = current_ligne + esp_ligne + hauteur_ligne
+		nb_ligne = nb_ligne+1
+		#print "current_ligne(%s), nb_ligne(%s) " % (current_ligne,nb_ligne)
+                nb_test = nb_test + 1
+	        if nb_test < debug_till:
+                   debug = True
+		else:
+                   debug = False                   
 	        line = fields.pop(0)
 		cells = line.split("=")
-		#print cells
+		if debug:
+		  print "---- Ligne %d --------" % nb_test
+		  print cells
+		nb_cell = 0
+		data_ligne=[]
 		for cell in cells:
+                    if debug:
+		      print "cell(%d)=/%s/" % (nb_cell,cell)
+		    nb_cell = nb_cell + 1
 		    champs = cell.split(";")
-		    texte = champs.pop()
+		    texte = champs.pop(0)
 		    cadrage,bords,couleur,font = "xx","xx","xx","xx"
 		    if len(champs):
 		      format = champs.pop(0)
 		      if len(format):
 		         cadrage=format[0]
+			 texte = "%s__jj__%s" % (cadrage,texte)
 			 format=format[1:]
 		      if len(format):
 		         bords=format[0]
+			 if bords=="g":
+                           bords = "L"
+			 elif bords=="d":
+                           bords = "R"
+			 elif bords=="c":
+                           bords = "LR"
+			 if not bords==".":
+                           texte = "%s__bb__%s" % (bords,texte)
 			 format=format[1:]
 		      if len(format):
 		         couleur=format[0]
+			 if couleur=="g":
+                            texte = "__GRAS__%s__gras__" % texte_
+			 if couleur=="i":
+                            texte = "__SLANTED__%s__slanted__" % texte_
+			 if couleur=="G":
+                            texte = "__GRAY__%s__GRAY__" % texte_
+			 if couleur=="r":
+                            texte = "__RED__%s__red__" % texte_
 			 format=format[1:]
 		      if len(format):
 		         font=format[0]
+			 if not font==".":
+  			   texte = "__%s__%s" % (font,texte)
 			 format=format[1:]
-		    print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
+		    data_ligne.append(texte)
+		    if debug:
+		      print "texte=/%s/,cadrage=%s,bords=%s,couleur=%s,font=%s" % (texte,cadrage,bords,couleur,font)
+		if debug:
+                  print data_ligne
+		if len(first_line_tab)==0:
+                  first_line_tab=data_ligne
+		  centering = []
+		  title = []
+		  for c in range(len(first_line_tab)):
+		    r = first_line_tab[c]	  
+		    if r.find("__bb__")>-1: 
+		      (cadre,r) = r.split("__bb__")
+		    # traitement d'une justification particuliere d'une colonne
+		    if r.find("__jj__")>-1: 
+		      (just,r) = r.split("__jj__")
+		    else:
+		      just = "C"
+		    centering.append(just)
+		    title.append(r) #"%s/%s"%(r,just))
+		  header_tab = [ centering, title]
+		  print "header:", header_tab
+		else:
+                  data_tab.append(data_ligne)
+		if len(fields)==0 or current_ligne>nb_max_ligne or nb_ligne>tab_max_ligne:
+		  print "EJECT !!! ",len(fields),\
+			"esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+			(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
+                  nb_ligne = 0
+		  current_ligne = y_tab
+		  current_ligne = current_ligne + (esp_ligne+hauteur_ligne)
+		  if len(data_tab):
+                    pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+ 		    data_tab = []
+		  if (len(fields)):
+  		    pdf.add_page()
+		    page_number = page_number+1
+		    for l in printed_at_each_page:
+		      [x,y,texte] = l
+		      if texte.find("__numero_page__")>-1:
+		        texte = string.replace(texte,"__numero_page__","%d" % page_number)
+		      pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
+		    pdf.set_xy(x_tab,y_tab)
+	      
+
     pdf.output(output_file,'F')
-	    	
+    return printer
+  except:
+    dump_exception("processing general "+fic,fic_contents_initial)	  
+    return -1
+        
 if __name__ == "__main__":
-    print_facture([os.path.abspath("tests/fac/FACT1plus")],"tuto5.pdf")
-    #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
-    #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    if sys.platform.startswith("linux"):
+    ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
+    #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
+    #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
+    #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
+    #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
+    #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
+    if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
+    else:
+      print "erreur"
