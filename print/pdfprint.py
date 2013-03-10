@@ -336,6 +336,8 @@ def print_one_facture(pdf,fic):
 
 
 def print_general(fic,output_file,debug_till=0):
+  try:
+
     print "processing general file ",fic,debug_till
 
 
@@ -343,7 +345,7 @@ def print_general(fic,output_file,debug_till=0):
     printed_at_each_page = []
     OUT = False
 
-    print len(fic_contents)
+    print "nb de lignes dans le fichier :",len(fic_contents)
     
     while len(fic_contents) and not(OUT):
         f = fic_contents.pop(0)	     
@@ -352,7 +354,6 @@ def print_general(fic,output_file,debug_till=0):
         fields = f.split("!")
 	#print fields
         what  = fields.pop(0).strip()
-	print what
 	page_number = 1
 
 	
@@ -361,10 +362,10 @@ def print_general(fic,output_file,debug_till=0):
 	    print "orientation:",orientation
 	    if (orientation[0:4] in ["PAYS","pays", "land","LAND"]):
 	      orientation="landscape"
-	      nb_max_ligne = 30
+	      nb_max_ligne = 199.8
 	    else:
 	      orientation="portrait"
-	      nb_max_ligne = 60
+	      nb_max_ligne = 288.8
 	    pdf = PDF(orientation)
 	    pdf.set_auto_page_break(auto=False,margin=0)
 	    pdf.set_font('Arial','',14)
@@ -372,18 +373,20 @@ def print_general(fic,output_file,debug_till=0):
     
 	    nb_ligne = 0
 	    current_ligne = 0
-	    esp_ligne = 0.2
+	    esp_ligne = 2
+	    hauteur_ligne = 2
 	    esp_tab_ligne = 0.43 
 	    data_tab = []
 	    continue
 
         if what=="EJECT" or (current_ligne>nb_max_ligne):
+	   print "EJECT esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+		(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
 	   nb_ligne = 0
 	   current_ligne = 0
 	   if len(data_tab):
               pdf.oyak_table(x_tab,y_tab,w_tab,first_line_tab,data_tab,4)
-           print "EJECT§!!!!!!!!!!!"
-           pdf.add_page()
+	   pdf.add_page()
 	   page_number = page_number+1
 	   for l in printed_at_each_page:
 		   [x,y,texte] = l
@@ -391,20 +394,23 @@ def print_general(fic,output_file,debug_till=0):
 		     texte = string.replace(texte,"__numero_page__","%d" % page_number)
 		   pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	   data_tab = []
-	   continue
 
-	y = fields.pop(0).strip()
-	x = fields.pop(0).strip()
+	if len(fields):
+	  y = fields.pop(0).strip()
+	  x = fields.pop(0).strip()
 	if x=="." and y==".":
 	    current_ligne = current_ligne + esp_ligne
 	    x = 1
 	    y = current_ligne
-	    
+	else:
+	    y = float(y)
+	    x = float(x)   
+
 	#print fields
 	if what[:3]=='TXT':
             texte = fields.pop(0)
-	    x = int(x)*3+5
-	    y = int(y)*4   
+	    x = int(x)
+	    y = int(y)
 	    #print "x=/%s/,y=/%s/,texte=/%s/"%(x,y,texte)
 	    if texte.find("__sur_toute_page__")>-1:
 	      texte = string.replace(texte,"__sur_toute_page__","")
@@ -413,18 +419,19 @@ def print_general(fic,output_file,debug_till=0):
 	      texte = string.replace(texte,"__numero_page__","%d" % page_number)
 	    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
 	    current_ligne = current_ligne + esp_ligne
-	    
+	    print "TXT",texte
 	    continue
 
 
 	if what=="TAB":
-	    print fields[0]
+	    print "TAB",fields[0]
 	    dim = fields.pop(0).strip()
 	    if dim.find("=")>-1: 
 	       tailles = dim.split("=")
+	       tab_max_ligne = 100
 	    else:
-	      nb_max_ligne = int(dim)
-	      print "nb_max_ligne : ",nb_max_ligne 
+	      tab_max_ligne = int(dim)
+	      print "tab_max_ligne : ",tab_max_ligne 
 	      dim = fields.pop(0).strip()
 	      tailles = dim.split("=")
 	    w_tab = tailles
@@ -434,6 +441,9 @@ def print_general(fic,output_file,debug_till=0):
 	      print "tailles",w_tab
 	    x_tab = int(x)
 	    y_tab = int(y)
+	    print "x,y_tab",x_tab,y_tab
+	    current_ligne = y_tab - hauteur_ligne - esp_ligne
+	    	    
 	    header_tab = ""
 	    first_line_tab = []
 	    if debug_till:
@@ -444,9 +454,11 @@ def print_general(fic,output_file,debug_till=0):
 	        tailles = fields.pop(0).strip().split("=")
 	        if debug_till:
 		   print "tailles",tailles
-	    current_ligne = current_ligne + esp_ligne
 	    data_tab = []
 	    while len(fields):
+		current_ligne = current_ligne + esp_ligne + hauteur_ligne
+		nb_ligne = nb_ligne+1
+		#print "current_ligne(%s), nb_ligne(%s) " % (current_ligne,nb_ligne)
                 nb_test = nb_test + 1
 	        if nb_test < debug_till:
                    debug = True
@@ -523,35 +535,45 @@ def print_general(fic,output_file,debug_till=0):
 		  print "header:", header_tab
 		else:
                   data_tab.append(data_ligne)
-		current_ligne = current_ligne +1
-		if current_ligne>nb_max_ligne:
+		if len(fields)==0 or current_ligne>nb_max_ligne or nb_ligne>tab_max_ligne:
+		  print "EJECT !!! ",len(fields),\
+			"esp_ligne=%s current_ligne(%s)>nb_max_ligne(%s) or nb_ligne(%s)>tab_max_ligne(%s)" %\
+			(esp_ligne,current_ligne,nb_max_ligne,nb_ligne,tab_max_ligne)
                   nb_ligne = 0
-		  current_ligne = 0
+		  current_ligne = y_tab
+		  current_ligne = current_ligne + (esp_ligne+hauteur_ligne)
 		  if len(data_tab):
                     pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
-		  if debug:
-		     print "EJECT§!!!!!!!!!!!"
-		  pdf.add_page()
-		  page_number = page_number+1
-		  data_tab = []
-		  for l in printed_at_each_page:
-		    [x,y,texte] = l
-		    if texte.find("__numero_page__")>-1:
-		      texte = string.replace(texte,"__numero_page__","%d" % page_number)
-		    pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
-	    if len(data_tab):
-              pdf.oyak_table(x_tab,y_tab,w_tab,header_tab,data_tab,4)
+ 		    data_tab = []
+		  if (len(fields)):
+  		    pdf.add_page()
+		    page_number = page_number+1
+		    for l in printed_at_each_page:
+		      [x,y,texte] = l
+		      if texte.find("__numero_page__")>-1:
+		        texte = string.replace(texte,"__numero_page__","%d" % page_number)
+		      pdf.oyak_table(x,y,[10],[],[[texte]],4,countour=0)
+		    pdf.set_xy(x_tab,y_tab)
+	      
 
     pdf.output(output_file,'F')
     return printer
-	    	
+  except:
+    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+    traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+			      file=sys.stdout)
+    return -1
+        
 if __name__ == "__main__":
-    #print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
-    #print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
-    #print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
-    print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
-    #print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",4)
-    #print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
-    #print_catalog("../print/tests/stock/example","tuto5.pdf")
-    if sys.platform.startswith("linux"):
+    #ret=print_facture("TESTS/fac/FACT1plus","tuto5.pdf",marge=1)
+    #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
+    #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
+    #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
+    #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
+    ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
+    #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
+    #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
+    if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
+    else:
+      print "erreur"
