@@ -232,11 +232,16 @@ def print_one_facture(pdf,fic):
     fic_contents_initial = open(fic).readlines()
     fic_contents = list(fic_contents_initial)
     valeurs = {}
+    clefsZ5 = []
+
     for f in fic_contents:
         if f[-2:]=='\r\n':
             f = f[:-2]
         fields = f.split("!")
         id  = fields[0]
+        # on chope toutes les clefs Z5 possibles
+        if id[0:2]=="Z5" and not(id in clefsZ5):
+            clefsZ5.append(id)
         if not(id in valeurs.keys()):
             if len(fields[1:])==1:
                 valeurs[id] = fields[1]
@@ -304,17 +309,9 @@ def print_one_facture(pdf,fic):
     data_facture = []
     taille_designation = int(w_fac[1]/1.7)
 
-    # on chope toute les clefs Z5 meme Z5,KL
-    i=1
-    clefsZ5 = []
-    while 'Z5,%d'%i in clefs:
-        clefsZ5.append('Z5,%d'%i)
-        i=i+1
-    for cZ5 in clefs:
-        if cZ5[0:2]=="Z5" and not(cZ5 in clefsZ5):
-            clefsZ5.append(cZ5)
 
-    for cZ5 in clefsZ5:
+    while len(clefsZ5):
+        cZ5=clefsZ5.pop(0)
         v = valeurs[cZ5]
 	designation = v[1]
 	designation_suite = False
@@ -670,7 +667,7 @@ def print_general(fic,output_file,debug_till=0):
     return -1
         
 if __name__ == "__main__":
-    ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac_masse/FACT1b"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
