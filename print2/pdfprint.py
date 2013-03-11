@@ -9,7 +9,7 @@ import copy
 import logging
 import logging.handlers
 
-
+debug_exception =  True
 #import bookland
 
 # import barcode
@@ -57,8 +57,9 @@ def dump_exception(where,fic_contents_initial):
 
 
     exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-    #traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
-    # 			      file=sys.stdout)
+    if debug_exception:
+      traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+     			      file=sys.stdout)
     print '!!!! Erreur in %s check error log file!!!'
     logger.info('!!!! Erreur in %s check error log file!!!' % where)
     loggerror.error('Erreur in %s' % where, exc_info=True)
@@ -302,9 +303,19 @@ def print_one_facture(pdf,fic):
     y_fac = 95
     data_facture = []
     taille_designation = int(w_fac[1]/1.7)
+
+    # on chope toute les clefs Z5 meme Z5,KL
     i=1
+    clefsZ5 = []
     while 'Z5,%d'%i in clefs:
-        v = valeurs['Z5,%d'%i]
+        clefsZ5.append('Z5,%d'%i)
+        i=i+1
+    for cZ5 in clefs:
+        if cZ5[0:2]=="Z5" and not(cZ5 in clefsZ5):
+            clefsZ5.append(cZ5)
+
+    for cZ5 in clefsZ5:
+        v = valeurs[cZ5]
 	designation = v[1]
 	designation_suite = False
 	if len(designation)>taille_designation:
@@ -659,7 +670,7 @@ def print_general(fic,output_file,debug_till=0):
     return -1
         
 if __name__ == "__main__":
-    ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
