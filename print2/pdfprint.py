@@ -9,7 +9,7 @@ import copy
 import logging
 import logging.handlers
 
-debug_exception =  True
+
 #import bookland
 
 # import barcode
@@ -57,9 +57,8 @@ def dump_exception(where,fic_contents_initial):
 
 
     exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-    if debug_exception:
-      traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
-     			      file=sys.stdout)
+    #traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+    # 			      file=sys.stdout)
     print '!!!! Erreur in %s check error log file!!!'
     logger.info('!!!! Erreur in %s check error log file!!!' % where)
     loggerror.error('Erreur in %s' % where, exc_info=True)
@@ -232,16 +231,11 @@ def print_one_facture(pdf,fic):
     fic_contents_initial = open(fic).readlines()
     fic_contents = list(fic_contents_initial)
     valeurs = {}
-    clefsZ5 = []
-
     for f in fic_contents:
         if f[-2:]=='\r\n':
             f = f[:-2]
         fields = f.split("!")
         id  = fields[0]
-        # on chope toutes les clefs Z5 possibles
-        if id[0:2]=="Z5" and not(id in clefsZ5):
-            clefsZ5.append(id)
         if not(id in valeurs.keys()):
             if len(fields[1:])==1:
                 valeurs[id] = fields[1]
@@ -308,11 +302,9 @@ def print_one_facture(pdf,fic):
     y_fac = 95
     data_facture = []
     taille_designation = int(w_fac[1]/1.7)
-
-
-    while len(clefsZ5):
-        cZ5=clefsZ5.pop(0)
-        v = valeurs[cZ5]
+    i=1
+    while 'Z5,%d'%i in clefs:
+        v = valeurs['Z5,%d'%i]
 	designation = v[1]
 	designation_suite = False
 	if len(designation)>taille_designation:
@@ -667,7 +659,8 @@ def print_general(fic,output_file,debug_till=0):
     return -1
         
 if __name__ == "__main__":
-    ret=print_facture(["../print/tests/fac_masse/FACT1b"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
