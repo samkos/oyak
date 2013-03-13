@@ -18,6 +18,8 @@ import logging.handlers
 # EAN = barcode.get_barcode_class('ean13')
 
 
+dump_exception_at_screen = True
+
 
 if sys.platform.startswith("linux"):
     TMPDIR="/tmp"
@@ -57,8 +59,9 @@ def dump_exception(where,fic_contents_initial):
 
 
     exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
-    #traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
-    # 			      file=sys.stdout)
+    if dump_exception_at_screen:
+      traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+                                file=sys.stdout)
     print '!!!! Erreur in %s check error log file!!!'
     logger.info('!!!! Erreur in %s check error log file!!!' % where)
     loggerror.error('Erreur in %s' % where, exc_info=True)
@@ -657,10 +660,105 @@ def print_general(fic,output_file,debug_till=0):
   except:
     dump_exception("processing general "+fic,fic_contents_initial)	  
     return -1
-        
+
+
+
+def print_catalog(fic,output_file):
+
+  try:
+    print "processing catalog ",fic
+    logger.info("processing catalog "+fic)
+
+    fic_contents_initial = ["NOTHING YET\n"]
+    fic_contents_initial = open(fic).readlines()
+    fic_contents = list(fic_contents_initial)
+
+    codebarlist = list()
+    version = "%s %s" % (bookland.MYVERSION, bookland.DATE)
+    debug = False
+
+    for l in fic_contents:
+	    code,lots = l[:-1].split("]")
+	    codebarlist.append((code,0.0,"xxxxxxx"))
+	    if debug:
+		    print code,lots
+    #arrivage,vente_cumulee,stock_fin_de_journee,es,s = lots.split("\\")
+    #if debug:
+    #    print code,arrivage,vente_cumulee,stock_fin_de_journee
+
+    # generating all needed codebar
+
+    n=1
+    for isbn,price,comment in codebarlist:
+        outfile="codes/%s.eps" % isbn
+	if not(os.path.exists(outfile)):
+           n=n+1
+        #print "depart : "+str(isbn)
+	   print "generating : ",isbn
+	   b = bookland.ean13print(isbn,price)
+        #b = bookland.upc5print(isbn,price)
+	   b.ps.out(outfile)
+        #print "\\foo{%s}{%s \\\\bookland.py %s}" % (outfile,comment,version)
+
+
+
+    header_catalog = [ ["C","L","C"], 
+		       ["Article","Designation","Zone"]]
+
+    w_catalog = [30,45,25]
+    x_catalog = 5
+    y_catalog = 5
+    data_facture = []
+    i=1
+    for isbn,price,comment in codebarlist:
+	data_facture = data_facture + [("%s" % isbn,"%s" % comment,"%s" % price)]
+        i=i+1
+    #print data_facture
+    nb_ligne_fac_page =  20
+
+
+    # (printer,n,title) = valeurs['Z0,1']
+    # facture = valeurs["Z1,1"]
+    # data_title =  [ [" "],["_b_%s" % valeurs["Z4,1"]]]
+    # header_title =  [ ["C"],["_h_"+title]]
+    # w_title  =  [160]
+    # x_title = 40
+    # y_title = 75
+
+
+
+    pdf = PDF()
+    pdf.set_auto_page_break(auto=False,margin=0)
+
+    #Data loading
+
+
+
+
+    while len(data_facture):
+        data_page = []
+        i=0
+        while len(data_facture) and i<nb_ligne_fac_page:
+            x = data_facture.pop(0)
+            data_page.append(x)
+            i=i+1
+        #print data_page,len(data_facture)
+        pdf.add_page()
+        pdf.oyak_table(x_catalog,y_catalog,w_catalog,header_catalog,data_page,4)
+        #pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
+
+    pdf.set_font('Arial','',14)
+    pdf.output(output_file,'F')
+    
+    return 
+  except:
+    dump_exception("processing catalog "+fic,fic_contents_initial)
+    return -1
+          
+
 if __name__ == "__main__":
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
-    ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
@@ -668,8 +766,8 @@ if __name__ == "__main__":
     #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
     #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
     #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
-    #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
+    ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
     else:
-      print "erreur"
+      print "!!!!!!!!! erreur"
