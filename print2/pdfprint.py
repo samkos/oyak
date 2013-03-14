@@ -705,11 +705,17 @@ def print_catalog(fic,output_file):
     for isbn,price,comment in codebarlist:
         barcode = code128.Code128(isbn,barWidth = 0.015 * inch, barHeight = 1. * inch, fontSize = 30, humanReadable = True)
         barcode.drawOn(c, x, y)
+        x1 = x + 6.4 * mm
+        y = y - 8 * mm
+        c.drawString(x1, y, "comment_123456789")
+        y = y - 5 * mm
+        c.drawString(x1, y, "comment_123456789")
+
         x = x
-        y = y - 1.8 * inch
+        y = y - 1.3 * inch
 
         if int(y) <= 0:
-            x = x + 140 * mm
+            x = x + 70 * mm
             y = 285 * mm - inch
             if int(x) > int(300*mm):
                 x = 1*mm
