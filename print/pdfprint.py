@@ -1,1 +1,0 @@
-/home/samy/GIT/OYAK/oyak/pdfprint.py

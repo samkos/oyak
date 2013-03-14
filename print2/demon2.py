@@ -179,9 +179,9 @@ def init_env():
        if debug:
            print "easyphp d'installation : ",easyphp
 
-       exe_view="\""+easyphp+"/www/phpmyfactures/print/view.bat \""    
-       exe_print="\""+easyphp+"/www/phpmyfactures/print/print.bat \""
-       exe_printTo="\""+easyphp+"/www/phpmyfactures/print/printTo.bat \""
+       exe_view="\""+easyphp+"/www/phpmyfactures/print2/view.bat \""    
+       exe_print="\""+easyphp+"/www/phpmyfactures/print2/print.bat \""
+       exe_printTo="\""+easyphp+"/www/phpmyfactures/print2/printTo.bat \""
        exe_facture="\""+easyphp+"/www/phpmyfactures/print/factures/traite.bat\" ";
        exe_etiq="\""+easyphp+"/www/phpmyfactures/barcode/traite.bat\" ";
        exe_imp="\""+easyphp+"/www/phpmyfactures/print/impression/traite.bat\" ";
@@ -228,7 +228,9 @@ def probeFacture():
             dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
             if not os.path.exists(dir_printer):
                 os.makedirs(dir_printer)
-            shutil.copy("all.pdf","%s/facture.pdf" % dir_printer) 
+            now=datetime.datetime.now()
+            timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
+            shutil.copy("all.pdf","%s/facture_%s.pdf" % (dir_printer,timestamp)) 
         shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
         os.unlink("all.pdf")
         for fic in files:
@@ -282,7 +284,9 @@ def probeImp():
                 dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
                 if not os.path.exists(dir_printer):
                     os.makedirs(dir_printer)
-                shutil.copy("all.pdf","%s/imp.pdf" % dir_printer) 
+                now=datetime.datetime.now()
+                timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
+                shutil.copy("all.pdf","%s/imp_%s.pdf" % (dir_printer,timestamp)) 
             shutil.copy("all.pdf","%s/Oyak/imp.pdf" % TMPDIR)
             os.unlink("all.pdf")
             if not(fichier_imp) or not(fic==fichier_imp):
@@ -349,6 +353,7 @@ def probePrint(dir_print,printer="default"):
               os.remove(filename)
               if msg:
                     print "%s"%timestamp+":"+ "Effacement de %s "%filename
+
 
     return
 
