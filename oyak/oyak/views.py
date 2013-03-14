@@ -48,6 +48,7 @@ conn.row_factory = sqlite3.Row                # acces facile aux colonnes
 # everything fine... start list
 try:
     HOME = os.environ['HOME']
+    print "OYAK WEBSITE OPERATING ... reinitializing database..."
 except:
     print "[VIEW] ERROR Problem occured when loading vishnu module"
     exc_type, exc_value, exc_traceback = sys.exc_info()
