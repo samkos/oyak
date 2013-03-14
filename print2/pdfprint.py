@@ -10,6 +10,14 @@ import logging
 import logging.handlers
 
 
+try:
+    from reportlab.graphics.barcode import code39, code128
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import mm,inch
+    from reportlab.pdfgen import canvas
+except:
+    print "could not import report lab --> no barcode catalog supported"
+
 #import bookland
 
 # import barcode
@@ -674,7 +682,6 @@ def print_catalog(fic,output_file):
     fic_contents = list(fic_contents_initial)
 
     codebarlist = list()
-    version = "%s %s" % (bookland.MYVERSION, bookland.DATE)
     debug = False
 
     for l in fic_contents:
@@ -686,70 +693,29 @@ def print_catalog(fic,output_file):
     #if debug:
     #    print code,arrivage,vente_cumulee,stock_fin_de_journee
 
-    # generating all needed codebar
+    # generating codebar page
+
+    c = canvas.Canvas(output_file, pagesize=A4)
 
     n=1
+    x = 1 * mm
+    y = 285 * mm - inch
+    x1 = 6.4 * mm
+
     for isbn,price,comment in codebarlist:
-        outfile="codes/%s.eps" % isbn
-	if not(os.path.exists(outfile)):
-           n=n+1
-        #print "depart : "+str(isbn)
-	   print "generating : ",isbn
-	   b = bookland.ean13print(isbn,price)
-        #b = bookland.upc5print(isbn,price)
-	   b.ps.out(outfile)
-        #print "\\foo{%s}{%s \\\\bookland.py %s}" % (outfile,comment,version)
+        barcode = code128.Code128(isbn,barWidth = 0.015 * inch, barHeight = 1. * inch, fontSize = 30, humanReadable = True)
+        barcode.drawOn(c, x, y)
+        x = x
+        y = y - 1.8 * inch
 
-
-
-    header_catalog = [ ["C","L","C"], 
-		       ["Article","Designation","Zone"]]
-
-    w_catalog = [30,45,25]
-    x_catalog = 5
-    y_catalog = 5
-    data_facture = []
-    i=1
-    for isbn,price,comment in codebarlist:
-	data_facture = data_facture + [("%s" % isbn,"%s" % comment,"%s" % price)]
-        i=i+1
-    #print data_facture
-    nb_ligne_fac_page =  20
-
-
-    # (printer,n,title) = valeurs['Z0,1']
-    # facture = valeurs["Z1,1"]
-    # data_title =  [ [" "],["_b_%s" % valeurs["Z4,1"]]]
-    # header_title =  [ ["C"],["_h_"+title]]
-    # w_title  =  [160]
-    # x_title = 40
-    # y_title = 75
-
-
-
-    pdf = PDF()
-    pdf.set_auto_page_break(auto=False,margin=0)
-
-    #Data loading
-
-
-
-
-    while len(data_facture):
-        data_page = []
-        i=0
-        while len(data_facture) and i<nb_ligne_fac_page:
-            x = data_facture.pop(0)
-            data_page.append(x)
-            i=i+1
-        #print data_page,len(data_facture)
-        pdf.add_page()
-        pdf.oyak_table(x_catalog,y_catalog,w_catalog,header_catalog,data_page,4)
-        #pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
-
-    pdf.set_font('Arial','',14)
-    pdf.output(output_file,'F')
-    
+        if int(y) <= 0:
+            x = x + 140 * mm
+            y = 285 * mm - inch
+            if int(x) > int(300*mm):
+                x = 1*mm
+                c.showPage()
+                c.save()        
+        
     return 
   except:
     dump_exception("processing catalog "+fic,fic_contents_initial)
