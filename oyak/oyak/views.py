@@ -30,6 +30,8 @@ import config, sys, traceback
 
 #from pdfprint import *
 
+
+
 show_colonnes = { "fournisseurs" : [ "id,clef,societe,ville", "clef","societe"],
                   "clients"      : [ "id,clef,societe,ville", "clef","societe"],
                   "produits"     : [ "id,titre,stock,barcode,prix_vente_ht,prix_plancher_ht,"+\
@@ -49,6 +51,12 @@ conn.row_factory = sqlite3.Row                # acces facile aux colonnes
 try:
     HOME = os.environ['HOME']
     print "OYAK WEBSITE OPERATING ... reinitializing database..."
+    print "initializing fournisseurs..."
+    c = conn.cursor()
+    if False:
+        for table in ["clients","produits","fournisseurs","vendeurs"]:
+            c.execute("DELETE * FROM pcfact_%s " % (table))
+
 except:
     print "[VIEW] ERROR Problem occured when loading vishnu module"
     exc_type, exc_value, exc_traceback = sys.exc_info()
