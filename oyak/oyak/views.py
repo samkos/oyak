@@ -28,7 +28,7 @@ from django.http import QueryDict
 
 import config, sys, traceback
 
-from pdfprint import *
+#from pdfprint import *
 
 show_colonnes = { "fournisseurs" : [ "id,clef,societe,ville", "clef","societe"],
                   "clients"      : [ "id,clef,societe,ville", "clef","societe"],
