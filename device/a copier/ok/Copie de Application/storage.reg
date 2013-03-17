@@ -1,0 +1,3 @@
+[HKEY_LOCAL_MACHINE\software\symbol\StorageMemory]
+    "Pages"=dword:0
+    "Percent"=dword:23			; 35 percent of RAM is for Storage

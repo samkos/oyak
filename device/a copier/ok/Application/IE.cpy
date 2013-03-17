@@ -1,0 +1,9 @@
+\application\IE\mlang.DLL >	   	\windows\mlang.DLL
+\application\IE\shlwapi.DLL >		\windows\shlwapi.DLL
+\application\IE\IECEExt.dll  >		\windows\IECEExt.dll
+\application\IE\msls31.DLL  >	   	\windows\msls31.DLL
+\application\IE\msxml3.DLL   >   	\windows\msxml3.DLL
+\application\IE\mshtml.DLL >	   	\windows\mshtml.DLL
+\application\IE\shdocvw.DLL >		\windows\shdocvw.DLL
+\application\IE\shdoclc.DLL >		\windows\shdoclc.DLL
+\application\IE\urlmon.DLL  >	   	\windows\urlmon.DLL

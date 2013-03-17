@@ -1,0 +1,8 @@
+REGEDIT4
+
+[HKEY_CURRENT_USER\Software\Symbol\Security]
+"PlatKey"=hex:\
+      01,02,00,00,01,68,00,00,00,a4,00,00,83,34,e3,16,52,16,76,c8,a9,a5,6a,57,4a,\
+      85,61,8d,63,3b,4f,a5,06,ff,68,ab,d8,b0,d9,06,1b,3b,40,ed,3d,94,94,8e,fa,97,\
+      d2,dc,c7,89,89,b9,8a,69,b0,7d,40,37,04,50,2b,9c,bf,e8,b5,3c,67,08,78,3a,c2,\
+      26

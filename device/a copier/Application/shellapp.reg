@@ -1,0 +1,135 @@
+
+; --------------------------------------------------------------------
+; FILENAME:	ShellAppl_9000.Reg
+;
+; Copyright(c) 2002 Symbol Technologies Inc. All rights reserved.
+;
+; DESCRIPTION:	Registry setting used by SymShell application
+;
+; NOTES
+; 
+; --------------------------------------------------------------------
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Settings]
+;
+; Controls the visibility of hidden windows in the Taskmanger.
+;
+"ShowHidden"=dword:00000000		; Not Visible (default)
+
+;
+; Controls the visibility of the taskbar.
+;
+"HideTaskBar"=dword:00000002		; Always show taskbar (default)
+					; (1) Auto hide taskbar (Note: Not supported on PDT7200)
+					; (2)Always hide taskbar
+
+;
+; Causes the check for touch calibration to be bypassed.
+;
+"NoTouch"=dword:00000000			; Check (default)
+
+;
+; Replaces the text on the start button with the text in 's'.
+;
+"StartButtonText"="Start"
+
+;
+; Controls displaying the "Start" button
+;
+;"ShowStartButton"=dword:00000000	; Don't display start button
+"ShowStartButton"=dword:00000001	; Display start button (default)
+;
+; Sets the width of the start button in pixels.
+; default = 50,b min = 10, max = 150
+;
+"StartWidth"=dword:00000050
+
+;
+; Controls displaying the system tray icon tips
+;
+;"ShowTips"=dword:00000000			; Don't display tips
+
+; Setup the default Storage and Program Memory allocation
+"SystemStorePages"=dword:0E00		; 3584 pages * 4K/page = 14 MB Storage, ~ 14 MB program
+"MenuFeaturesOff"=dword:0		; 1 to turn off start menu
+
+;;; Wallpaper setting
+[HKEY_CURRENT_USER\ControlPanel\Desktop]
+; control which wallpaper to use
+"wallpaper"="\\windows\\Symbol.bmp"
+; 0 = no tile, 1 = tile
+"tile"=dword:0
+
+;;; Program Menu settings
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\TaskMan]
+;
+; Replaces the text in the start menu for the task manager entry.
+; If the TaskMan key exists, but the Description value does not,
+; the "Taskman" menu item is not shown.
+;
+"Description"="Task Manager"
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\PCLink]
+;
+; Replaces the text in the start menu for the Repllog entry.
+; If the PCLink key exists, but the Description value does not,
+; the "PCLink" menu item is not shown.
+;
+"Description"="PC Link"
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\CtrlPanel]
+;
+; Replaces the text in the start menu for the Control Panel entry.
+; If the CtrlPanel key exists, but the Description value does not,
+; the "Settings" menu item is not shown.
+;
+"Name"="CtlPanel.exe"
+"Description"="Symbol Settings"
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\Reboot]
+;
+; Replaces the text in the start menu for the Reboot entry.
+; If the Reboot key exists, but the Description value does not,
+; the "Reboot" menu item is not shown.
+;
+"Description"="Warm Boot"
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\Suspend]
+;
+; Replaces the text in the start menu for the Suspend entry.
+; If the Suspend key exists, but the Description value does not,
+; the "Suspend" menu item is not shown.
+;
+"Description"="Suspend"
+
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\Prog1]
+;
+; Used to add additional programs to the start menu. Same functionality
+; as the program launcher values.
+;
+"Name"="\\Windows\\Inkwiz.exe"
+"Description"="File Browser"
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\Prog2]
+;
+; Used to add additional programs to the start menu. Same functionality
+; as the program launcher values.
+;
+"Name"="\\Windows\\Cmd.exe"
+"Description"="Console"
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\Prog3]
+;
+; Used to add additional programs to the start menu. Same functionality
+; as the program launcher values.
+;
+"Name"="\\Windows\\SipSelect.exe"
+"Description"="Soft KeyBd"
+
+[HKEY_CURRENT_USER\Software\Symbol\SymShell\Programs\Prog4]
+;
+; Used to add additional programs to the start menu. Same functionality
+; as the program launcher values.
+;
+"Name"="\\Windows\\ABClient.exe"
+"Description"="AirBeam Client"
