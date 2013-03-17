@@ -728,7 +728,9 @@ class getData:
             else:
                 if debugMessages:
                     print "lecture from web failed..."
-
+                    if sys.platform.startswith("linux"):
+                        print "do something for linux!!!!!!!!"
+                        
         # sauvegarde sur la device des données
             self.tmpFile.close()
             self.fichierOld=fichierOld_Template%what
@@ -818,6 +820,7 @@ class getData:
         
         try :
             self.origFileh = open(self.fichierBackup)
+            print "opening..." + self.fichierBackup
             return 0
         except :
             return -1     
