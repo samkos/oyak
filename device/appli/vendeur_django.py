@@ -700,7 +700,9 @@ class getData:
         # creation des nom de fichiers
         self.fichierBackup=fichierBackup_Template%what
         self.fichierTemp=fichierTemp_Template%what
-
+        if debugMessages:
+            print "Backup file taken from ",self.fichierBackup
+        
         # ouverture du fichier temporaire
             
         # lecture sur fichier backup d'abord
@@ -723,6 +725,9 @@ class getData:
             if self.readFromUrl()==0:
                 self.readSource(lengthArticle)
                 self.closeSource()
+            else:
+                if debugMessages:
+                    print "lecture from web failed..."
 
         # sauvegarde sur la device des données
             self.tmpFile.close()
