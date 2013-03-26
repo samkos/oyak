@@ -23,10 +23,10 @@ for d in [dir_Root]:
     os.mkdir(d)
 
 # set log file
-logger = logging.getLogger('oyak.log')
+logger = logging.getLogger('oyak_device.log')
 logger.propagate = 0
 logger.setLevel(logging.INFO)
-log_file_name = "%s/" % dir_Root+"oyak.log"
+log_file_name = "%s/" % dir_Root+"oyak_device.log"
 open(log_file_name, "a").close()
 handler = logging.handlers.RotatingFileHandler(
      log_file_name, maxBytes = 20000000,  backupCount = 5)
@@ -34,10 +34,10 @@ formatter = logging.Formatter("%(asctime)s %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-loggerror = logging.getLogger('oyak_err.log')
+loggerror = logging.getLogger('oyak_err_device.log')
 loggerror.propagate = 0
 loggerror.setLevel(logging.DEBUG)
-log_file_name = "%s/" % dir_Root+"oyak_err.log"
+log_file_name = "%s/" % dir_Root+"oyak_err_device.log"
 open(log_file_name, "a").close()
 handler = logging.handlers.RotatingFileHandler(
      log_file_name, maxBytes = 20000000,  backupCount = 5)
@@ -695,7 +695,8 @@ class getData:
         # initialisation
         self.what=what
         
-        lengthArticle=nbChamps[what]
+        #SK lengthArticle=nbChamps[what]
+        lengthArticle=2
 
         # creation des nom de fichiers
         self.fichierBackup=fichierBackup_Template%what
@@ -706,6 +707,12 @@ class getData:
         # ouverture du fichier temporaire
             
         # lecture sur fichier backup d'abord
+        if sys.platform.startswith("linux"):
+            print "do something for linux!!!!!!!!"
+            copying  = "cat '../../data/%s.txt' | awk '{clef=$1; $1=\"\"; printf(\"%%s!%%s=\", clef,$0);}' > '%s'" % \
+                (what,self.fichierBackup)
+            print copying
+            os.system(copying)
         if not(forceRecharge) and self.readFromBackup()==0:
             if debugMessages:
                 print "lecture from Backup pour %s"%what
@@ -728,9 +735,6 @@ class getData:
             else:
                 if debugMessages:
                     print "lecture from web failed..."
-                    if sys.platform.startswith("linux"):
-                        print "do something for linux!!!!!!!!"
-                        
         # sauvegarde sur la device des données
             self.tmpFile.close()
             self.fichierOld=fichierOld_Template%what
@@ -806,6 +810,9 @@ class getData:
 
         if not(isServeurInjoignable):
             try:
+                if debugMessages:
+                    print "reading data from url : %s" %(self.urlName)
+                    print
                 self.origFileh = urllib.urlopen(self.urlName)
                 return 0
             except:
@@ -833,6 +840,7 @@ class getData:
             if self.create_backup:
                 self.tmpFile.write(l)
             articles=string.split(l, "=")
+            print articles
             for a in articles:
                 article=string.split(a, "!")
                 if len(article)==lengthArticle:
@@ -973,7 +981,10 @@ class chooseVendeur(chooseXXX):
 
     def collect(self, article):
         global Vendeurs
-        (numero, nom, prenom, timestamp)=article
+        #SK (numero, nom, prenom, timestamp)=article
+        print article
+        (numero, nom )=article
+        (prenom, timestamp) = ("xxx",0)
         Vendeurs[numero]=(numero, nom, prenom)
         return 1
                                     
@@ -1037,7 +1048,9 @@ class chooseClient(chooseXXX):
         
     def collect(self, article):
         global Clients
-        (societe, ville, clef, timestamp)=article
+        #SK (societe, ville, clef, timestamp)=article
+        (clef,societe)=article
+        (ville, timestamp) = ("xxx",0)
         Clients[societe+"/"+ville]=(societe, ville, clef)
         return 1
 
@@ -1127,8 +1140,16 @@ class chooseProduit(chooseXXX):
     def collect(self, article):
          global Produits, ProduitsFournisseurs, ProduitsRacourcis, ProduitsCodes
 
-         (code, clef, fournisseur, prix, prix_plancher, poids, libele, timestamp)=article
-         racourci = int(clef)
+         #SK (code, clef, fournisseur, prix, prix_plancher, poids, libele, timestamp)=article
+         (clef, libele) = article
+         (code, fournisseur, prix, prix_plancher, poids, timestamp)=(0,1,0.,0.,1,0)
+
+         #SK racourci = int(clef)
+         try:
+             racourci = int(clef[1:])
+         except:
+             print "pb with ",clef
+             return
          ProduitsRacourcis[racourci]=libele
          if racourci in ProduitsFournisseurs.keys():
              ProduitsFournisseurs[racourci].append(fournisseur)
@@ -1197,8 +1218,9 @@ class chooseFournisseur(chooseXXX):
 
     def collect(self, article):
         global Fournisseurs
-        
-        (societe, ville, clef, timestamp)=article
+        #SK(societe, ville, clef, timestamp)=article
+        (clef,societe)=article
+        (ville, timestamp) = ("xxx",0)
         Fournisseurs[clef]=(societe, ville, clef)
         return 1
     
