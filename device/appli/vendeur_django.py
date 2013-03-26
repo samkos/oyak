@@ -840,7 +840,7 @@ class getData:
             if self.create_backup:
                 self.tmpFile.write(l)
             articles=string.split(l, "=")
-            print articles
+            #print articles
             for a in articles:
                 article=string.split(a, "!")
                 if len(article)==lengthArticle:
@@ -984,7 +984,7 @@ class chooseVendeur(chooseXXX):
         #SK (numero, nom, prenom, timestamp)=article
         print article
         (numero, nom )=article
-        (prenom, timestamp) = ("xxx",0)
+        (prenom, timestamp) = ("v%s" % numero,0)
         Vendeurs[numero]=(numero, nom, prenom)
         return 1
                                     
@@ -1061,9 +1061,12 @@ class chooseClient(chooseXXX):
         i=0
         for clef in clefsClients:
             (societe, ville, nb)=Clients[clef]
-            self.listbox0.insert(END, "%04d-%s"%(int(nb[1:]), clef))
-            self.clefs0[i]=clef
-            i=i+1
+            try:
+                self.listbox0.insert(END, "%04d-%s"%(int(nb[1:]), clef))
+                self.clefs0[i]=clef
+                i=i+1
+            except:
+                print "probleme avec ",Clients[clef]
         #print self.listbox0
 
         pass
@@ -1142,7 +1145,7 @@ class chooseProduit(chooseXXX):
 
          #SK (code, clef, fournisseur, prix, prix_plancher, poids, libele, timestamp)=article
          (clef, libele) = article
-         (code, fournisseur, prix, prix_plancher, poids, timestamp)=(0,1,0.,0.,1,0)
+         (code, fournisseur, prix, prix_plancher, poids, timestamp)=(0,100,0.,0.,1,0)
 
          #SK racourci = int(clef)
          try:
@@ -1221,7 +1224,10 @@ class chooseFournisseur(chooseXXX):
         #SK(societe, ville, clef, timestamp)=article
         (clef,societe)=article
         (ville, timestamp) = ("xxx",0)
-        Fournisseurs[clef]=(societe, ville, clef)
+        try:
+            Fournisseurs[int(clef[1:])]=(societe, ville, clef)
+        except:
+            print "pb avec ",article
         return 1
     
     def go(self, event):
@@ -1245,7 +1251,7 @@ class chooseFournisseur(chooseXXX):
         liste=self.fournisseurs
         n=len(self.filtre)
         for code in liste:
-            (societe, ville, clef)=Fournisseurs[code]
+            (societe, ville, clef)=Fournisseurs[int(code[1:])]
             s="%04d-%s"%(int(clef), societe)
             c="%d"%int(clef)
             n=len(self.filtre)
