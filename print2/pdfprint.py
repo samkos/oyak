@@ -336,7 +336,8 @@ def print_one_facture(pdf,fic):
 		   designation_suite = designation_suite[taille_designation:]
 
     #print data_facture
-    nb_ligne_fac_page =  20
+    nb_ligne_fac_page  =  20
+    nb_ligne_fac_page2 =  40
 
     header_footer1 = [["C"    ,"R"    ,"R"     ,"R"      ,"R"     ,"R"       ,"R"        ,"R"        ],
                       ["Colis","Poids","H.T. 1","TVA 5.5","H.T. 2","TVA 19.6","Total TVA","Total TTC"]]
@@ -405,7 +406,7 @@ def print_one_facture(pdf,fic):
 
 
 
-
+    footer_not_done = True
     while len(data_facture):
         data_page = []
         i=0
@@ -421,12 +422,15 @@ def print_one_facture(pdf,fic):
         pdf.oyak_table(x_entete,y_entete,w_entete,header_entete,data_entete,4)
         pdf.oyak_table(x_adresse,y_adresse,w_adresse,header_adresse,data_adresse,4,countour=0)
         pdf.oyak_table(x_fac,y_fac,w_fac,header_fac,data_page,4)
-        pdf.oyak_table(x_footer1,y_footer1,w_footer1,header_footer1,data_footer1,4)
-        pdf.oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
+        if footer_not_done : # len(data_facture)==0:
+            pdf.oyak_table(x_footer1,y_footer1,w_footer1,header_footer1,data_footer1,4)
+            pdf.oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
+            pdf.oyak_table(x_message,y_message,w_message,header_message,data_message,4,countour=0)
+            footer_not_done = False
+            nb_ligne_fac_page =      nb_ligne_fac_page2
+
         pdf.oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
         pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
-        pdf.oyak_table(x_message,y_message,w_message,header_message,data_message,4,countour=0)
-
     pdf.set_font('Arial','',14)
     
     return printer
@@ -729,7 +733,7 @@ def print_catalog(fic,output_file):
           
 
 if __name__ == "__main__":
-    #ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
@@ -738,7 +742,7 @@ if __name__ == "__main__":
     #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
     #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
     #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
-    ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
+    #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
     else:
