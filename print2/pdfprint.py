@@ -401,12 +401,20 @@ def print_one_facture(pdf,fic):
     x_message = 90
     y_message = 222
 
+    header_numero =  []
+    w_numero      =  [20,20]
+    x_numero = 190
+    y_numero = 292
 
-    header_message=[]
 
+    if len(data_facture)<nb_ligne_fac_page :
+        nb_pages = 1
+    else:
+        nb_pages = 1 +  (len(data_facture)-nb_ligne_fac_page)/nb_ligne_fac_page2 + 1
 
 
     footer_not_done = True
+    numero_page = 1
     while len(data_facture):
         data_page = []
         i=0
@@ -431,6 +439,10 @@ def print_one_facture(pdf,fic):
 
         pdf.oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
         pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
+        data_numero = [ ["page %d/%d" % (numero_page,nb_pages)]]
+        pdf.oyak_table(x_numero,y_numero,w_numero,header_numero,data_numero,4,countour=0)
+        numero_page = numero_page + 1
+
     pdf.set_font('Arial','',14)
     
     return printer
@@ -735,7 +747,7 @@ def print_catalog(fic,output_file):
 if __name__ == "__main__":
     ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
-    #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
