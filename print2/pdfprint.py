@@ -255,8 +255,8 @@ def print_one_facture(pdf,fic):
 
     #print valeurs
     clefs = valeurs.keys()
-    for c in clefs:
-        print c,":",valeurs[c]
+    # for c in clefs:
+    #     print c,":",valeurs[c]
         
     for i in range(9):
         for j in range(10):
@@ -336,8 +336,6 @@ def print_one_facture(pdf,fic):
 		   designation_suite = designation_suite[taille_designation:]
 
     #print data_facture
-    nb_ligne_fac_page  =  20
-    nb_ligne_fac_page2 =  40
 
     header_footer1 = [["C"    ,"R"    ,"R"     ,"R"      ,"R"     ,"R"       ,"R"        ,"R"        ],
                       ["Colis","Poids","H.T. 1","TVA 5.5","H.T. 2","TVA 19.6","Total TVA","Total TTC"]]
@@ -407,22 +405,35 @@ def print_one_facture(pdf,fic):
     y_numero = 292
 
 
-    if len(data_facture)<nb_ligne_fac_page :
+    nb_lignes_page1 =  20
+    nb_lignes_page2 =  40
+    nb_lignes_total = len(data_facture)
+    if nb_lignes_total<=nb_lignes_page1 :
         nb_pages = 1
     else:
-        nb_pages = 1 +  (len(data_facture)-nb_ligne_fac_page)/nb_ligne_fac_page2 + 1
-
-
+        nb_lignes_restantes = (nb_lignes_total-nb_lignes_page1) % nb_lignes_page2
+        nb_pages =  (nb_lignes_total-nb_lignes_page1)/nb_lignes_page2
+        if (nb_lignes_restantes>0):
+            nb_pages = nb_pages +1
+        #print "nb_pages:",nb_pages
+        #nb_lignes_page = nb_lignes_page2
+        nb_lignes_page  = (nb_lignes_total-nb_lignes_page1)/(nb_pages)+1
+        nb_pages = nb_pages +1
+        #print "nb_lignes_total=%d,nb_pages=%d,nb_lignes_page=%d,nb_lignes_restantes=%d" % \
+        #      (nb_lignes_total,nb_pages,nb_lignes_page,nb_lignes_restantes)
+        
     footer_not_done = True
     numero_page = 1
     while len(data_facture):
+        if numero_page == nb_pages:
+            nb_lignes_page = nb_lignes_page1
         data_page = []
         i=0
-        while len(data_facture) and i<nb_ligne_fac_page:
+        while len(data_facture) and i<nb_lignes_page:
             x = data_facture.pop(0)
             data_page.append(x)
             i=i+1
-        while (i<nb_ligne_fac_page):
+        while (i<nb_lignes_page):
             i = i+1
             data_page.append([''])
         #print data_page,len(data_facture)
@@ -430,18 +441,16 @@ def print_one_facture(pdf,fic):
         pdf.oyak_table(x_entete,y_entete,w_entete,header_entete,data_entete,4)
         pdf.oyak_table(x_adresse,y_adresse,w_adresse,header_adresse,data_adresse,4,countour=0)
         pdf.oyak_table(x_fac,y_fac,w_fac,header_fac,data_page,4)
-        if footer_not_done : # len(data_facture)==0:
-            pdf.oyak_table(x_footer1,y_footer1,w_footer1,header_footer1,data_footer1,4)
-            pdf.oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
-            pdf.oyak_table(x_message,y_message,w_message,header_message,data_message,4,countour=0)
-            footer_not_done = False
-            nb_ligne_fac_page =      nb_ligne_fac_page2
-
-        pdf.oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
         pdf.oyak_table(x_title,y_title,w_title,header_title,data_title,4,countour=0)
         data_numero = [ ["page %d/%d" % (numero_page,nb_pages)]]
         pdf.oyak_table(x_numero,y_numero,w_numero,header_numero,data_numero,4,countour=0)
         numero_page = numero_page + 1
+
+    if footer_not_done : # len(data_facture)==0:
+        pdf.oyak_table(x_footer1,y_footer1,w_footer1,header_footer1,data_footer1,4)
+        pdf.oyak_table(x_footer2,y_footer2,w_footer2,header_footer2,data_footer2,4)
+        pdf.oyak_table(x_message,y_message,w_message,header_message,data_message,4,countour=0)
+        pdf.oyak_table(x_vignette,y_vignette,w_vignette,header_vignette,data_vignette,4)
 
     pdf.set_font('Arial','',14)
     
