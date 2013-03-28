@@ -407,17 +407,18 @@ def print_one_facture(pdf,fic):
 
     nb_lignes_page1 =  20
     nb_lignes_page2 =  40
+    nb_lignes_page_1 = 5
     nb_lignes_total = len(data_facture)
     if nb_lignes_total<=nb_lignes_page1 :
         nb_pages = 1
     else:
-        nb_lignes_restantes = (nb_lignes_total-nb_lignes_page1) % nb_lignes_page2
-        nb_pages =  (nb_lignes_total-nb_lignes_page1)/nb_lignes_page2
+        nb_lignes_restantes = (nb_lignes_total-nb_lignes_page_1) % nb_lignes_page2
+        nb_pages =  (nb_lignes_total-nb_lignes_page_1)/nb_lignes_page2
         if (nb_lignes_restantes>0):
             nb_pages = nb_pages +1
         #print "nb_pages:",nb_pages
         #nb_lignes_page = nb_lignes_page2
-        nb_lignes_page  = (nb_lignes_total-nb_lignes_page1)/(nb_pages)+1
+        nb_lignes_page  = (nb_lignes_total-nb_lignes_page_1)/(nb_pages)+1
         nb_pages = nb_pages +1
         #print "nb_lignes_total=%d,nb_pages=%d,nb_lignes_page=%d,nb_lignes_restantes=%d" % \
         #      (nb_lignes_total,nb_pages,nb_lignes_page,nb_lignes_restantes)
@@ -754,7 +755,9 @@ def print_catalog(fic,output_file):
           
 
 if __name__ == "__main__":
-    ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT1page"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
