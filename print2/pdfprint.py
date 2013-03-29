@@ -771,3 +771,4 @@ if __name__ == "__main__":
 	    os.system("evince tuto5.pdf")
     else:
       print "!!!!!!!!! erreur"
+      dump_exception("print_facture in pdfprint.py standalone test")
