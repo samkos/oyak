@@ -759,7 +759,7 @@ if __name__ == "__main__":
     #ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
     ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
-    #ret=print_facture(["../print/tests/fac/FACT1plus"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/TEST0.txt","tuto5.pdf")
     #ret=print_general("../print/tests/imp/VEND2.txt","tuto5.pdf",4)
@@ -770,4 +770,4 @@ if __name__ == "__main__":
     if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
     else:
-      print "!!!!!!!!! erreur"
+      print "!!!!!!!!! erreur",ret
