@@ -10,7 +10,20 @@ import logging
 import logging.handlers
 
 
+<<<<<<< HEAD
 
+=======
+
+
+try:
+    from reportlab.graphics.barcode import code39, code128
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import mm,inch
+    from reportlab.pdfgen import canvas
+except:
+    print "could not import report lab --> no barcode catalog supported"
+
+>>>>>>> origin/masse
 dump_exception_at_screen = True
 
 
@@ -656,6 +669,55 @@ def print_general(fic,output_file,debug_till=0):
 
 
 
+def print_catalog(fic,output_file):
+
+  try:
+    print "processing catalog ",fic
+    logger.info("processing catalog "+fic)
+
+    fic_contents_initial = ["NOTHING YET\n"]
+    fic_contents_initial = open(fic).readlines()
+    fic_contents = list(fic_contents_initial)
+
+    codebarlist = list()
+    debug = False
+
+    for l in fic_contents:
+	    code,lots = l[:-1].split("]")
+	    codebarlist.append((code,0.0,"xxxxxxx"))
+	    if debug:
+		    print code,lots
+    #arrivage,vente_cumulee,stock_fin_de_journee,es,s = lots.split("\\")
+    #if debug:
+    #    print code,arrivage,vente_cumulee,stock_fin_de_journee
+
+    # generating codebar page
+
+    c = canvas.Canvas(output_file, pagesize=A4)
+
+    n=1
+    x = 1 * mm
+    y = 285 * mm - inch
+    x1 = 6.4 * mm
+
+    for isbn,price,comment in codebarlist:
+        barcode = code128.Code128(isbn,barWidth = 0.015 * inch, barHeight = 1. * inch, fontSize = 30, humanReadable = True)
+        barcode.drawOn(c, x, y)
+        x = x
+        y = y - 1.8 * inch
+
+        if int(y) <= 0:
+            x = x + 140 * mm
+            y = 285 * mm - inch
+            if int(x) > int(300*mm):
+                x = 1*mm
+                c.showPage()
+                c.save()        
+        
+    return 
+  except:
+    dump_exception("processing catalog "+fic,fic_contents_initial)
+    return -1
           
 
 if __name__ == "__main__":
