@@ -770,5 +770,4 @@ if __name__ == "__main__":
     if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
     else:
-      print "!!!!!!!!! erreur"
-      dump_exception("print_facture in pdfprint.py standalone test")
+      print "!!!!!!!!! erreur",ret
