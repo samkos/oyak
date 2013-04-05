@@ -761,7 +761,8 @@ def print_catalog(fic,output_file):
 if __name__ == "__main__":
     #ret=print_facture(["../print/tests/fac/FACT1page"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
-    ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac/FACT11_dist"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
@@ -772,6 +773,7 @@ if __name__ == "__main__":
     #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
-	    os.system("evince tuto5.pdf")
+        print "ret = /%s/" % ret
+        os.system("evince tuto5.pdf")
     else:
       print "!!!!!!!!! erreur",ret

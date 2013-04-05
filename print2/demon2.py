@@ -24,6 +24,7 @@ exe_view=exe_print=exe_printTo=exe_facture=exe_etiq = "???exe_xxx"
 debug=0
 
 noprint=0
+nodel=0
 msg=1
 once=0
 fichier_fac=0
@@ -56,6 +57,7 @@ def usage(message = None):
              \n\t\t[ --once ] \
              \n\t\t[ --debug ] \
              \n\t\t[ --noprint ] \
+             \n\t\t[ --nodel ] \
              \n\t\t[ --fac=<fichier facture a tester> ] \
              \n\t\t[ --etiq=<fichier code barre a tester> ] \
              \n\t\t[ --imp=<fichier bordereau a tester> ] \
@@ -67,13 +69,13 @@ def usage(message = None):
 
 
 def parse():
-    global once,debug,noprint,timeOK,msg,fichier_fac,fichier_imp,fichier_etiq
+    global once,debug,noprint,nodel,timeOK,msg,fichier_fac,fichier_imp,fichier_etiq
     
     """ parse the command line and set global _flags according to it """
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ht", 
                                    ["help", "once", "every=", "fac=", "etiq=", \
-                                    "imp=", "trace=", "debug", "noprint"])
+                                    "imp=", "trace=", "debug", "noprint", "nodel"])
     except getopt.GetoptError, err:        # print help information and exit:
         usage(err)
 
@@ -102,6 +104,8 @@ def parse():
             debug = True
         elif option in ("--noprint"):
             noprint = True
+        elif option in ("--nodel"):
+            nodel = True
         else:
             usage("unhandled option %s" % option)
 
@@ -230,8 +234,9 @@ def probeFacture():
                 os.makedirs(dir_printer)
             now=datetime.datetime.now()
             timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
-            shutil.copy("all.pdf","%s/facture_%s.pdf" % (dir_printer,timestamp)) 
-        shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
+            shutil.copy("all.pdf","%s/facture_%s.pdf" % (dir_printer,timestamp))
+            os.system("echo --- dir ---; ls %s; echo --- end ---" % dir_printer)
+        #shutil.copy("all.pdf","%s/Oyak/facture.pdf" % TMPDIR)
         os.unlink("all.pdf")
         for fic in files:
             if not(fic==fichier_fac):
@@ -297,7 +302,7 @@ def probeImp():
         
 
 def probePrint(dir_print,printer="default"):
-    global timestamp, noprint
+    global timestamp, noprint, nodel
 
     if noprint:
         if sys.platform.startswith("linux"):
@@ -350,9 +355,9 @@ def probePrint(dir_print,printer="default"):
                       print "%s"%timestamp+":"+ "Impression de %s "%filename+"sur imprimante %s"%printer
 
               os.system(commande)
-              os.remove(filename)
-              if msg:
-                    print "%s"%timestamp+":"+ "Effacement de %s "%filename
+              if not(nodel):
+                  os.remove(filename)
+                  print "%s"%timestamp+":"+ "Effacement de %s "%filename
 
 
     return
