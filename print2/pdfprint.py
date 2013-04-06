@@ -269,7 +269,7 @@ def print_one_facture(pdf,fic):
     facture = valeurs["Z1,1"]
     data_title =  [ [" "],["_b_%s" % valeurs["Z4,1"]]]
     header_title =  [ ["C"],["_h_"+title]]
-    w_title  =  [160]
+    w_title  =  [100]
     x_title = 40
     y_title = 75
 
@@ -306,10 +306,10 @@ def print_one_facture(pdf,fic):
                     "C","R","R","R","R"],
                    ["Article","Designation","Zone","Vd","Colis",
                     "Poids","Poids","Prix","Total","TVA"],
-                   ["","","Peche","","",
+                   ["","","Pêche","","",
                     "Unit.","Quant.","Unit.","H.T.",""]]
-    w_fac = [10,85,25,10,20,10,10,10,15,7]
-    x_fac = 5
+    w_fac = [10,92,20,5,8,12,12,10,15,7]
+    x_fac = 4
     y_fac = 95
     data_facture = []
     taille_designation = int(w_fac[1]/1.7)
@@ -340,7 +340,7 @@ def print_one_facture(pdf,fic):
     header_footer1 = [["C"    ,"R"    ,"R"     ,"R"      ,"R"     ,"R"       ,"R"        ,"R"        ],
                       ["Colis","Poids","H.T. 1","TVA 5.5","H.T. 2","TVA 19.6","Total TVA","Total TTC"]]
     w_footer1      = [10     ,15     ,15      ,15       ,15      ,15        ,15         ,15         ]
-    x_footer1 = 90
+    x_footer1 = 65
     y_footer1 = 210
 
     data_footer1 =  [ valeurs['Z6,1'], 
@@ -350,7 +350,7 @@ def print_one_facture(pdf,fic):
     header_footer2 = [["L"               ,"R"            ,"R"          ,"R"           ,"R" ,"R"        ],
                       ["Règlement Client","Date","_s_N de Facture","_s_Ancien Solde","_s_au","_s_Nouveau Solde"]]
     w_footer2      =  [50                ,15   ,15                ,15               ,15      ,15        ]
-    x_footer2 = 80
+    x_footer2 = 55
     y_footer2 = 230
     data_footer2 =  [ valeurs['Z8,1']] 
 
@@ -363,8 +363,8 @@ def print_one_facture(pdf,fic):
 		       "_s_Ancien Solde"      ,"_s_au","_s_Nouveau Solde"]]
     w_vignette      =  [40                    ,25                ,20               ,17         ,
 			17                    ,17                ,17         ]
-    x_vignette = 25
-    y_vignette = 284
+    x_vignette = 20
+    y_vignette = 274
     #print len(valeurs['Z8,1']),valeurs['Z8,1']
     data_vignette =  [ [ valeurs['Z8,1'][0], valeurs['Z8,1'][1], valeurs['Z8,1'][2], valeurs['Z6,1'][7], 
 		       valeurs['Z8,1'][3], valeurs['Z8,1'][4], valeurs['Z8,1'][5]]
@@ -384,7 +384,7 @@ def print_one_facture(pdf,fic):
     header_vignette_bas =  []
     w_vignette_bas      =  [20,20]
     x_vignette_bas = 168
-    y_vignette_bas = 275
+    y_vignette_bas = 205
 
 
     header_vignette_bas=[]
@@ -396,8 +396,12 @@ def print_one_facture(pdf,fic):
 
     header_message =  []
     w_message      =  [20,20]
-    x_message = 90
-    y_message = 222
+    x_message = 65
+    y_message = 224
+
+
+    header_message=[]
+
 
     header_numero =  []
     w_numero      =  [20,20]
@@ -757,7 +761,8 @@ def print_catalog(fic,output_file):
 if __name__ == "__main__":
     #ret=print_facture(["../print/tests/fac/FACT1page"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
-    ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
+    ret=print_facture(["../print/tests/fac/FACT11_dist"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
@@ -768,6 +773,7 @@ if __name__ == "__main__":
     #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
     #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
-	    os.system("evince tuto5.pdf")
+        print "ret = /%s/" % ret
+        os.system("evince tuto5.pdf")
     else:
       print "!!!!!!!!! erreur",ret
