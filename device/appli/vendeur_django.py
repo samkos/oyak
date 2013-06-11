@@ -695,9 +695,8 @@ class getData:
         # initialisation
         self.what=what
         
-        #SK lengthArticle=nbChamps[what]
-        lengthArticle=2
-
+        lengthArticle=nbChamps[what]
+        
         # creation des nom de fichiers
         self.fichierBackup=fichierBackup_Template%what
         self.fichierTemp=fichierTemp_Template%what
@@ -981,9 +980,8 @@ class chooseVendeur(chooseXXX):
 
     def collect(self, article):
         global Vendeurs
-        #SK (numero, nom, prenom, timestamp)=article
-        print article
-        (numero, nom )=article
+        (numero, nom, prenom, timestamp)=article
+        
         (prenom, timestamp) = ("v%s" % numero,0)
         Vendeurs[numero]=(numero, nom, prenom)
         return 1
@@ -1048,9 +1046,8 @@ class chooseClient(chooseXXX):
         
     def collect(self, article):
         global Clients
-        #SK (societe, ville, clef, timestamp)=article
-        (clef,societe)=article
-        (ville, timestamp) = ("xxx",0)
+        (societe, ville, clef, timestamp)=article
+        
         Clients[societe+"/"+ville]=(societe, ville, clef)
         return 1
 
@@ -1143,11 +1140,8 @@ class chooseProduit(chooseXXX):
     def collect(self, article):
          global Produits, ProduitsFournisseurs, ProduitsRacourcis, ProduitsCodes
 
-         #SK (code, clef, fournisseur, prix, prix_plancher, poids, libele, timestamp)=article
-         (clef, libele) = article
-         (code, fournisseur, prix, prix_plancher, poids, timestamp)=(0,100,0.,0.,1,0)
-
-         #SK racourci = int(clef)
+         (code, clef, fournisseur, prix, prix_plancher, poids, libele, timestamp)=article
+         
          try:
              racourci = int(clef[1:])
          except:
@@ -1221,9 +1215,9 @@ class chooseFournisseur(chooseXXX):
 
     def collect(self, article):
         global Fournisseurs
-        #SK(societe, ville, clef, timestamp)=article
-        (clef,societe)=article
-        (ville, timestamp) = ("xxx",0)
+        
+        (societe, ville, clef, timestamp)=article
+        
         try:
             Fournisseurs[int(clef[1:])]=(societe, ville, clef)
         except:
