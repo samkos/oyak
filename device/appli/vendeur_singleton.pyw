@@ -63,6 +63,7 @@ def dump_exception(where,fic_contents_initial):
 
 
 oyak=0
+vendeur_version="0.37"
 
 class singleton:
     
@@ -72,7 +73,7 @@ class singleton:
         self.cible=os.path.exists('\Platform')
         self.linux=os.path.exists('/etc/passwd')
         self.ip_serveur="77"
-        self.version="0.37 (singleton/serveur=%s)"%self.ip_serveur
+        self.version="%s (singleton/serveur=%s)"% (vendeur_version,self.ip_serveur)
         self.time_last_key=0
         self.isServeurInjoignable=0
         
@@ -101,7 +102,7 @@ class singleton:
             self.fichierTemp_Template='\Oyak\%s.tmp'
             self.fichierOld_Template='\Oyak\%s.old'
         else:
-            self.version="0.37 (singleton/serveur=%s)"%"localhost"
+            self.version="%s (singleton/serveur=%s)"%(vendeur_version,"localhost")
             self.erreurCatch=0
             self.debugMessages=1
             self.zoomedWindow=0
@@ -396,7 +397,7 @@ class ihmRoot:
         label = Button(self.ihm, text="Choisir Vendeur", command=self.changeVendeur, height=3, width=self.Xmax)
         self.add(panelName, "vendeur", label, 5, 0)
 
-        label = Button(self.ihm, text="Relire Donnée", command=self.rechargeBase, height=3, width=self.Xmax)
+        label = Button(self.ihm, text="Relire Donnee", command=self.rechargeBase, height=3, width=self.Xmax)
         self.add(panelName, "reloader", label, 6, 0)
         
         
@@ -626,9 +627,9 @@ class ihmRoot:
         oyak.myVendeur.ihmShow()
 
     def rechargeBase(self):
-        ihm.showMessage("Telechargement du serveur")
+        self.showMessage("Telechargement du serveur")
         lisData(clearAll=1, forceRecharge=1)
-        ihm.showMessage("OK...", self.showMenu)
+        self.showMessage("OK...", self.showMenu)
 
     def changeVendeur(self):
         oyak.myVendeur.ihmShow()
