@@ -758,13 +758,13 @@ class getData:
         # lecture sur fichier backup d'abord
         if not(forceRecharge) and self.readFromBackup()==0:
             if oyak.debugMessages:
-                print "lecture from Backup pour %s"%what
+                print "lecture from Backup pour %s a %d Articles" % (what,lengthArticle)
             self.readSource(lengthArticle)
             self.closeSource()
         # lecture depuis la base
         else:
             if oyak.debugMessages:
-                print "lecture from web pour %s "%what
+                print "lecture from web pour %s  a %d Articles" % (what,lengthArticle)
 
 	    isThere=os.path.exists(self.fichierBackup)
             if isThere:
@@ -866,6 +866,8 @@ class getData:
 
             
     def readSource(self, lengthArticle):
+        printMessageNotYet = True
+
         self.fileList = self.origFileh.readlines()
         self.nbArticles=0
         for l in self.fileList:
@@ -874,9 +876,31 @@ class getData:
             articles=string.split(l, "=")
             for a in articles:
                 article=string.split(a, "!")
-                if len(article)==lengthArticle:
+                if len(article)>lengthArticle and printMessageNotYet:
+                    if oyak.debugMessages:
+                        print "reading ",article
+                        print "expecting %s fields " % (lengthArticle)
+                        print "Truncating...."
+                        print
+                        printMessageNotYet = False
+                    article = article[:lengthArticle]
+                if len(article)<lengthArticle and printMessageNotYet:
+                    if oyak.debugMessages:
+                        print "reading ",article
+                        print "expecting %s fields " % (lengthArticle)
+                        print "adding fake values for missing fields..."
+                        print
+                        printMessageNotYet = False
+                    while (len(article)<lengthArticle):
+                        article.append(self.default[len(article)])
+                                        
                     if self.collect(article):
                         self.nbArticles+=1
+                    else:
+                        if oyak.debugMessages and printMessageNotYet:
+                            print "article has not been collected ",article
+                            printMessageNotYet = False
+
 
     def closeSource(self):                    
         self.origFileh.close()
@@ -997,6 +1021,7 @@ class chooseVendeur(chooseXXX):
 
     def __init__(self, forceRecharge=0):
         chooseXXX.__init__(self, "vendeurs", forceRecharge)        
+        self.default = [9999,"Nom","Prenom"]
 
     def ihmShow(self):
         chooseXXX.ihmShow(self, "vendeurs")        
@@ -1066,7 +1091,8 @@ class chooseClient(chooseXXX):
         
     def ihmShow(self):
         chooseXXX.ihmShow(self, "clients")
-        
+        self.default = ["Societe","ville",9999,9999999]
+
     def collect(self, article):
         (societe, ville, clef, timestamp)=article
         oyak.Clients[societe+"/"+ville]=(societe, ville, clef)
@@ -1144,7 +1170,8 @@ class chooseProduit(chooseXXX):
     def __init__(self, forceRecharge=0):
         
         chooseXXX.__init__(self, "produits", forceRecharge)
-        
+        self.default = [ 9999,999,0.0,0.0,0,9999,99999]
+
     def ihmShow(self, facture, valeur):
         self.liste0={}
         self.clefs0={}
@@ -1213,6 +1240,7 @@ class chooseFournisseur(chooseXXX):
 
     def __init__(self, forceRecharge=0):
         chooseXXX.__init__(self, "fournisseurs", forceRecharge)
+        self.default = ["Societe","ville",9999,9999999]
         
     def ihmShow(self, facture, racourci, all=0):
         self.facture=facture
@@ -1282,6 +1310,7 @@ class chooseRelease(chooseXXX):
 
     def __init__(self, forceRecharge=0):
         chooseXXX.__init__(self, "releases")
+        self.default = [9999,"filename"]
 
     def ihmShow(self, facture, racourci, save=0):
         chooseXXX.ihmShow(self, "releases", killable=1)
