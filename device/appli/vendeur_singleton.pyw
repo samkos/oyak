@@ -155,7 +155,7 @@ class singleton:
             
         self.clefsClients=list()
         self.nbChamps = {"vendeurs":4, "fournisseurs":4, "clients":4,
-                    "releases":2, "produits":8}
+                    "releases":2, "produits":4}
         self.isAlreadyPaneled = {"vendeurs":0, "fournisseurs":0, "clients":0,
                     "releases":0, "produits":0}
         self.barSize = {"vendeurs":0.1, "fournisseurs":0.9, "clients":0.3,
@@ -892,7 +892,7 @@ class getData:
                         print
                         printMessageNotYet = False
                     while (len(article)<lengthArticle):
-                        article.append(self.default[len(article)])
+                        article.append(self.default[len(article)-1])
                                         
                     if self.collect(article):
                         self.nbArticles+=1
@@ -1020,8 +1020,8 @@ class chooseVendeur(chooseXXX):
     global oyak
 
     def __init__(self, forceRecharge=0):
-        chooseXXX.__init__(self, "vendeurs", forceRecharge)        
         self.default = [9999,"Nom","Prenom"]
+        chooseXXX.__init__(self, "vendeurs", forceRecharge)        
 
     def ihmShow(self):
         chooseXXX.ihmShow(self, "vendeurs")        
@@ -1087,11 +1087,11 @@ class chooseVendeur(chooseXXX):
 class chooseClient(chooseXXX):
 
     def __init__(self, forceRecharge=0):
+        self.default = ["Societe","ville",9999,9999999]
         chooseXXX.__init__(self, "clients", forceRecharge)
         
     def ihmShow(self):
         chooseXXX.ihmShow(self, "clients")
-        self.default = ["Societe","ville",9999,9999999]
 
     def collect(self, article):
         (societe, ville, clef, timestamp)=article
@@ -1168,9 +1168,9 @@ class chooseClient(chooseXXX):
 class chooseProduit(chooseXXX):
 
     def __init__(self, forceRecharge=0):
-        
+        self.default = [ 9999,"xxxxxxx",0.0,0.0,0]        
         chooseXXX.__init__(self, "produits", forceRecharge)
-        self.default = [ 9999,999,0.0,0.0,0,9999,99999]
+
 
     def ihmShow(self, facture, valeur):
         self.liste0={}
@@ -1187,15 +1187,17 @@ class chooseProduit(chooseXXX):
         
 
     def collect(self, article):
-         (code, clef, fournisseur, prix, prix_plancher, poids, libele, timestamp)=article
+         (clef, libele, prix, prix_plancher)=article
          racourci = int(clef)
+         fournisseur = 1
+         code = fournisseur*1000+racourci
          oyak.ProduitsRacourcis[racourci]=libele
          if racourci in oyak.ProduitsFournisseurs.keys():
              oyak.ProduitsFournisseurs[racourci].append(fournisseur)
          else:
              oyak.ProduitsFournisseurs[racourci]=[fournisseur]
          oyak.ProduitsCodes[racourci, fournisseur]=code
-         oyak.Produits[code]=(libele, prix, racourci, prix_plancher, poids, fournisseur)
+         oyak.Produits[code]=(libele, prix, racourci, prix_plancher,fournisseur)
          return 1
 
     def listePrepare(self):
@@ -1239,8 +1241,8 @@ class chooseProduit(chooseXXX):
 class chooseFournisseur(chooseXXX):
 
     def __init__(self, forceRecharge=0):
-        chooseXXX.__init__(self, "fournisseurs", forceRecharge)
         self.default = ["Societe","ville",9999,9999999]
+        chooseXXX.__init__(self, "fournisseurs", forceRecharge)
         
     def ihmShow(self, facture, racourci, all=0):
         self.facture=facture
@@ -1309,8 +1311,8 @@ class chooseFournisseur(chooseXXX):
 class chooseRelease(chooseXXX):
 
     def __init__(self, forceRecharge=0):
-        chooseXXX.__init__(self, "releases")
         self.default = [9999,"filename"]
+        chooseXXX.__init__(self, "releases")
 
     def ihmShow(self, facture, racourci, save=0):
         chooseXXX.ihmShow(self, "releases", killable=1)
