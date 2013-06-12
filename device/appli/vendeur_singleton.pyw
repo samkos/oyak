@@ -5,6 +5,62 @@ import shutil
 import string
 import traceback
 import urllib
+import logging
+import logging.handlers
+
+ROOT_PATH = os.path.dirname(__file__)
+
+
+if sys.platform.startswith("linux"):
+    TMPDIR="/tmp"
+else:
+    TMPDIR="c:"
+
+dir_Root=TMPDIR+'/Oyak/'
+
+for d in [dir_Root]:
+  if not(os.path.exists(d)):
+    os.mkdir(d)
+
+# set log file
+logger = logging.getLogger('oyak_device.log')
+logger.propagate = 0
+logger.setLevel(logging.INFO)
+log_file_name = "%s/" % dir_Root+"oyak_device.log"
+open(log_file_name, "a").close()
+handler = logging.handlers.RotatingFileHandler(
+     log_file_name, maxBytes = 20000000,  backupCount = 5)
+formatter = logging.Formatter("%(asctime)s %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+loggerror = logging.getLogger('oyak_err_device.log')
+loggerror.propagate = 0
+loggerror.setLevel(logging.DEBUG)
+log_file_name = "%s/" % dir_Root+"oyak_err_device.log"
+open(log_file_name, "a").close()
+handler = logging.handlers.RotatingFileHandler(
+     log_file_name, maxBytes = 20000000,  backupCount = 5)
+handler.setFormatter(formatter)
+loggerror.addHandler(handler)
+
+
+def dump_exception(where,fic_contents_initial):
+
+
+    exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+    if dump_exception_at_screen:
+      traceback.print_exception(exceptionType,exceptionValue, exceptionTraceback,\
+                                file=sys.stdout)
+    print '!!!! Erreur in %s check error log file!!!'
+    logger.info('!!!! Erreur in %s check error log file!!!' % where)
+    loggerror.error('Erreur in %s' % where, exc_info=True)
+    loggerror.error("\n============ content of file ===========\n"+\
+		    "\n".join(fic_contents_initial)+\
+		    "========== end content of file =========\n")
+
+
+
 
 oyak=0
 
@@ -16,7 +72,7 @@ class singleton:
         self.cible=os.path.exists('\Platform')
         self.linux=os.path.exists('/etc/passwd')
         self.ip_serveur="77"
-        self.version="0.36 (singleton/serveur=%s)"%self.ip_serveur
+        self.version="0.37 (singleton/serveur=%s)"%self.ip_serveur
         self.time_last_key=0
         self.isServeurInjoignable=0
         
@@ -36,16 +92,16 @@ class singleton:
             self.raiseError=0
             self.website_address="http://192.168.111.%s/phpmyfactures"%self.ip_serveur
             self.fichierIp='\Platform\S24Profiles.reg'
-            self.fichierIpBackup='\\Oyak\\S24old.reg'
-            self.fichierIpNew='\\Oyak\\S24New.reg'
-            self.fichierIpTemplate='\\Application\\Oyak\\S24Profiles.reg'
-            self.fichierAppTemplate='\\Application\\Oyak\\Data\\%s.bak'
-            self.fichierAppOldTemplate='\\Application\\Oyak\\Data\\%s.old'
+            self.fichierIpBackup='/Oyak/S24old.reg'
+            self.fichierIpNew='/Oyak/S24New.reg'
+            self.fichierIpTemplate='/Application/Oyak/S24Profiles.reg'
+            self.fichierAppTemplate='/Application/Oyak/Data/%s.bak'
+            self.fichierAppOldTemplate='/Application/Oyak/Data/%s.old'
             self.fichierBackup_Template='\Oyak\%s.bak'
             self.fichierTemp_Template='\Oyak\%s.tmp'
             self.fichierOld_Template='\Oyak\%s.old'
         else:
-            self.version="0.34 (singleton/serveur=%s)"%"localhost"
+            self.version="0.37 (singleton/serveur=%s)"%"localhost"
             self.erreurCatch=0
             self.debugMessages=1
             self.zoomedWindow=0
@@ -63,14 +119,17 @@ class singleton:
                 self.fichierBackup_Template=self.tmp_address+'/%s.bak'
                 self.fichierTemp_Template=self.tmp_address+'/%s.tmp'
                 self.fichierOld_Template=self.tmp_address+'/%s.old'
-                
+            self.root_address = ROOT_PATH+"../a copier/"
             self.fichierIp=self.root_address+"Platform/test/S24Profiles.reg"
             self.fichierIpBackup=self.root_address+"Platform/test/S24old.reg"
             self.fichierIpNew=self.root_address+"Platform/test/S24new.reg"
             self.fichierIpTemplate=self.root_address+"Application/Oyak/S24Profiles.reg"
             self.fichierAppTemplate=self.root_address+"Application/Oyak/Data/%s.bak"
             self.fichierAppOldTemplate=self.root_address+"Application/Oyak/Data/%s.old"
-        
+            self.fichierBackup_Template=dir_Root+'%s.bak'
+            self.fichierTemp_Template=dir_Root+'%s.tmp'
+            self.fichierOld_Template=dir_Root+'%s.old'       
+
         self.myVendeur=0
         self.myClient=0;
         self.myFournisseur=0
@@ -687,6 +746,14 @@ class getData:
 
         # ouverture du fichier temporaire
             
+        # creation d'un fichier test si on est sous linux
+        if sys.platform.startswith("linux"):
+            print "do something for linux!!!!!!!!"
+            copying  = "cat '../../data/%s.txt' | awk '{clef=$1; $1=\"\"; printf(\"%%s!%%s=\", clef,$0);}' > '%s'" % \
+                (what,self.fichierBackup)
+            print copying
+            os.system(copying)
+
         # lecture sur fichier backup d'abord
         if not(forceRecharge) and self.readFromBackup()==0:
             if oyak.debugMessages:
@@ -1279,22 +1346,22 @@ def loadRelease(filename, save):
             oyak.ihm.showMessage("Le serveur Release ne répond pas!")
             return
         try:
-          os.remove("\\Oyak\\%s"%filename)
+          os.remove("/Oyak/%s"%filename)
         except:
           pass
 
-        new=open("\\Oyak\\%s"%filename, "w")
+        new=open("/Oyak/%s"%filename, "w")
         program=f.readlines()
         for l in program :
             new.write("%s\n"%l[:-1])
         new.close()
         try:
-            shutil.copy("\\Oyak\\%s"%filename, "\\Windows\\Desktop\\%s"%filename)
+            shutil.copy("/Oyak/%s"%filename, "/Windows/Desktop/%s"%filename)
         except:
             pass
     else:
         try:
-            shutil.copy("\\Oyak\\%s"%filename, "\\Application\\Python\\vendeur.pyw")
+            shutil.copy("/Oyak/%s"%filename, "/Application/Python/vendeur.pyw")
             oyak.ihm.showMessage("Device Flashe avec %s"%filename)
         except:
             oyak.ihm.showMessage("Pb dans la mise a jour %s"%filename)
@@ -1494,9 +1561,9 @@ class processFacture:
         scrollFrame = Frame(self.listFrame)
         scrollFrame.pack(side=RIGHT, expand=0, fill=BOTH)
 
-        scrollUp=Button(scrollFrame, text='/\\',command=lambda x=1:self.scrollFacture(-self.nbLignesVisibles+1))
+        scrollUp=Button(scrollFrame, text='//',command=lambda x=1:self.scrollFacture(-self.nbLignesVisibles+1))
         scrollUp.pack(side=TOP, expand=1, fill=Y)
-        scrollDown=Button(scrollFrame, text='\\/',command=lambda x=1:self.scrollFacture(+self.nbLignesVisibles-1))
+        scrollDown=Button(scrollFrame, text='//',command=lambda x=1:self.scrollFacture(+self.nbLignesVisibles-1))
         scrollDown.pack(side=TOP, expand=1, fill=Y)
 
         self.quantiteListFrame = Frame(self.listFrame)
@@ -1954,7 +2021,7 @@ if __name__ == "__main__":
         try:
             run()
         except:
-             os.remove("\\Oyak\\except.out")
+             os.remove("/Oyak/except.out")
              f=open('\Oyak\except.out', "w")
              f.write("Exception in user code:\n")
              f.write('-'*60)
