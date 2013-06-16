@@ -1165,10 +1165,11 @@ class chooseClient(chooseXXX):
             self.listbox.delete(0, END)
             oyak.ihm.show("clients")
             for clef in oyak.Clients.keys():
-                (nb, societe)=oyak.Clients[clef]
-                nb=nb[1:]
-                if string.lower(clef[:n])==self.filtre or  nb.find(self.filtre)==0:
-                    self.listbox.insert(END, "%s-%s"%(nb, clef))
+                societe=oyak.Clients[clef]
+                sclef = "%04d" % clef
+                if string.lower(sclef[:n])==self.filtre or \
+                       string.lower(societe).find(self.filtre)==0:
+                    self.listbox.insert(END, "%s-%s"%(sclef, societe))
                     self.clefs[i]=clef
                     i=i+1
             self.listbox.focus_set()
@@ -1971,7 +1972,10 @@ class processFacture:
             print code
             racourci = int(code[0:3])
             fournisseur = int(code[3:6])
-            date = int(code[6:])
+            if len(code)>6:
+                date = int(code[6:])
+            else:
+                date = ""
             print racourci, fournisseur, date
             self.acceptProduit(racourci, fournisseur)
             return TRUE
