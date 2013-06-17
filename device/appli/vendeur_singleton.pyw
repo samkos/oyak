@@ -1167,6 +1167,7 @@ class chooseClient(chooseXXX):
             for clef in oyak.Clients.keys():
                 societe=oyak.Clients[clef]
                 sclef = "%04d" % clef
+                n = len(filtre)
                 if string.lower(sclef[:n])==self.filtre or \
                        string.lower(societe).find(self.filtre)==0:
                     self.listbox.insert(END, "%s-%s"%(sclef, societe))
@@ -1234,7 +1235,8 @@ class chooseProduit(chooseXXX):
             c="%s"%racourci
             l="%s"%libelle
             n=len(self.filtre)
-            if l.find(self.filtre)==0 or c.find(self.filtre)==0:
+            if string.lower(l).find(self.filtre)==0 or \
+                   string.lower(c).find(self.filtre)==0:
                 self.listbox.insert(END, s)
                 self.clefs[i]=(racourci, libelle)
                 i=i+1
@@ -1302,7 +1304,8 @@ class chooseFournisseur(chooseXXX):
             c="%d"%int(clef)
             n=len(self.filtre)
             try:
-              if societe.find(self.filtre)==0 or c.find(self.filtre)==0:
+              if string.lower(societe).find(self.filtre)==0 or \
+                     string(c).find(self.filtre)==0:
                 self.listbox.insert(END, s)
                 self.clefs[i]=(societe,  clef)
                 i=i+1
