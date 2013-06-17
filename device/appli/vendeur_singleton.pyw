@@ -13,6 +13,7 @@ import traceback
 import urllib
 import logging
 import logging.handlers
+import time
 
 ROOT_PATH = os.path.dirname(__file__)
 
@@ -23,11 +24,26 @@ else:
     TMPDIR="c:"
 
 dir_Root=TMPDIR+'/Oyak/'
+dir_Commande=TMPDIR+'/ventesjours/'
+commande_counter_file="%s/%s" % (dir_Commande,"counter.txt")
+commande_counter=0
 
-for d in [dir_Root]:
+for d in [dir_Root,dir_Commande]:
   if not(os.path.exists(d)):
     os.mkdir(d)
 
+# get counter value
+if not(os.path.exists(commande_counter_file)):
+    f = open(commande_counter_file,'w')
+    f.write("%d" % commande_counter)
+    f.close()
+
+f = open(commande_counter_file,'r')
+scommande_counter=f.readlines()
+print scommande_counter
+commande_counter = int(scommande_counter[0])
+f.close()    
+      
 # set log file
 logger = logging.getLogger('oyak_device.log')
 logger.propagate = 0
@@ -1167,7 +1183,7 @@ class chooseClient(chooseXXX):
             for clef in oyak.Clients.keys():
                 societe=oyak.Clients[clef]
                 sclef = "%04d" % clef
-                n = len(filtre)
+                n = len(self.filtre)
                 if string.lower(sclef[:n])==self.filtre or \
                        string.lower(societe).find(self.filtre)==0:
                     self.listbox.insert(END, "%s-%s"%(sclef, societe))
@@ -1332,7 +1348,7 @@ class chooseFournisseur(chooseXXX):
 ################################################################################
 
 class processFacture:
-    global oyak
+    global oyak, commande_counter
     
     def __init__(self, nb=0, client=0, check=0):
         self.nb=nb
@@ -1827,7 +1843,7 @@ class processFacture:
                 return
             except:
                 self.prix.delete(0, END)
-                oyak.ihm.showMessage("le prix "+self.prix_saisi+" n'est pas reconnu", self.goToPrice)
+                oyak.ihm.showMessage("le prix %s "%self.prix_saisi+" n'est pas reconnu", self.goToPrice)
                 return
          
             # verification quantite
@@ -1906,7 +1922,8 @@ class processFacture:
         return
     
     def envoyer(self, parametre=""):
-
+        global commande_counter
+        
         oyak.ihm.showMessage("Traitement Commande en  cours ", self.neRienFaire)
         if self.nbArticles==0:
               self.article.delete(0, END)
@@ -1923,15 +1940,22 @@ class processFacture:
              s=s+"%s%s"%(self.selectedColis[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedpoidsColis[l], oyak.sep2)
              s=s+"%s%s"%(self.selectedQuantite[l], oyak.sep2)
-             s=s+"%s%s"%(self.selectedPrix[l], oyak.sep2)
+             s=s+"%s"%(self.selectedPrix[l])
+             if l<self.nbArticles-1:
+                 s = s+oyak.sep1
         #params = urllib.urlencode({'vendeur': self.vendeur_numero, 'commande':s})
         a_ecrire = "%s%s%s" % (self.vendeur_numero,oyak.sep1,s)
         print "facture envoyee /%s/ : vendeur=/%s/ commande=/%s/ " % (a_ecrire,self.vendeur_numero,s)
         oyak.ihm.showMessage("Commande OK!", oyak.ihm.delCurrentFacture)
-        
-        f = open("c:/ventesjour/%s" %  "000001","w")
+        commande_counter = (commande_counter+1)%1000
+        name_file="%s/%s%03d%s" % (dir_Commande,time.strftime("%Y%m%d"),
+                                   commande_counter,self.vendeur_numero)
+        f = open(name_file,"w")
 	f.write(a_ecrire)
 	f.close()
+        f = open(commande_counter_file,'w')
+        f.write("%d" % commande_counter)
+        f.close()
         return
     
         try:
