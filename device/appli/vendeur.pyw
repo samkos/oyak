@@ -15,6 +15,9 @@ import logging
 import logging.handlers
 import time
 
+
+vendeur_version="0.38"
+
 ROOT_PATH = os.path.dirname(__file__)
 
 
@@ -67,7 +70,7 @@ handler.setFormatter(formatter)
 loggerror.addHandler(handler)
 
 
-def dump_exception(where,fic_contents_initial):
+def dump_exception(where,fic_contents_initial=0):
 
 
     exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
@@ -77,15 +80,16 @@ def dump_exception(where,fic_contents_initial):
     print '!!!! Erreur in %s check error log file!!!'
     logger.info('!!!! Erreur in %s check error log file!!!' % where)
     loggerror.error('Erreur in %s' % where, exc_info=True)
-    loggerror.error("\n============ content of file ===========\n"+\
-		    "\n".join(fic_contents_initial)+\
-		    "========== end content of file =========\n")
+    if fic_content_initial:
+        loggerror.error("\n============ content of file ===========\n"+\
+                        "\n".join(fic_contents_initial)+\
+                        "========== end content of file =========\n")
 
 
 
 
 oyak=0
-vendeur_version="0.37"
+
 
 class singleton:
     
@@ -165,7 +169,6 @@ class singleton:
         self.Clients={}
         self.Vendeurs={}
         self.Fournisseurs={}
-        self.Fournisseurs['9999']=('XXXX', 'xxxx', '9999')
         self.Factures={}
         self.clientNB = {}
         self.timestamp = {}
@@ -734,7 +737,6 @@ class lisData:
             Clients={}
             Vendeurs={}
             Fournisseurs={}
-            Fournisseurs['9999']=('XXXX', 'xxxx', '9999')
             timestamp = {}
 
 
@@ -1183,9 +1185,8 @@ class chooseClient(chooseXXX):
             for clef in oyak.Clients.keys():
                 societe=oyak.Clients[clef]
                 sclef = "%04d" % clef
-                n = len(self.filtre)
-                if string.lower(sclef[:n])==self.filtre or \
-                       string.lower(societe).find(self.filtre)==0:
+                if string.lower(sclef).find(self.filtre)>=0 or \
+                       string.lower(societe).find(self.filtre)>=0:
                     self.listbox.insert(END, "%s-%s"%(sclef, societe))
                     self.clefs[i]=clef
                     i=i+1
@@ -1233,6 +1234,7 @@ class chooseProduit(chooseXXX):
             clef=self.listbox.curselection()[0]
             (libelle)=self.clefs[int(clef)]
         except:
+            dump_error("client_go")
             return
 
         oyak.Factures[oyak.factureCurrent].racourci=clef
@@ -1251,8 +1253,8 @@ class chooseProduit(chooseXXX):
             c="%s"%racourci
             l="%s"%libelle
             n=len(self.filtre)
-            if string.lower(l).find(self.filtre)==0 or \
-                   string.lower(c).find(self.filtre)==0:
+            if string.lower(l).find(self.filtre)>=0 or \
+                   string.lower(c).find(self.filtre)>=0:
                 self.listbox.insert(END, s)
                 self.clefs[i]=(racourci, libelle)
                 i=i+1
@@ -1318,15 +1320,12 @@ class chooseFournisseur(chooseXXX):
             societe=oyak.Fournisseurs[clef]
             s="%03d-%s"%(int(clef), societe)
             c="%d"%int(clef)
-            n=len(self.filtre)
-            try:
-              if string.lower(societe).find(self.filtre)==0 or \
-                     string(c).find(self.filtre)==0:
+            if string.lower(societe).find(self.filtre)>=0 or \
+                     string.lower(c).find(self.filtre)>=0:
                 self.listbox.insert(END, s)
                 self.clefs[i]=(societe,  clef)
                 i=i+1
-            except:
-              print "defaut de filtrage sur (societe,clef,filtre)=",(societe,self.filtre,clef)
+
 	# ajout de 'TOUS'
         self.listbox.insert(END, "TOUS LES FOURNISSEURS")
         self.clefs[i]=("TOUS", "PARTOUT", 0)
