@@ -16,7 +16,7 @@ import logging.handlers
 import time
 
 
-vendeur_version="0.38"
+vendeur_version="0.39"
 
 ROOT_PATH = os.path.dirname(__file__)
 
@@ -1508,7 +1508,7 @@ class processFacture:
         # quantite, prix, article, fournisseur, date
 
         self.article_label, self.article, self.article_focus, self.article_content = self.addLabelEntry("Article:")
-        self.fournisseur_label, self.fournisseur, self.fournisseur_focus, self.fournisseur_content = self.addLabelEntry("Fournisseur:",clickable=FALSE)
+        self.fournisseur_label, self.fournisseur, self.fournisseur_focus, self.fournisseur_content = self.addLabelEntry("Fournisseur:")
         self.date_label, self.date, self.date_focus, self.date_content = self.addLabelEntry("Date:")
         self.colis_label, self.colis, self.colis_focus, self.colis_content = self.addLabelEntry("Colis:")
         self.poidsColis_label, self.poidsColis, self.poidsColis_focus, self.poidsColis_content = self.addLabelEntry("Poids:")
@@ -1583,6 +1583,7 @@ class processFacture:
         self.goToArticle()
         self.article.bind(".", self.processProduit)
         self.article.bind("<Return>", self.route)
+        self.fournisseur.bind(".", self.processFournisseur)
         self.date.bind("<Return>", self.goToColis)
         self.colis.bind("<Return>", self.goTopoidsColis)
         self.poidsColis.bind("<Return>", self.goToQuantite)
@@ -1638,6 +1639,12 @@ class processFacture:
         valeur=self.article.get()
         self.article.delete(0, END)
         oyak.myProduit.ihmShow(self, valeur)
+
+    def processFournisseur(self, event):
+                
+        valeur=self.article.get()
+        self.fournisseur.delete(0, END)
+        oyak.myFournisseur.ihmShow(self, valeur)
 
 
 
