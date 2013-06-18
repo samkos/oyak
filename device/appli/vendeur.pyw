@@ -1684,8 +1684,18 @@ class processFacture:
         
         if True : # (racourci, fournisseur) in oyak.ProduitsCodes.keys() or autre_fournisseur:
             (prix_plancher) = ("0.")
-            libelle=oyak.Produits[racourci]
-            societe=oyak.Fournisseurs[fournisseur]
+            if racourci in oyak.Produits.keys():
+                libelle=oyak.Produits[racourci]
+            else:
+                oyak.ihm.showMessage("produit %d inexistant!" % racourci,\
+                                     self.goToArticle)
+                return
+            if fournisseur in oyak.Fournisseurs.keys():
+                societe=oyak.Fournisseurs[fournisseur]
+            else:
+                oyak.ihm.showMessage("Fournisseur %d inexistant!" % fournisseur,\
+                                     self.goToArticle)
+                return
             self.fournisseur_content.set(societe)
             self.fournisseur_label.set("Fournisseur : %s"%fournisseur)
               
