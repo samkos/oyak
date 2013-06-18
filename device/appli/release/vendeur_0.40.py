@@ -16,7 +16,7 @@ import logging.handlers
 import time
 
 
-vendeur_version="0.41"
+vendeur_version="0.40"
 
 ROOT_PATH = os.path.dirname(__file__)
 
@@ -1733,7 +1733,6 @@ class processFacture:
             if not(date=="-99"):
                 self.date.delete(0, END)
                 self.date.insert(END,date)
-                self.goToColis()
                 return
             
             self.goToDate()
@@ -1777,15 +1776,6 @@ class processFacture:
         self.labelEntryFocus(self.poidsColis, self.poidsColis_focus,self.poidsColis_content)
 
     def goToQuantite(self, event="fake"):
-        nb_col = self.colis_content.get()
-        pds = self.poidsColis_content.get()
-        print "in gotoquantite"
-        try:
-            q = float(nb_col)*float(pds)
-            self.quantite_content = "%s"%q
-            print "q=",q
-        except:
-            print "erreur d'évaluation de quantite"
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
         self.labelEntryFocus(self.quantite, self.quantite_focus,self.quantite_content)
 
@@ -2038,11 +2028,11 @@ class processFacture:
             racourci = int(code[0:3])
             fournisseur = int(code[3:6])
             if len(code)>6:
-                other = int(code[6:])
+                date = int(code[6:])
             else:
-                other = ""
-            print racourci, fournisseur, other
-            self.acceptProduit(racourci, fournisseur, date = other)
+                date = ""
+            print racourci, fournisseur, date
+            self.acceptProduit(racourci, fournisseur)
             return TRUE
        
        
