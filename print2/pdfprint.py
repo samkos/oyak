@@ -711,8 +711,8 @@ def print_catalog(fic,output_file):
     debug = False
 
     for l in fic_contents:
-	    code,lots = l[:-1].split("]")
-	    codebarlist.append((code,0.0,"xxxxxxx"))
+	    code,comment = l[:-1].split("]")
+	    codebarlist.append((code,0.0,comment))
 	    if debug:
 		    print code,lots
     #arrivage,vente_cumulee,stock_fin_de_journee,es,s = lots.split("\\")
@@ -733,9 +733,9 @@ def print_catalog(fic,output_file):
         barcode.drawOn(c, x, y)
         x1 = x + 6.4 * mm
         y = y - 8 * mm
-        c.drawString(x1, y, "comment_123456789")
+        c.drawString(x1, y, comment)
         y = y - 5 * mm
-        c.drawString(x1, y, "comment_123456789")
+        #c.drawString(x1, y, "comment_123456789")
 
         x = x
         y = y - 1.3 * inch
@@ -757,7 +757,7 @@ def print_catalog(fic,output_file):
 if __name__ == "__main__":
     #ret=print_facture(["../print/tests/fac/FACT1page"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT2pages"],"tuto5.pdf")
-    ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
+    #ret=print_facture(["../print/tests/fac/FACT3pages"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac_masse/FACT1"],"tuto5.pdf")
     #ret=print_facture(["../print/tests/fac/FACT1plus"],"fac.pdf")
     #ret=print_general("../print/tests/imp/PAYSAGE.txt","tuto5.pdf")
@@ -766,7 +766,7 @@ if __name__ == "__main__":
     #ret=print_general("../print/tests/imp/1p.txt","tuto5.pdf",4)
     #ret=print_general("../print/tests/imp/VEND_3pages.txt","tuto5.pdf",0)
     #ret=print_general("../print/tests/imp/VEND_erreur.txt","tuto5.pdf",4)
-    #ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
+    ret=print_catalog("../print/tests/stock/example","tuto5.pdf")
     if not(ret==-1) and sys.platform.startswith("linux"):
 	    os.system("evince tuto5.pdf")
     else:
