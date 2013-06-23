@@ -14,7 +14,7 @@ import urllib
 import logging
 import logging.handlers
 import time
-
+import getopt
 
 vendeur_version="0.44"
 
@@ -70,6 +70,9 @@ handler.setFormatter(formatter)
 loggerror.addHandler(handler)
 
 
+dump_exception_at_screen = True
+TEST = False
+
 def dump_exception(where,fic_contents_initial=0):
 
 
@@ -80,10 +83,52 @@ def dump_exception(where,fic_contents_initial=0):
     print '!!!! Erreur in %s check error log file!!!'
     logger.info('!!!! Erreur in %s check error log file!!!' % where)
     loggerror.error('Erreur in %s' % where, exc_info=True)
-    if fic_content_initial:
+    if fic_contents_initial:
         loggerror.error("\n============ content of file ===========\n"+\
                         "\n".join(fic_contents_initial)+\
                         "========== end content of file =========\n")
+
+
+
+def usage(message = None):
+    """ helping message"""
+    if message:
+        print message
+    print "  usage: \n \t python vendeur.py \
+             \n\t\t[ --help ] \
+             \n\t\t[ --test ] \
+           \n"  
+    sys.exit(1)
+
+
+
+#########################################################################
+# command line parsing...
+#########################################################################
+
+def parse():
+    """ parse the command line and set global _flags according to it """
+    global TEST
+    
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "t", 
+                          ["test", "job="])
+    except getopt.GetoptError, err:
+        # print help information and exit:
+        usage(err)
+        signal(CRITICAL,"err")
+
+    # first scan opf option to get prioritary one first
+    # those who sets the state of the process
+    # especially those only setting flags are expected here
+    for option, argument in opts:
+        if option in ("-h", "--help"):
+            usage("")
+        elif option in ("-t", "--test"):
+            TEST=True
+        else:
+            print "unhandled option %s" % option
+            sys.exit(A)
 
 
 
@@ -163,7 +208,7 @@ class singleton:
         self.myProduit=0
         
         self.Produits={}
-        self.ProduitsDetails={}
+        self.ProduitsDetail={}
         self.ProduitsRacourcis={}
         self.ProduitsCodes={}
         self.Clients={}
@@ -720,7 +765,7 @@ class interrogateur:
         
 class lisData:
 
-    global oyak
+    global oyak, TEST
     
     def __init__(self, clearAll=0, forceRecharge=0):
   
@@ -731,7 +776,7 @@ class lisData:
         
         if clearAll:
             Produits={}
-            ProduitsDetails={}
+            ProduitsDetail={}
             ProduitsRacourcis={}
             ProduitsCodes={}
             Clients={}
@@ -1051,10 +1096,13 @@ class chooseVendeur(chooseXXX):
 
     def __init__(self, forceRecharge=0):
         self.default = [9999,"Prenom"]
-        chooseXXX.__init__(self, "vendeurs", forceRecharge)        
+        chooseXXX.__init__(self, "vendeurs", forceRecharge)
 
     def ihmShow(self):
         chooseXXX.ihmShow(self, "vendeurs")        
+        if TEST:
+            oyak.vendeurChoisi=self.clefs[1]
+            oyak.myClient.ihmShow()
 
     def collect(self, article):
         global Vendeurs
@@ -1123,6 +1171,9 @@ class chooseClient(chooseXXX):
         
     def ihmShow(self):
         chooseXXX.ihmShow(self, "clients")
+        if TEST:
+            processFacture(client=2)
+
 
     def collect(self, article):
         (clef,societe)=article
@@ -1222,11 +1273,22 @@ class chooseProduit(chooseXXX):
         
 
     def collect(self, article):
-         (clef, libele, code_barre,pds,prx,prx)=article
+         (clef, libele, code_barre,pds,prx,pch)=article
          #print "%s]%s" % (code_barre,libele)
          try:
              oyak.Produits[int(clef)]=libele
-             oyak.ProduitsFournisseurs[int(clef)] = (code_barre,pds,prx,pch)
+             code = "%s"%code_barre
+             racourci = int(code[0:3])
+             fournisseur = int(code[3:6])
+             if len(code)>6:
+                 other = int(code[6:])
+             else:
+                 other = ""
+             oyak.ProduitsDetail[int(clef)] = \
+                                            (clef,libelle,fournisseur,code_barre,\
+                                             pds,prx,pch,other)
+                         
+             oyak.ProduitsCodes[int(code_barre)] = oyak.ProduitsDetail[int(clef)]
          except:
              print  "did not take ",article
          return 1
@@ -1240,13 +1302,12 @@ class chooseProduit(chooseXXX):
             clef=self.listbox.curselection()[0]
             (numero,libelle)=self.clefs[int(clef)]
         except:
-            dump_error("client_go")
+            dump_exception("client_go")
             return
 
         print numero,libelle
         oyak.Factures[oyak.factureCurrent].racourci=int(numero)
-        oyak.myFournisseur.ihmShow(self.facture, int(numero))
-
+        self.facture.goToFournisseur()
 
     def action(self, event="fake"):
         self.listbox.delete(0, END)
@@ -1683,10 +1744,6 @@ class processFacture:
             
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
 
-        if (racourci, fournisseur) in oyak.ProduitsCodes.keys():
-            code = oyak.ProduitsCodes[racourci, fournisseur]
-            (libelle,racourci, prix_plancher,  fournisseur)=oyak.Produits[code]
-
         
         if True : # (racourci, fournisseur) in oyak.ProduitsCodes.keys() or autre_fournisseur:
             (prix_plancher) = ("0.")
@@ -2025,14 +2082,7 @@ class processFacture:
        
        
         article=self.article.get()
-        try:
-            article_attendu=oyak.ProduitsRacourcis[self.racourci]
-            if article_attendu==article:
-                racourci="%s"%self.racourci
-            else:
-                racourci=article
-        except:
-            racourci=article
+        racourci=article
         oyak.Factures[oyak.factureCurrent].racourci=racourci
 
         if len(racourci)==0:
@@ -2041,44 +2091,47 @@ class processFacture:
          # le produit selectionne a un code barre
         if len("%s"%racourci)>3:
             code = "%s"%racourci
-            print code
             racourci = int(code[0:3])
             fournisseur = int(code[3:6])
             if len(code)>6:
                 other = int(code[6:])
             else:
                 other = ""
+            print oyak.ProduitsDetail
             print racourci, fournisseur, other
+            (detail_clef, detail_libelle,detail_fournisseur,\
+             detail_code_barre,detail_poids, detail_prix, \
+             detail_peche) =  oyak.ProduitsDetail[int(racourci)]
+            self.fournisseur.delete(0, END)
+            self.fournisseur.insert(END, detail_fournisseur)
+            self.date.delete(0, END)
+            self.date.insert(END, detail_date)
+            self.poidsColis.delete(0, END)
+            self.poidsColis.insert(END, detail_poids)
+            self.prix.delete(0, END)
+            self.prix.insert(END, detail_prix)
+            self.goToFournisseur()
             self.acceptProduit(racourci, fournisseur, date = other)
             return TRUE
        
        
-        if racourci in oyak.Produits.keys():
-            libelle=oyak.Produits[racourci]
-            (prix, racourci, prix_plancher, poids, fournisseur) = (9,999,0.,0.,0.,1)
-            self.acceptProduit(racourci, fournisseur)
-            return TRUE
         # * ->  La commande est envoye
         if racourci[0]=="*" :
             self.envoyer(racourci[1:])
             return TRUE
         # sinon on process le couple (racourci,fournisseur)
         try :
-            racourci=int(racourci)
-            oyak.Factures[oyak.factureCurrent].racourci=racourci
-            self.racourci=racourci
+             if int(racourci) in oyak.ProduitsDetails.keys():
+                libelle=oyak.Produits[int(racourci)]
+                oyak.Factures[oyak.factureCurrent].racourci=int(detail_clef)
+                self.racourci=detail_clef
+                return True
         except:
-            self.article.delete(0, END)
-            oyak.ihm.showMessage("%s n'est pas un code reconnu!"%racourci, self.goToArticle)
-            return FALSE
-        if racourci in oyak.Produits.keys():
-            oyak.myFournisseur.ihmShow(self, racourci)
-            return TRUE
-        else:
-            self.article.delete(0, END)
-            oyak.ihm.showMessage("%d n'est pas un code reconnu!"%racourci, self.goToArticle)
-            return FALSE
-
+                dump_exception("acceptProduit",["clef = %s",racourci])
+                self.article.delete(0, END)
+                oyak.ihm.showMessage("%s n'est pas un code reconnu!"%racourci, self.goToArticle)
+                return FALSE
+        
 
         
 def run():
@@ -2088,6 +2141,7 @@ def run():
     oyak.ihm.start()
 
 if __name__ == "__main__":
+    parse()
     oyak = singleton()
     if oyak.cible:
         try:
