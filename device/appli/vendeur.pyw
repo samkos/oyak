@@ -1679,6 +1679,11 @@ class processFacture:
         self.selectedQuantite[self.currentArticle]=""
         self.selectedPrix[self.currentArticle]=""
 
+        if TEST:
+            self.article.delete(0, END)
+            self.article.insert(END, "9000533031510")
+
+
     def afficheLigne(self):
         for ligne in range(self.nbLignesVisibles):
             l=ligne+self.currentTopArticle
