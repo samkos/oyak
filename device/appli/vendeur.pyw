@@ -16,7 +16,7 @@ import logging.handlers
 import time
 
 
-vendeur_version="0.43"
+vendeur_version="0.44"
 
 ROOT_PATH = os.path.dirname(__file__)
 
@@ -163,7 +163,7 @@ class singleton:
         self.myProduit=0
         
         self.Produits={}
-        self.ProduitsFournisseurs={}
+        self.ProduitsDetails={}
         self.ProduitsRacourcis={}
         self.ProduitsCodes={}
         self.Clients={}
@@ -178,7 +178,7 @@ class singleton:
             
         self.clefsClients=list()
         self.nbChamps = {"vendeurs":2, "fournisseurs":2, "clients":2,
-                    "produits":3}
+                    "produits":6}
         self.isAlreadyPaneled = {"vendeurs":0, "fournisseurs":0, "clients":0,
                 "produits":0}
         self.barSize = {"vendeurs":0.1, "fournisseurs":0.9, "clients":0.3,
@@ -731,7 +731,7 @@ class lisData:
         
         if clearAll:
             Produits={}
-            ProduitsFournisseurs={}
+            ProduitsDetails={}
             ProduitsRacourcis={}
             ProduitsCodes={}
             Clients={}
@@ -917,8 +917,12 @@ class getData:
                         print "adding fake values for missing fields..."
                         print
                         printMessageNotYet = False
-                    while (len(article)<lengthArticle):
-                        article.append(self.default[len(article)-1])
+                    if False:
+                        while (len(article)<lengthArticle):
+                            article.append(self.default[len(article)-1])
+                    else:
+                        print "not collecting ",article
+                        continue 
                                    
                 if self.collect(article):
                     self.nbArticles+=1
@@ -1218,10 +1222,11 @@ class chooseProduit(chooseXXX):
         
 
     def collect(self, article):
-         (clef, libele, code_barre)=article
+         (clef, libele, code_barre,pds,prx,prx)=article
          #print "%s]%s" % (code_barre,libele)
          try:
              oyak.Produits[int(clef)]=libele
+             oyak.ProduitsFournisseurs[int(clef)] = (code_barre,pds,prx,pch)
          except:
              print  "did not take ",article
          return 1
