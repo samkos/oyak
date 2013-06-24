@@ -1772,11 +1772,11 @@ class processFacture:
             self.article_label.set("Article : %d"%racourci)
             self.article_clef = racourci
 
-            if colis>0:
+            if not (colis==-99):
                 self.colis.delete(0, END)
                 self.colis.insert(END, colis)
             
-            if poidsColis>0:
+            if not (poidsColis==-99):
                 self.poidsColis.delete(0, END)
                 self.poidsColis.insert(END, poidsColis)
             
@@ -1802,10 +1802,8 @@ class processFacture:
             if not(date=="-99"):
                 self.date.delete(0, END)
                 self.date.insert(END,date)
-                self.goToColis()
-                return
-            
-            self.goToDate()
+
+            self.goToQuantite()
         else:
             oyak.ihm.showMessage("Article a part numero %s fournisseur %s"%(racourci, fournisseur), self.neRienFaire())
                 
@@ -2116,7 +2114,8 @@ class processFacture:
             self.prix.delete(0, END)
             self.prix.insert(END, detail_prix)
             self.goToFournisseur()
-            self.acceptProduit(racourci, fournisseur, date = other)
+            self.acceptProduit(int(detail_clef), fournisseur, \
+                                   date = other,prix=detail_prix, poidsColis=detail_poids)
             return TRUE
        
        
@@ -2128,8 +2127,8 @@ class processFacture:
         try :
              if int(racourci) in oyak.ProduitsDetail.keys():
                 libelle=oyak.Produits[int(racourci)]
-                oyak.Factures[oyak.factureCurrent].racourci=int(detail_clef)
-                self.racourci=detail_clef
+                oyak.Factures[oyak.factureCurrent].racourci=int(racourci)
+                self.racourci=racourci
                 return True
         except:
                 dump_exception("acceptProduit",["clef = %s",racourci])
