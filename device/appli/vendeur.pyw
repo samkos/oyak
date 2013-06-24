@@ -1308,6 +1308,10 @@ class chooseProduit(chooseXXX):
 
         print numero,libelle
         oyak.Factures[oyak.factureCurrent].racourci=int(numero)
+        self.facture.article.delete(0, END)
+        self.facture.article.insert(END, libelle)
+        self.facture.article_label.set("Article : %d"%numero)
+        self.facture.article_clef = numero
         self.facture.goToFournisseur()
 
     def action(self, event="fake"):
@@ -1733,6 +1737,9 @@ class processFacture:
 
     def acceptProduit(self, racourci, fournisseur, autre_fournisseur=0, 
                       date="-99",colis=-99,poidsColis=-99,quantite=-99, prix=-99):
+
+        print "in accept_produit"
+
         self.autre_fournisseur=autre_fournisseur
 
         self.fournisseurCode=fournisseur
