@@ -1273,10 +1273,10 @@ class chooseProduit(chooseXXX):
         
 
     def collect(self, article):
-         (clef, libele, code_barre,pds,prx,pch)=article
+         (clef, libelle, code_barre,pds,prx,pch)=article
          #print "%s]%s" % (code_barre,libele)
          try:
-             oyak.Produits[int(clef)]=libele
+             oyak.Produits[int(clef)]=libelle
              code = "%s"%code_barre
              racourci = int(code[0:3])
              fournisseur = int(code[3:6])
@@ -1285,11 +1285,12 @@ class chooseProduit(chooseXXX):
              else:
                  other = ""
              oyak.ProduitsDetail[int(clef)] = \
-                                            (clef,libelle,fournisseur,code_barre,\
-                                             pds,prx,pch,other)
-                         
-             oyak.ProduitsCodes[int(code_barre)] = oyak.ProduitsDetail[int(clef)]
+                                            (clef,libelle,fournisseur,\
+                                                 code_barre,pds,prx,\
+                                                 pch)
+             oyak.ProduitsDetail[int(code_barre)] = oyak.ProduitsDetail[int(clef)]
          except:
+             dump_exception("collect")
              print  "did not take ",article
          return 1
 
@@ -2096,13 +2097,12 @@ class processFacture:
          # le produit selectionne a un code barre
         if len("%s"%racourci)>3:
             code = "%s"%racourci
-            racourci = int(code[0:3])
             fournisseur = int(code[3:6])
             if len(code)>6:
                 other = int(code[6:])
             else:
                 other = ""
-            print oyak.ProduitsDetail
+            print oyak.ProduitsDetail[int(racourci)],len(oyak.ProduitsDetail[int(racourci)])
             print racourci, fournisseur, other
             (detail_clef, detail_libelle,detail_fournisseur,\
              detail_code_barre,detail_poids, detail_prix, \
@@ -2110,7 +2110,7 @@ class processFacture:
             self.fournisseur.delete(0, END)
             self.fournisseur.insert(END, detail_fournisseur)
             self.date.delete(0, END)
-            self.date.insert(END, detail_date)
+            self.date.insert(END, detail_peche)
             self.poidsColis.delete(0, END)
             self.poidsColis.insert(END, detail_poids)
             self.prix.delete(0, END)
@@ -2126,7 +2126,7 @@ class processFacture:
             return TRUE
         # sinon on process le couple (racourci,fournisseur)
         try :
-             if int(racourci) in oyak.ProduitsDetails.keys():
+             if int(racourci) in oyak.ProduitsDetail.keys():
                 libelle=oyak.Produits[int(racourci)]
                 oyak.Factures[oyak.factureCurrent].racourci=int(detail_clef)
                 self.racourci=detail_clef
