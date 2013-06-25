@@ -132,7 +132,7 @@ def parse():
             if len(argument):
                 TEST_PROD=argument
             else:
-                TEST_PROD = '0010023456789'
+                TEST_PROD = '0030023456789'
         else:
             print "unhandled option %s" % option
             sys.exit(-1)
