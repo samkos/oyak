@@ -1841,6 +1841,8 @@ class processFacture:
         self.goToArticle()
 
     def goToArticle(self, event="fake"):
+        self.article.delete(0, END)
+        self.article.insert(END,self.article_clef)
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
         self.labelEntryFocus(self.article, self.article_focus,self.article_content)
 
