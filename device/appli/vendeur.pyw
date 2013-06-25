@@ -1841,14 +1841,16 @@ class processFacture:
         self.goToArticle()
 
     def goToArticle(self, event="fake"):
+        oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
         self.article.delete(0, END)
         self.article.insert(END,self.article_clef)
-        oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
         self.labelEntryFocus(self.article, self.article_focus,self.article_content)
 
 
     def goToFournisseur(self, event="fake"):
         oyak.ihm.show("facture%d"%self.nb, title="Oyak? Facture ")
+        self.fournisseur.delete(0, END)
+        self.fournisseur.insert(END, self.fournisseur_clef)
         self.labelEntryFocus(self.fournisseur, self.fournisseur_focus,self.fournisseur_content)
 
 
@@ -2124,6 +2126,7 @@ class processFacture:
                 (detail_clef, detail_libelle,detail_fournisseur,\
                  detail_code_barre,detail_poids, detail_prix, \
                  detail_peche) =  oyak.ProduitsDetail[int(racourci)]
+                self.fournisseur_clef = detail_fournisseur                                
                 self.poidsColis.delete(0, END)
                 self.poidsColis.insert(END, detail_poids)
                 self.prix.delete(0, END)
@@ -2132,6 +2135,7 @@ class processFacture:
                 detail_clef = int(code[0:3])
                 if len(code)>3:
                     detail_fournisseur = int(code[3:6])
+                    self.fournisseur_clef = code[3:6]                                
                 else:
                     detail_fournisseur = ""
                 detail_prix = detail_poids = -99
