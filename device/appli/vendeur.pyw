@@ -72,6 +72,7 @@ loggerror.addHandler(handler)
 
 dump_exception_at_screen = True
 TEST = False
+TEST_PROD = '9000533031510'
 
 def dump_exception(where,fic_contents_initial=0):
 
@@ -96,7 +97,7 @@ def usage(message = None):
         print message
     print "  usage: \n \t python vendeur.py \
              \n\t\t[ --help ] \
-             \n\t\t[ --test ] \
+             \n\t\t[ --test | --prod=<code_barre> ] \
            \n"  
     sys.exit(1)
 
@@ -108,11 +109,11 @@ def usage(message = None):
 
 def parse():
     """ parse the command line and set global _flags according to it """
-    global TEST
+    global TEST, TEST_PROD
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "t", 
-                          ["test", "job="])
+        opts, args = getopt.getopt(sys.argv[1:], "tp", 
+                          ["test", "prod="])
     except getopt.GetoptError, err:
         # print help information and exit:
         usage(err)
@@ -126,9 +127,15 @@ def parse():
             usage("")
         elif option in ("-t", "--test"):
             TEST=True
+        elif option in ("-p", "--prod"):
+            TEST=True
+            if len(argument):
+                TEST_PROD=argument
+            else:
+                TEST_PROD = '0010023456789'
         else:
             print "unhandled option %s" % option
-            sys.exit(A)
+            sys.exit(-1)
 
 
 
@@ -1686,7 +1693,7 @@ class processFacture:
 
         if TEST:
             self.article.delete(0, END)
-            self.article.insert(END, "9000533031510")
+            self.article.insert(END, TEST_PROD)
 
 
     def afficheLigne(self):
@@ -1738,7 +1745,12 @@ class processFacture:
     def acceptProduit(self, racourci, fournisseur, autre_fournisseur=0, 
                       date="-99",colis=-99,poidsColis=-99,quantite=-99, prix=-99):
 
-        print "in accept_produit"
+        if TEST:
+            print """in accept_produit : racourci=/%s/, fournisseur=/%s/,
+            autre_fournisseur=/%s/, date=/%s/, colis=/%s/,
+            poidsColis=/%s/,quantite=/%s/, prix=/%s/""" % \
+              (racourci, fournisseur, autre_fournisseur, \
+               date,colis,poidsColis,quantite, prix)
 
         self.autre_fournisseur=autre_fournisseur
 
@@ -1760,24 +1772,24 @@ class processFacture:
         
         if True : # (racourci, fournisseur) in oyak.ProduitsCodes.keys() or autre_fournisseur:
             (prix_plancher) = ("0.")
-            if racourci in oyak.Produits.keys():
-                libelle=oyak.Produits[racourci]
+            if int(racourci) in oyak.Produits.keys():
+                libelle=oyak.Produits[int(racourci)]
+                self.article.insert(END, libelle)
+                self.article_label.set("Article : %d"%racourci)
+                self.article_clef = racourci
             else:
                 oyak.ihm.showMessage("produit %d inexistant!" % racourci,\
                                      self.goToArticle)
                 return
-            if fournisseur in oyak.Fournisseurs.keys():
-                societe=oyak.Fournisseurs[fournisseur]
+            if int(fournisseur) in oyak.Fournisseurs.keys():
+                societe=oyak.Fournisseurs[int(fournisseur)]
+                self.fournisseur_content.set(societe)
+                self.fournisseur_label.set("Fournisseur : %s"%fournisseur)
             else:
                 oyak.ihm.showMessage("Fournisseur %d inexistant!" % fournisseur,\
                                      self.goToArticle)
                 return
-            self.fournisseur_content.set(societe)
-            self.fournisseur_label.set("Fournisseur : %s"%fournisseur)
               
-            self.article.insert(END, libelle)
-            self.article_label.set("Article : %d"%racourci)
-            self.article_clef = racourci
 
             if not (colis==-99):
                 self.colis.delete(0, END)
@@ -2100,29 +2112,35 @@ class processFacture:
             oyak.ihm.showMessage("Article vide!", self.goToArticle)
             return FALSE
          # le produit selectionne a un code barre
-        if len("%s"%racourci)>3:
+        if len("%s"%racourci)>1:
             code = "%s"%racourci
-            fournisseur = int(code[3:6])
             if len(code)>6:
                 other = int(code[6:])
             else:
                 other = ""
-            print oyak.ProduitsDetail[int(racourci)],len(oyak.ProduitsDetail[int(racourci)])
-            print racourci, fournisseur, other
-            (detail_clef, detail_libelle,detail_fournisseur,\
-             detail_code_barre,detail_poids, detail_prix, \
-             detail_peche) =  oyak.ProduitsDetail[int(racourci)]
+            if int(racourci) in oyak.ProduitsDetail.keys():
+                (detail_clef, detail_libelle,detail_fournisseur,\
+                 detail_code_barre,detail_poids, detail_prix, \
+                 detail_peche) =  oyak.ProduitsDetail[int(racourci)]
+                self.poidsColis.delete(0, END)
+                self.poidsColis.insert(END, detail_poids)
+                self.prix.delete(0, END)
+                self.prix.insert(END, detail_prix)
+            else:
+                detail_clef = int(code[0:3])
+                if len(code)>3:
+                    detail_fournisseur = int(code[3:6])
+                else:
+                    detail_fournisseur = ""
+                detail_prix = detail_poids = -99
+                
             self.fournisseur.delete(0, END)
             self.fournisseur.insert(END, detail_fournisseur)
             self.date.delete(0, END)
-            self.date.insert(END, detail_peche)
-            self.poidsColis.delete(0, END)
-            self.poidsColis.insert(END, detail_poids)
-            self.prix.delete(0, END)
-            self.prix.insert(END, detail_prix)
+            self.date.insert(END, other)
             self.goToFournisseur()
-            self.acceptProduit(int(detail_clef), fournisseur, \
-                                   date = detail_peche,prix=detail_prix, poidsColis=detail_poids)
+            self.acceptProduit(int(detail_clef), int(detail_fournisseur), \
+                                   date = other,prix=detail_prix, poidsColis=detail_poids)
             return TRUE
        
        
