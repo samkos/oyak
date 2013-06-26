@@ -2165,6 +2165,7 @@ class processFacture:
                 else:
                     detail_fournisseur = -99
                 detail_prix = detail_poids = -99
+                detail_peche = ""
                 
             self.fournisseur.delete(0, END)
             self.fournisseur.insert(END, detail_fournisseur)
@@ -2172,7 +2173,7 @@ class processFacture:
             self.date.insert(END, other)
             self.goToFournisseur()
             self.acceptProduit(int(detail_clef), int(detail_fournisseur), \
-                                   date = other,prix=detail_prix, poidsColis=detail_poids)
+                                   date = "%s%s" % (other,detail_peche),prix=detail_prix, poidsColis=detail_poids)
             return TRUE
        
        
