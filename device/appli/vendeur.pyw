@@ -16,7 +16,7 @@ import logging.handlers
 import time
 import getopt
 
-vendeur_version="0.47"
+vendeur_version="0.48"
 
 ROOT_PATH = os.path.dirname(__file__)
 
