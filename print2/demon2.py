@@ -277,18 +277,24 @@ def probeImp():
             files.append(fichier_imp)
         for fic in files:
             print "traitement impression generale ",fic
-            pr = print_general(fic,"all.pdf")
+            if (str.find(fic, ".Zbar") > 0):
+                output_file = "catalogue.pdf"
+                pr = print_catalog(fic,output_file)
+                shutil.copy(output_file,"%s/Oyak/catalogue.pdf" % TMPDIR)
+            else:
+                output_file = "all.pdf"
+                pr = print_general(fic,output_file)
             if noprint:
-                shutil.copy("all.pdf","%s/Oyak/screen.pdf" % TMPDIR)
+                shutil.copy(output_file,"%s/Oyak/screen.pdf" % TMPDIR)
             else: 
                 dir_printer = "%s/Oyak/ToPrint/%s/" % (TMPDIR,pr)
                 if not os.path.exists(dir_printer):
                     os.makedirs(dir_printer)
                 now=datetime.datetime.now()
                 timestamp="%s%s"%(now.strftime("%Y%m%d"),now.strftime("%H%M%S"))
-                shutil.copy("all.pdf","%s/imp_%s.pdf" % (dir_printer,timestamp)) 
-            shutil.copy("all.pdf","%s/Oyak/imp.pdf" % TMPDIR)
-            os.unlink("all.pdf")
+                shutil.copy(output_file,"%s/imp_%s.pdf" % (dir_printer,timestamp)) 
+            shutil.copy(output_file,"%s/Oyak/imp.pdf" % TMPDIR)
+            os.unlink(output_file)
             if not(fichier_imp) or not(fic==fichier_imp):
                 os.unlink(fic)
     else:

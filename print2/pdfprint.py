@@ -708,18 +708,17 @@ def print_catalog(fic,output_file):
     fic_contents = list(fic_contents_initial)
 
     codebarlist = list()
+    produits = {}
+    
     debug = False
 
     for l in fic_contents:
-	    code,comment = l[:-1].split("]")
-	    codebarlist.append((code,0.0,comment))
+	    code,nom_produit,fournisseur = l[:-1].split("!")
+            if not(fournisseur in produits.keys()):
+                produits[fournisseur] = list()
+	    produits[fournisseur].append((code,nom_produit))
 	    if debug:
 		    print code,lots
-    #arrivage,vente_cumulee,stock_fin_de_journee,es,s = lots.split("\\")
-    #if debug:
-    #    print code,arrivage,vente_cumulee,stock_fin_de_journee
-
-    # generating codebar page
 
     c = canvas.Canvas(output_file, pagesize=A4)
 
@@ -728,25 +727,29 @@ def print_catalog(fic,output_file):
     y = 285 * mm - inch
     x1 = 6.4 * mm
 
-    for isbn,price,comment in codebarlist:
+    for fournisseur in produits.keys():
+      for isbn,comment in produits[fournisseur]:
         barcode = code128.Code128(isbn,barWidth = 0.015 * inch, barHeight = 1. * inch, fontSize = 30, humanReadable = True)
+        y0 = y
         barcode.drawOn(c, x, y)
         x1 = x + 6.4 * mm
         y = y - 8 * mm
-        c.drawString(x1, y, comment)
+        c.drawString(x1, y, "%s" % (comment))
+        c.drawString(x1, y-5*mm, "%s" % (fournisseur))
         y = y - 5 * mm
-        #c.drawString(x1, y, "comment_123456789")
 
-        x = x
-        y = y - 1.3 * inch
-
-        if int(y) <= 0:
-            x = x + 70 * mm
-            y = 285 * mm - inch
-            if int(x) > int(300*mm):
-                x = 1*mm
+        x = x + 70 * mm
+        
+        
+        if int(x) > int(300*mm):
+            x = 1*mm
+            y = y - 1.3 * inch
+            if int(y) <= 0:
+                y = 285 * mm - inch
                 c.showPage()
-                c.save()        
+                c.save()
+        else:
+            y = y0
         
     return 
   except:
