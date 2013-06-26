@@ -6,8 +6,11 @@ form = cgi.FieldStorage()
  
 val1 = form.getvalue('first')
 val2 = form.getvalue('last')
- 
-print """Content-type: text/html
+
+
+
+
+print """
  
 <html><head><title>Test URL Encoding</title></head><body>
 Hello my name is %s %s
