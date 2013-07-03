@@ -986,9 +986,13 @@ class getData:
 
             
     def readSource(self, lengthArticle):
+        global DEBUG
+
         printMessageNotYet = True
 
         self.fileList = self.origFileh.readlines()
+        if DEBUG:
+            print self.fileList
         self.nbArticles=0
         for l in self.fileList:
             if self.create_backup:

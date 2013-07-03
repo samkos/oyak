@@ -18,13 +18,13 @@ try:
         out = data[0]
     else:
         out = "ERROR"
-except:
+        print """%s""" % out
+<except:
     out = "EXCEPTION"
     print os.stderr,out
-print """%s""" % out
  
 
-print out
+print os.stderr, out
 
 
 
