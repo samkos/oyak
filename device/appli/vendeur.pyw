@@ -75,6 +75,8 @@ loggerror.addHandler(handler)
 dump_exception_at_screen = True
 TEST = False
 TEST_PROD = '9000533031510'
+URL = False
+DEBUG = False
 
 def dump_exception(where,fic_contents_initial=0):
 
@@ -98,8 +100,10 @@ def usage(message = None):
     if message:
         print message
     print "  usage: \n \t python vendeur.py \
-             \n\t\t[ --help ] \
+             \n\t\t[ --help ] [ --debug ] \
              \n\t\t[ --test | --prod=<code_barre> ] \
+             \n\t\t[ --catalog ] \
+             \n\t\t[ --url ] \
            \n"  
     sys.exit(1)
 
@@ -111,11 +115,11 @@ def usage(message = None):
 
 def parse():
     """ parse the command line and set global _flags according to it """
-    global TEST, TEST_PROD
+    global TEST, TEST_PROD, URL, DEBUG
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "tpc", 
-                          ["test", "catalog", "prod="])
+        opts, args = getopt.getopt(sys.argv[1:], "tpcud", 
+                          ["test", "catalog", "prod=", "url", "debug"])
     except getopt.GetoptError, err:
         # print help information and exit:
         usage(err)
@@ -131,6 +135,10 @@ def parse():
             TEST=True
         elif option in ("-c", "--catalog"):
             TEST="cat"
+        elif option in ("-u", "--url"):
+            URL = True
+        elif option in ("-d", "--debug"):
+            DEBUG = True
         elif option in ("-p", "--prod"):
             TEST=True
             print argument
@@ -151,6 +159,7 @@ oyak=0
 class singleton:
     
     def __init__(self):
+        global DEBUG
         
         self.maxDigits=130
         self.cible=os.path.exists('\Platform')
@@ -174,7 +183,7 @@ class singleton:
             self.erreurCatch=0
             self.debugMessages=0
             self.raiseError=0
-            self.website_address="http://192.168.111.%s/phpmyfactures"%self.ip_serveur
+            self.website_address="http://192.168.111.%s"%self.ip_serveur
             self.fichierIp='\Platform\S24Profiles.reg'
             self.fichierIpBackup='/Oyak/S24old.reg'
             self.fichierIpNew='/Oyak/S24New.reg'
@@ -187,18 +196,18 @@ class singleton:
         else:
             self.version="%s (singleton/serveur=%s)"%(vendeur_version,"localhost")
             self.erreurCatch=0
-            self.debugMessages=1
+            self.debugMessages=DEBUG
             self.zoomedWindow=0
             self.raiseError=1
             if not(self.linux):
-                self.website_address="http://127.0.0.1/phpmyfactures"
+                self.website_address="http://127.0.0.1:7777"
                 self.root_address="c:/Program Files/EasyPHP1-8/www/phpmyfactures/device/a copier/"
                 self.fichierBackup_Template='c:\Oyak\%s.bak'
                 self.fichierTemp_Template='c:\Oyak\%s.tmp'
                 self.fichierOld_Template='c:\Oyak\%s.old'
             else:
-                self.website_address="http://claui2t0.der.edf.fr:8080/~samuel/phpmyfactures"
-                self.root_address="/local00/users/samuel/public_html/phpmyfactures/device/a copier/"
+                self.website_address="http://claui2t0.der.edf.fr:7777"
+                self.root_address="/local00/users/samuel/public_html,/phpmyfactures/device/a copier/"
                 self.tmp_address="/local00/users/samuel/public_html/phpmyfactures/device/tmp"
                 self.fichierBackup_Template=self.tmp_address+'/%s.bak'
                 self.fichierTemp_Template=self.tmp_address+'/%s.tmp'
@@ -250,7 +259,7 @@ class singleton:
         self.url_update_commande=self.website_address+"/query/download.php?"
         self.url_interroge=self.website_address+"/query/interroge.php?"
         
-        self.url_get_Template=self.website_address+"/query/get_data.php?%s=1"
+        self.url_get_Template=self.website_address+"/cgi/get.py?data=%s"
         
         
         self.sep1=";"
@@ -832,6 +841,8 @@ class getData:
 
     def __init__(self, what, forceRecharge):
         
+        global URL
+
         oyak.ihm.updateProgressBar("Chargement %s..."%what, oyak.barSize[what])
         
         # initialisation
@@ -862,21 +873,24 @@ class getData:
             shutil.copy('/datadevice/%s.txt'%what,self.fichierBackup)
 
         # lecture sur fichier backup d'abord
-        if not(forceRecharge) and self.readFromBackup()==0:
+        if not(forceRecharge) and self.readFromBackup()==0 and not(URL):
             if oyak.debugMessages:
                 print "lecture from Backup pour %s a %d Articles" % (what,lengthArticle)
             self.readSource(lengthArticle)
             self.closeSource()
         # lecture depuis la base
         else:
+            self.urlName=oyak.url_get_Template%what
             if oyak.debugMessages:
-                print "lecture from web pour %s  a %d Articles" % (what,lengthArticle)
+                print "lecture from web pour %s  a %d Articles from address : ->%s<-" % \
+                      (what,lengthArticle, self.urlName)
 
             isThere=os.path.exists(self.fichierBackup)
             if isThere:
                os.unlink(self.fichierBackup)
             self.tmpFile = open(self.fichierTemp, "w")
-            self.urlName=oyak.url_get_Template%what
+
+
 
             if self.readFromUrl()==0:
                 self.readSource(lengthArticle)
@@ -972,9 +986,13 @@ class getData:
 
             
     def readSource(self, lengthArticle):
+        global DEBUG
+
         printMessageNotYet = True
 
         self.fileList = self.origFileh.readlines()
+        if DEBUG:
+            print self.fileList
         self.nbArticles=0
         for l in self.fileList:
             if self.create_backup:
