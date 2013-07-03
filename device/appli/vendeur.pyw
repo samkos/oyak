@@ -200,14 +200,14 @@ class singleton:
             self.zoomedWindow=0
             self.raiseError=1
             if not(self.linux):
-                self.website_address="http://127.0.0.1"
+                self.website_address="http://127.0.0.1:7777"
                 self.root_address="c:/Program Files/EasyPHP1-8/www/phpmyfactures/device/a copier/"
                 self.fichierBackup_Template='c:\Oyak\%s.bak'
                 self.fichierTemp_Template='c:\Oyak\%s.tmp'
                 self.fichierOld_Template='c:\Oyak\%s.old'
             else:
-                self.website_address="http://claui2t0.der.edf.fr:8080"
-                self.root_address="/local00/users/samuel/public_html/phpmyfactures/device/a copier/"
+                self.website_address="http://claui2t0.der.edf.fr:7777"
+                self.root_address="/local00/users/samuel/public_html,/phpmyfactures/device/a copier/"
                 self.tmp_address="/local00/users/samuel/public_html/phpmyfactures/device/tmp"
                 self.fichierBackup_Template=self.tmp_address+'/%s.bak'
                 self.fichierTemp_Template=self.tmp_address+'/%s.tmp'
@@ -259,7 +259,7 @@ class singleton:
         self.url_update_commande=self.website_address+"/query/download.php?"
         self.url_interroge=self.website_address+"/query/interroge.php?"
         
-        self.url_get_Template=self.website_address+"/get.py?data=%s"
+        self.url_get_Template=self.website_address+"/cgi/get.py?data=%s"
         
         
         self.sep1=";"

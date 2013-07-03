@@ -1,17 +1,35 @@
-#!/usr/bin/env python
+#!c:/Python27/python.exe
  
 import cgi
- 
+import os
+
 form = cgi.FieldStorage()
  
-val1 = form.getvalue('first')
-val2 = form.getvalue('last')
+val1 = form.getvalue('data')
 
+try:
+    filename = "/datadevice/%s.txt" % val1
 
-
-
-print """
+    if os.path.exists(filename):
+        print "sending ",filename
+        f = open(filename,"r")
+        data = f.readlines()
+        f.close()
+        out = data[0]
+    else:
+        out = "ERROR"
+except:
+    out = "EXCEPTION"
+    print os.stderr,out
+print """%s""" % out
  
-<html><head><title>Test URL Encoding</title></head><body>
-Hello my name is %s %s
-</body></html>""" % (val1, val2)
+
+print out
+
+
+
+# if False:
+#    print """
+# <html><head><title>Test URL Encoding</title></head><body>
+# Hello my name is %s %s
+# </body></html>""" % (val1, out)
