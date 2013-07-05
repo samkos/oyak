@@ -1,35 +1,47 @@
-#!c:/Python27/python.exe
+#!/usr/bin/python
+##c:/Python27/python.exe
  
 import cgi
 import os
+import sys
 
 form = cgi.FieldStorage()
  
 val1 = form.getvalue('data')
 
 try:
-    filename = "/datadevice/%s.txt" % val1
+    templates = [ "/datadevice/%s.txt" ,"../../data/%s.txt"]
 
-    if os.path.exists(filename):
-        print "sending ",filename
-        f = open(filename,"r")
-        data = f.readlines()
-        f.close()
-        out = data[0]
-    else:
-        out = "ERROR"
-        print """%s""" % out
-<except:
+    out = False
+
+    for t in templates :
+
+        filename = t % val1
+        
+
+        if os.path.exists(filename):
+            print  >> sys.stderr, "sending ",filename
+            f = open(filename,"r")
+            data = f.readlines()
+            f.close()
+            out = data[0]
+        else:
+            print >> sys.stderr, "testing %s with no success " % filename
+
+    if out==False:
+        out = "ERROR File /%s/ not exists" % val1
+
+except:
     out = "EXCEPTION"
-    print os.stderr,out
+    print >> sys.stderr, out
  
 
-print os.stderr, out
+print >> sys.stderr, out
+
+print "hello"
 
 
-
-# if False:
-#    print """
-# <html><head><title>Test URL Encoding</title></head><body>
-# Hello my name is %s %s
-# </body></html>""" % (val1, out)
+if True:
+   print """
+%s
+""" % out 
