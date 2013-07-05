@@ -255,7 +255,7 @@ class singleton:
         
         
         
-        self.url_send_commande=self.website_address+"/query/index.php?"
+        self.url_send_commande=self.website_address+"/cgi/cmd.py?data=%s"
         self.url_update_commande=self.website_address+"/query/download.php?"
         self.url_interroge=self.website_address+"/query/interroge.php?"
         
@@ -264,6 +264,8 @@ class singleton:
         
         self.sep1=";"
         self.sep2="!"
+        self.sep1b="_"
+        self.sep2b="!"
         
         
         self.vendeurChoisi=(0, "xxx", 'xx')
@@ -2095,7 +2097,7 @@ class processFacture:
         return
     
     def envoyer(self, parametre=""):
-        global commande_counter
+        global commande_counter, URL
         
         oyak.ihm.showMessage("Traitement Commande en  cours ", self.neRienFaire)
         if self.nbArticles==0:
@@ -2103,43 +2105,46 @@ class processFacture:
               oyak.ihm.showMessage("La commande est vide!!!", self.goToArticle)
               return            
 
-        s="%s%s"%(self.client, oyak.sep1)
+        s="%s%s"%(self.client, oyak.sep1b)
         for l in range(0, self.nbArticles):
              racourci=self.selectedRacourci[l]
              fournisseur=self.selectedFournisseur[l]
-             s=s+"%s%s"%(racourci, oyak.sep2)
-             s=s+"%s%s"%(fournisseur, oyak.sep2)
-             s=s+"%s%s"%(self.selectedDate[l], oyak.sep2)
-             s=s+"%s%s"%(self.selectedColis[l], oyak.sep2)
-             s=s+"%s%s"%(self.selectedpoidsColis[l], oyak.sep2)
-             s=s+"%s%s"%(self.selectedQuantite[l], oyak.sep2)
+             s=s+"%s%s"%(racourci, oyak.sep2b)
+             s=s+"%s%s"%(fournisseur, oyak.sep2b)
+             s=s+"%s%s"%(self.selectedDate[l], oyak.sep2b)
+             s=s+"%s%s"%(self.selectedColis[l], oyak.sep2b)
+             s=s+"%s%s"%(self.selectedpoidsColis[l], oyak.sep2b)
+             s=s+"%s%s"%(self.selectedQuantite[l], oyak.sep2b)
              s=s+"%s"%(self.selectedPrix[l])
              if l<self.nbArticles-1:
-                 s = s+oyak.sep1
+                 s = s+oyak.sep1b
         #params = urllib.urlencode({'vendeur': self.vendeur_numero, 'commande':s})
-        a_ecrire = "%s%s%s" % (self.vendeur_numero,oyak.sep1,s)
+        a_ecrire = "%s%s%s" % (self.vendeur_numero,oyak.sep1b,s)
         print "facture envoyee /%s/ : vendeur=/%s/ commande=/%s/ " % (a_ecrire,self.vendeur_numero,s)
         oyak.ihm.showMessage("Commande OK!", oyak.ihm.delCurrentFacture)
-        commande_counter = (commande_counter+1)%1000
-        name_file="%s/%s%03d%s" % (dir_Commande,time.strftime("%Y%m%d"),
-                                   commande_counter,self.vendeur_numero)
-        f = open(name_file,"w")
-	f.write(a_ecrire)
-	f.close()
-        f = open(commande_counter_file,'w')
-        f.write("%d" % commande_counter)
-        f.close()
-        return
-    
-        try:
-            f = urllib.urlopen(oyak.url_send_commande, params)
-        except:
-            oyak.ihm.showMessage("Le serveur ne répond pas!", self.goToArticle)
-            oyak.ihm.showMessage("Le serveur ne répond pas! \n url=%s \n v=%s \n s=%s"%
-                                 (oyak.url_send_commande,self.vendeur_numero,s), 
-                                 self.goToArticle)
-            oyak.writeDebug("?vendeur=1&params="+s)
+
+        if not(URL):
+            commande_counter = (commande_counter+1)%1000
+            name_file="%s/%s%03d%s" % (dir_Commande,time.strftime("%Y%m%d"),
+                                       commande_counter,self.vendeur_numero)
+            f = open(name_file,"w")
+            f.write(a_ecrire)
+            f.close()
+            f = open(commande_counter_file,'w')
+            f.write("%d" % commande_counter)
+            f.close()
             return
+        else:
+            try:
+                f = urllib.urlopen(oyak.url_send_commande%a_ecrire)
+            except:
+                oyak.ihm.showMessage("Le serveur ne répond pas!", self.goToArticle)
+                oyak.ihm.showMessage("Le serveur ne répond pas! \n url=%s \n v=%s \n s=%s"%
+                                     (oyak.url_send_commande,self.vendeur_numero,s), 
+                                     self.goToArticle)
+                oyak.writeDebug("?vendeur=1&params="+s)
+                return
+
         ack=f.readlines()
         ok=ack[0]
         if (ok[0]=="0"):
