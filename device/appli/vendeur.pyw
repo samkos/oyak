@@ -206,7 +206,7 @@ class singleton:
                 self.fichierTemp_Template='c:\Oyak\%s.tmp'
                 self.fichierOld_Template='c:\Oyak\%s.old'
             else:
-                self.website_address="http://claui2t0.der.edf.fr:7777"
+                self.website_address="http://localhost:7777"
                 self.root_address="/local00/users/samuel/public_html,/phpmyfactures/device/a copier/"
                 self.tmp_address="/local00/users/samuel/public_html/phpmyfactures/device/tmp"
                 self.fichierBackup_Template=self.tmp_address+'/%s.bak'
@@ -495,11 +495,11 @@ class ihmRoot:
         self.add(panelName, "catalogue", label, 5, 0)
 
         
-#        label = Button(self.ihm, text="Reglages", command=self.showIp,height=4,width=self.Xmax)
-#        self.add(panelName,"update",label,8,0)
+        label = Button(self.ihm, text="Reglages", command=self.showIp,height=4,width=self.Xmax)
+        self.add(panelName,"update",label,8,0)
 
-#        label = Button(self.ihm, text="Reactiver Scanner", command=self.scanner,height=4,width=self.Xmax)
-#        self.add(panelName,"scanner",label,9,0)
+        label = Button(self.ihm, text="Reactiver Scanner", command=self.scanner,height=4,width=self.Xmax)
+        self.add(panelName,"scanner",label,9,0)
 
 
         label = Button(self.ihm, text="QUITTER", command=self.ihm.quit, height=4, width=self.Xmax)

@@ -9,6 +9,7 @@ form = cgi.FieldStorage()
  
 val1 = form.getvalue('data')
 
+
 try:
     templates = [ "/datadevice/%s.txt" ,"../../data/%s.txt"]
 
@@ -37,9 +38,6 @@ except:
  
 
 print >> sys.stderr, out
-
-print "hello"
-
 
 if True:
    print """
